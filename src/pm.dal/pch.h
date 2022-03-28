@@ -8,5 +8,9 @@
 #define PCH_H
 
 // add headers that you want to pre-compile here
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <stdexcept>
 
 #endif //PCH_H
