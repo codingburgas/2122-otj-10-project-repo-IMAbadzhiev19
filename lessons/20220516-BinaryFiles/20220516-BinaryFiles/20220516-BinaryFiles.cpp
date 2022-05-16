@@ -30,7 +30,7 @@ int main()
 		//file.write(reinterpret_cast<char*>(&a), sizeof(a));
 		//file.write(reinterpret_cast<char*>(&arr), sizeof(arr));
 		//file.write(reinterpret_cast<char*>(&u1), sizeof(u1));
-		file.write(reinterpret_cast<char*>(users.data()), sizeof(users));
+		file.write(reinterpret_cast<char*>(users.data()), sizeof(users) * sizeof(User));
 
 		file.close();
 	}
