@@ -35,6 +35,6 @@ int main()
 		file.write(reinterpret_cast<char*>(users.data()), sizeof(users) * sizeof(User));
 
 		file.close();
-	}
+	}	
 
 }
