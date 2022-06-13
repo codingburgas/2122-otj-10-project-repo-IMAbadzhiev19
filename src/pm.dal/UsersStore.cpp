@@ -22,3 +22,11 @@ bool pm::dal::UsersStore::updateUser(size_t id, pm::dal::UsersStore::USER& user)
 	db.executeQuery(query);
 	return true;
 }
+
+bool pm::dal::UsersStore::removeUser(size_t id)
+{
+	std::string query = "DELETE FROM [Users] WHERE Id = " + std::to_string(id);
+
+	db.executeQuery(query);
+	return true;
+}
