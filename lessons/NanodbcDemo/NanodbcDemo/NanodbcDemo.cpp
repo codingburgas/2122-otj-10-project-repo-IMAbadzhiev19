@@ -34,7 +34,7 @@ void demoMain()
 
 int main() try
 {
-    auto const connstr = NANODBC_TEXT("Driver={ODBC Driver 17 for SQL Server};Server=.SD1110\\SQLExpress;Database=Training;Trusted_Connection=yes;"); // an ODBC connection string to your database
+    auto const connstr = NANODBC_TEXT("Driver={ODBC Driver 17 for SQL Server};Server=.\\SQLExpress;Database=Management;Trusted_Connection=yes;"); // an ODBC connection string to your database
     nanodbc::connection conn(connstr);
 
     string name;
@@ -45,9 +45,9 @@ int main() try
 
     // Vulnerrable to SQL Injection!
     // YOU MUST USE PREPARED STATEMENTS!!!
-    string query = NANODBC_TEXT("SELECT TOP 10 * FROM Employees WHERE LastName = N'" + name + "'";
+    string query = NANODBC_TEXT("SELECT * FROM Tasks");
 
-    auto result = nanodbc::execute(conn, query));
+    auto result = nanodbc::execute(conn, query);
     while (result.next())
     {
         auto id = result.get<int>(0);

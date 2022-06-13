@@ -4,12 +4,9 @@
 // However, files listed here are ALL re-compiled if any one of them is updated between builds.
 // Do not add files here that you will be updating frequently as this negates the performance advantage.
 
-#ifndef PCH_H_BLL
-#define PCH_H_BLL
+#ifndef PCH_H
+#define PCH_H
 
 // add headers that you want to pre-compile here
-#include <stdexcept>
-#include <algorithm>
-#include <array>
 
-#endif //PCH_H_BLL
+#endif //PCH_H
