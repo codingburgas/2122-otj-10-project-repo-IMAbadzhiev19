@@ -31,3 +31,11 @@ bool pm::dal::TeamsStore::updateTeam(size_t teamId, TEAM& team, size_t userId)
 	db.executeQuery(query);
 	return true;
 }
+
+bool pm::dal::TeamsStore::removeTeam(size_t teamId)
+{
+	std::string query = "DELETE FROM [Teams] WHERE Id = " + std::to_string(teamId);
+	db.executeQuery(query);
+
+	return true;
+}
