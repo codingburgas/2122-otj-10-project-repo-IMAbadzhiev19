@@ -30,3 +30,24 @@ bool pm::dal::UsersStore::removeUser(size_t id)
 	db.executeQuery(query);
 	return true;
 }
+
+pm::dal::UsersStore::USER pm::dal::UsersStore::getUserByEmail(std::string& email)
+{
+	std::string query = "SELECT * FROM [Users] WHERE Email = '" + email + "'";
+	nanodbc::result res = db.getResultFromSelect(query);
+
+	pm::dal::UsersStore::USER usr;
+
+	res.next();
+
+	usr.id = res.get<int>(0);
+	usr.firstName = res.get<std::string>(1);
+	usr.lastName = res.get<std::string>(2);
+	usr.email = res.get<std::string>(3);
+	usr.age = res.get<int>(4);
+	usr.password = res.get<std::string>(5);
+	usr.createdOn = res.get<nanodbc::date>(6);
+	usr.admin = res.get<short>(7);
+
+	return usr;
+}
