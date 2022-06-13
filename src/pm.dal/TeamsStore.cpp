@@ -39,3 +39,13 @@ bool pm::dal::TeamsStore::removeTeam(size_t teamId)
 
 	return true;
 }
+
+bool pm::dal::TeamsStore::addUserToTeam(size_t teamId, size_t userId)
+{
+	std::string query = "INSERT INTO [UsersAndTeams] "
+		"(UserId, TeamId) "
+		"VALUES (" + std::to_string(userId) + "," + std::to_string(teamId) + ")";
+
+	db.executeQuery(query);
+	return true;
+}
