@@ -1,9 +1,9 @@
 #pragma once
 
-#include"pch.h"
+#include "pch.h"
 
-#include"../pm.consoleApp/Database.h"
-#include"../../lib/nanodbc/nanodbc.h"
+#include "../pm.consoleApp/Database.h"
+#include "../../lib/nanodbc/nanodbc.h"
 
 namespace pm::dal
 {
