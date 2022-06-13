@@ -22,3 +22,12 @@ bool pm::dal::TeamsStore::createTeam(pm::dal::TeamsStore::TEAM& team, size_t use
 
 	return true;
 }
+
+bool pm::dal::TeamsStore::updateTeam(size_t teamId, TEAM& team, size_t userId)
+{
+	std::string query = "UPDATE [Teams]"
+		"SET Title = '" + team.title + "' WHERE Id = " + std::to_string(teamId);
+
+	db.executeQuery(query);
+	return true;
+}
