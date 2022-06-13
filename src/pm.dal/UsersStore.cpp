@@ -11,3 +11,14 @@ bool pm::dal::UsersStore::createUser(pm::dal::UsersStore::USER& user)
 	db.executeQuery(query);
 	return true;
 }
+
+bool pm::dal::UsersStore::updateUser(size_t id, pm::dal::UsersStore::USER& user)
+{
+	std::string query = "UPDATE [Users] "
+		"SET FirstName = '" + user.firstName + "', LastName = '" + user.lastName + "', Email = '" + user.email +
+		"', Age = " + std::to_string(user.age) + ", Admin = " + std::to_string(user.admin) +
+		"WHERE Id = " + std::to_string(id);
+
+	db.executeQuery(query);
+	return true;
+}
