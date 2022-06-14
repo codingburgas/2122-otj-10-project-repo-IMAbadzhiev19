@@ -36,6 +36,6 @@ protected:
 	size_t selectedItem;
 	std::string selectedItemMarker;
 	
-	std::vector<MenuItem*> menu;
+	std::vector<MenuItem*> submenu;
 
 };
