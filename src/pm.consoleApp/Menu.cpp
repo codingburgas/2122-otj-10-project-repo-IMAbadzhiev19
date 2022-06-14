@@ -44,3 +44,24 @@ void MenuItem::moveToItem(bool next)
 	}
 
 }
+
+void MenuItem::addItem(MenuItem* i, unsigned short row, unsigned short column)
+{
+	size_t length = submenu.size();
+
+	if((row == 0) && (column == 0) && (length > 0))
+		if (horizontal) {
+			i->position.row = submenu[0]->position.row;
+			i->position.column = submenu[length - 1]->position.column + submenu[length - 1]->name.size() + selectedItemMarker.size();
+		}
+		else {
+			i->position.row = submenu[length - 1]->position.row + 1;
+			i->position.column = submenu[0]->position.column;
+		}
+	else {
+		i->position.row = row;
+		i->position.column = column;
+	}
+
+	submenu.push_back(i);
+}
