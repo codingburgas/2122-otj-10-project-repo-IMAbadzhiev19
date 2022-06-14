@@ -132,3 +132,10 @@ void MenuItem::setPosition(unsigned short row, unsigned short column)
 	position.row = row;
 	position.column = column;
 }
+
+
+void MainMenu::Show()
+{
+	system("cls");
+	MenuItem::Show();
+}

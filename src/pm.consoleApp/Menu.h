@@ -39,3 +39,14 @@ protected:
 	std::vector<MenuItem*> submenu;
 
 };
+
+class MainMenu : public MenuItem
+{
+public:
+
+	MainMenu(std::string name, bool horizontal, bool execModule) : MenuItem(name, horizontal, execModule) { }
+
+	virtual void Run() { }
+	virtual void Show();
+
+};
