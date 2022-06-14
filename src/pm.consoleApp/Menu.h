@@ -50,3 +50,31 @@ public:
 	virtual void Show();
 
 };
+
+class SubMenu : public MenuItem
+{
+public:
+
+	SubMenu(std::string name, bool horizontal, bool execModule, bool users /*pm::bll::UserManager* uMM, pm::bll::TeamManager* tMM*/);
+
+	virtual void moveToItem(bool next);
+
+protected:
+
+	std::vector<pm::dal::UsersStore::USER> users;
+	std::vector<pm::dal::TeamsStore::TEAM> teams;
+
+	//pm::bll::UserManager* tM;
+	//pm::bll::TeamManager* tM;
+
+private:
+
+	struct ITEM_INFO
+	{
+		unsigned short row, column;
+		std::string itemName;
+	};
+
+	std::vector<ITEM_INFO> itemData;
+
+};

@@ -4,6 +4,7 @@
 #include<windows.h>
 #include<conio.h>
 
+/*MenuItem*/
 void MenuItem::gotoXY(int x, int y)
 {
 	COORD coords;
@@ -132,10 +133,41 @@ void MenuItem::setPosition(unsigned short row, unsigned short column)
 	position.row = row;
 	position.column = column;
 }
-
+/*MenuItem*/
 
 void MainMenu::Show()
 {
 	system("cls");
 	MenuItem::Show();
 }
+
+/*SubMenu*/
+
+SubMenu::SubMenu(std::string name, bool horizontal, bool execModule, bool users /*pm::bll::UserManager* uMM, pm::bll::TeamManager* tMM*/) : MenuItem(name, horizontal, execModule) /*, uM(uMM), tM(tMM)*/
+{
+	unsigned short c = 1;
+
+	if (users)
+		itemData.push_back({ c++, 10 , "Login" });
+
+	itemData.push_back({ c++, 10 , "Create" });
+	itemData.push_back({ c++, 10 , "Update" });
+	itemData.push_back({ c++, 10 , "Delete" });
+	itemData.push_back({ c++, 10 , "ShowAll" });
+
+	std::string func;
+
+	if (name.compare("Teams") == 0)
+		func = " User";
+	else if (name.compare("Projects") == 0)
+		func = " Team";
+	else if (name.compare("Tasks") == 0)
+		func = " Project";
+
+	if (!users) {
+		itemData.push_back({ c++, 10, "Add" + func });
+		itemData.push_back({ c++, 10, "Remove" + func });
+	}
+}
+
+/*SubMenu*/
