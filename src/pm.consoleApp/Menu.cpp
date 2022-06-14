@@ -65,3 +65,70 @@ void MenuItem::addItem(MenuItem* i, unsigned short row, unsigned short column)
 
 	submenu.push_back(i);
 }
+
+void MenuItem::Show()
+{
+	if (execModule)
+		return;
+
+	int key;
+
+	std::string separator = (horizontal) ? " " : "\r\n";
+
+	do
+	{
+
+		system("cls");
+
+		for (size_t i = 0; i < submenu.size(); i++)
+		{
+			gotoXY(submenu[i]->position.column, submenu[i]->position.row);
+
+			if (i == selectedItem)
+				std::cout << selectedItemMarker;
+			else
+				for (short c = 0; c < selectedItemMarker.size(); i++)
+					std::cout << ' ';
+
+			std::cout << submenu[i]->name << separator;
+
+		}
+
+		key = getKeyPressed();
+
+		switch (key)
+		{
+		case 72:
+			if (!horizontal)
+				moveToItem(false);
+			break;
+
+		case 75:
+			if (horizontal)
+				moveToItem(false);
+			break;
+			
+		case 80:
+			if (!horizontal)
+				moveToItem(true);
+			break;
+
+		case 77:
+			if (horizontal)
+				moveToItem(true);
+			break;
+
+		case 13:
+			system("cls");
+			submenu[selectedItem]->Run();
+			break;
+		}
+
+	} while (key != 27);
+}
+
+void MenuItem::setPosition(unsigned short row, unsigned short column)
+{
+	position.row = row;
+	position.column = column;
+}
