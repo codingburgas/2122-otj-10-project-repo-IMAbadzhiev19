@@ -21,12 +21,21 @@
     <ClInclude Include="UsersStore.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TeamsStore.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pm.dal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UsersStore.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TeamsStore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
