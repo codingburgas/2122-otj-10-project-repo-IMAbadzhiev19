@@ -70,3 +70,15 @@ std::vector<pm::dal::UsersStore::USER&> pm::bll::UsersManagement::getRegisteredU
 {
 	return m_usersStore.getAllUsers();
 }
+
+void pm::bll::UsersManagement::removeUser(size_t id)
+{
+	if (!m_usersStore.removeUser(id))
+		throw "We couldn't remove the user";
+}
+
+void pm::bll::UsersManagement::updateUser(size_t id, pm::dal::UsersStore::USER& user)
+{
+	if (!m_usersStore.updateUser(id, user))
+		throw "We couldn't update the user";
+}

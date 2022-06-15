@@ -26,7 +26,7 @@ namespace pm::bll
 		std::vector<pm::dal::UsersStore::USER&> getRegisteredUsers();
 
 		void removeUser(size_t id);
-		void updateUser(size_t id, pm::dal::UsersStore::USER);
+		void updateUser(size_t id, pm::dal::UsersStore::USER& user);
 
 	protected:
 
