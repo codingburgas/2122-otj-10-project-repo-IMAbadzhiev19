@@ -2,6 +2,7 @@
 
 #include "UsersManagement.h"
 #include "../../lib/nanodbc/nanodbc.h"
+#include "../pm.tools/SHA256.h"
 
 bool pm::bll::UsersManagement::checkLowerSymb(const std::string& pass)
 {
@@ -40,3 +41,27 @@ bool pm::bll::UsersManagement::checkPassComplexity(const std::string& pass)
 
 	return true;
 }
+
+void pm::bll::UsersManagement::registerUser(pm::dal::UsersStore::USER& user)
+{
+	if (checkPassComplexity(user.password))
+	{
+		std::string hashedPass = sha256(user.password);
+
+		if (!m_usersStore.createUser(user))
+			throw "Unexpected problem has occured with registering your account!";
+	}
+}
+
+pm::dal::UsersStore::USER& pm::bll::UsersManagement::loginUser(std::string email, std::string password)
+{
+	pm::dal::UsersStore::USER user = m_usersStore.getUserByEmail(email);
+
+	if (user.email.empty())
+		throw "There isn't an user with this email address";
+
+	if (user.password.compare(password) == 0)
+		return user;
+	else
+		throw std::logic_error("Incorrent password: " + password);
+} 
