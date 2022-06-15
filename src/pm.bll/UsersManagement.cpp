@@ -65,3 +65,8 @@ pm::dal::UsersStore::USER& pm::bll::UsersManagement::loginUser(std::string email
 	else
 		throw std::logic_error("Incorrent password: " + password);
 } 
+
+std::vector<pm::dal::UsersStore::USER&> pm::bll::UsersManagement::getRegisteredUsers()
+{
+	return m_usersStore.getAllUsers();
+}

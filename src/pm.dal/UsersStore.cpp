@@ -72,3 +72,19 @@ pm::dal::UsersStore::USER pm::dal::UsersStore::getUserById(unsigned id)
 
 	return usr;
 }
+
+std::vector<pm::dal::UsersStore::USER&> pm::dal::UsersStore::getAllUsers()
+{
+	std::string query = "SELECT * FROM [Users]";
+	nanodbc::result res = db.getResultFromSelect(query);
+
+	std::vector<pm::dal::UsersStore::USER&> users;
+
+	while (res.next())
+	{
+		users.emplace_back(res.get<int>(0), res.get<std::string>(1), res.get<std::string>(2), res.get<std::string>(3),
+			res.get<int>(4), res.get<std::string>(5), res.get<nanodbc::date>(6), res.get<bool>(7));
+	}
+
+	return users;
+}

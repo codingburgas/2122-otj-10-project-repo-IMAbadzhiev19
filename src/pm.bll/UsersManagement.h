@@ -23,7 +23,7 @@ namespace pm::bll
 		void registerUser(pm::dal::UsersStore::USER& user);
 		pm::dal::UsersStore::USER& loginUser(std::string email, std::string password);
 
-		std::vector<pm::dal::UsersStore::USER> getRegisteredUsers();
+		std::vector<pm::dal::UsersStore::USER&> getRegisteredUsers();
 
 		void removeUser(size_t id);
 		void updateUser(size_t id, pm::dal::UsersStore::USER);
