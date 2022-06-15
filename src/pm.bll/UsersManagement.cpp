@@ -29,3 +29,14 @@ bool pm::bll::UsersManagement::checkSize(const std::string& pass)
 {
 	return pass.size() >= 8;
 }
+
+bool pm::bll::UsersManagement::checkPassComplexity(const std::string& pass)
+{
+	for (const auto& filter : filters)
+	{
+		if (!filter.filter(pass))
+			throw filter.filterMsg;
+	}
+
+	return true;
+}
