@@ -78,3 +78,8 @@ private:
 	std::vector<ITEM_INFO> itemData;
 
 };
+
+class QuitMenu
+{
+
+};
