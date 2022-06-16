@@ -19,5 +19,6 @@ namespace pm::bll
 		void removeUserFromTeam(size_t teamId, size_t userId);
 
 		std::vector<pm::dal::TeamsStore::TEAM> loadTeams();
+		std::vector<pm::dal::UsersStore::USER> getUsersFromTeam(size_t teamId);
 	};
 }

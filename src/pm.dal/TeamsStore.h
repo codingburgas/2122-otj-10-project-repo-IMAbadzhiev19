@@ -4,6 +4,7 @@
 
 #include "../pm.consoleApp/Database.h"
 #include "../../lib/nanodbc/nanodbc.h"
+#include "../pm.dal/UsersStore.h"
 
 namespace pm::dal
 {
@@ -27,6 +28,7 @@ namespace pm::dal
 		bool removeFromTeam(size_t teamId, size_t userId);
 
 		std::vector<TEAM> loadTeams();
+		std::vector<pm::dal::UsersStore::USER> getUsersFromTeam(size_t teamId);
 
 	private:
 

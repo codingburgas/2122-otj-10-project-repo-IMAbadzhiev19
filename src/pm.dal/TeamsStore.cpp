@@ -72,3 +72,21 @@ std::vector<pm::dal::TeamsStore::TEAM> pm::dal::TeamsStore::loadTeams()
 
 	return t_teams;
 }
+
+std::vector<pm::dal::UsersStore::USER> pm::dal::TeamsStore::getUsersFromTeam(size_t teamId)
+{
+	std::string query = "SELECT Users.[Id], Users.[FirstName], Users.[LastName], Users.[Email], Users.[Age], Users.[Password], Users.[CreatedOn], [Users.Admin] "
+		"FROM [Users], [Teams], [UsersAndTeams] WHERE (UserId = Users.[Id]) AND (TeamId = Teams.[Id]) AND (TeamId = " + std::to_string(teamId) + ")";
+
+	nanodbc::result res = db.getResultFromSelect(query);
+
+	std::vector<pm::dal::UsersStore::USER> t_users;
+
+	while (res.next())
+	{
+		t_users.emplace_back(res.get<int>(0), res.get<std::string>(1), res.get<std::string>(2), res.get<std::string>(3),
+			res.get<short>(4), res.get<std::string>(5), res.get<nanodbc::date>(6), res.get<bool>(7));
+	}
+
+	return t_users;
+}
