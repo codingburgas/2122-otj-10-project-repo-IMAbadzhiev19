@@ -88,7 +88,34 @@ private:
 
 };
 
-class QuitMenu
+class QuitMenu : public MenuItem
 {
+public:
+	QuitMenu() : MenuItem("Quit", true, true) { }
+	virtual void Run() { exit(0); }
+};
+
+class UsersMenu : public SubMenu
+{
+public:
+
+	UsersMenu(pm::bll::UsersManagement* be);
+
+	void Create() { };
+	void Login() { };
+	void Delete() { };
+	void Update() { };
+	void Remove() { };
+	void showAll() { };
+
+private:
+
+	struct USERS_DATA
+	{
+		unsigned short row, column;
+		pm::dal::UsersStore::USER user;
+	};
+
+	std::vector<USERS_DATA> users_data;
 
 };

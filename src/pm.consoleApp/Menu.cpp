@@ -252,3 +252,15 @@ void SubMenu::moveToItem(bool next)
 	}
 }
 /*SubMenu*/
+
+/*UsersMenu*/
+UsersMenu::UsersMenu(pm::bll::UsersManagement* be) : SubMenu("Users", false, false, true, be, nullptr)
+{
+	users = uM->getRegisteredUsers();
+
+	for (size_t i = 0; i < users.size(); i++)
+		users_data.push_back({ (unsigned short)(++i), 10, users[i] });
+}
+
+
+/*UsersMenu*/
