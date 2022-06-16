@@ -142,8 +142,7 @@ void MainMenu::Show()
 }
 
 /*SubMenu*/
-
-SubMenu::SubMenu(std::string name, bool horizontal, bool execModule, bool users /*pm::bll::UserManager* uMM, pm::bll::TeamManager* tMM*/) : MenuItem(name, horizontal, execModule) /*, uM(uMM), tM(tMM)*/
+SubMenu::SubMenu(std::string name, bool horizontal, bool execModule, bool users, pm::bll::UsersManagement* uMM, pm::bll::TeamsManagement* tMM ) : MenuItem(name, horizontal, execModule), uM(uMM), tM(tMM)
 {
 	unsigned short c = 1;
 
@@ -170,4 +169,86 @@ SubMenu::SubMenu(std::string name, bool horizontal, bool execModule, bool users 
 	}
 }
 
+void SubMenu::Show()
+{
+	if (execModule)
+		return;
+
+	int key;
+	std::string separator = (horizontal) ? " " : "\r\n";
+	do
+	{
+		system("cls");
+		for (size_t i = 0; i < itemData.size(); i++)
+		{
+			gotoXY(itemData[i].column, itemData[i].row);
+			if (i == selectedItem)
+				std::cout << selectedItemMarker;
+			else
+				for (short c = 0; c < selectedItemMarker.size(); c++)
+					std::cout << ' ';
+			std::cout << itemData[i].itemName << separator;
+		}
+		key = getKeyPressed();
+
+		switch (key)
+		{
+		case 72:if (!horizontal)
+			moveToItem(false);
+			break;
+		case 75:if (horizontal)
+			moveToItem(false);
+			break;
+		case 80:if (!horizontal)
+			moveToItem(true);
+			break;
+		case 77:if (horizontal)
+			moveToItem(true);
+			break;
+		case 13:system("cls");
+			runItem();
+			break;
+		} // switch
+	} while (key != 27);
+}
+
+void SubMenu::runItem()
+{
+	switch (selectedItem + 1)
+	{
+	case 1: Create();
+		break;
+	case 2: Update();
+		break;
+	case 3: Delete();
+		break;
+	case 4: showAll();
+		break;
+	case 5: Add();
+		break;
+	case 6: Remove;
+		break;
+	}
+}
+
+void SubMenu::moveToItem(bool next)
+{
+	size_t oldSelectedItem = selectedItem;
+
+	if (next && (selectedItem < itemData.size() - 1))
+		selectedItem++;
+
+	if (!next && (selectedItem > 0))
+		selectedItem--;
+
+	if (selectedItem != oldSelectedItem)
+	{
+		gotoXY(itemData[oldSelectedItem].column, itemData[oldSelectedItem].row);
+		for (size_t i = 0; i < selectedItemMarker.length(); i++)
+			std::cout << ' ';
+
+		gotoXY(itemData[selectedItem].column, itemData[selectedItem].row);
+		std::cout << selectedItemMarker;
+	}
+}
 /*SubMenu*/
