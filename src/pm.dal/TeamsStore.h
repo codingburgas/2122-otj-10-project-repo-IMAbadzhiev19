@@ -26,6 +26,8 @@ namespace pm::dal
 		bool addUserToTeam(size_t teamId, size_t userId);
 		bool removeFromTeam(size_t teamId, size_t userId);
 
+		std::vector<TEAM> loadTeams();
+
 	private:
 
 		DatabaseManagement db;

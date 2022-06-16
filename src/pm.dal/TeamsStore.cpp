@@ -57,3 +57,18 @@ bool pm::dal::TeamsStore::removeFromTeam(size_t teamId, size_t userId)
 
 	return true;
 }
+
+std::vector<pm::dal::TeamsStore::TEAM> pm::dal::TeamsStore::loadTeams()
+{
+	std::string query = "SELECT * FROM [Teams]";
+	nanodbc::result res = db.getResultFromSelect(query);
+
+	std::vector<TEAM> t_teams;
+
+	while (res.next())
+	{
+		t_teams.emplace_back(res.get<int>(0), res.get<std::string>(1), res.get<nanodbc::date>(2), res.get<int>(3));
+	}
+
+	return t_teams;
+}
