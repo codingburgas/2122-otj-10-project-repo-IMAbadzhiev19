@@ -49,3 +49,11 @@ bool pm::dal::TeamsStore::addUserToTeam(size_t teamId, size_t userId)
 	db.executeQuery(query);
 	return true;
 }
+
+bool pm::dal::TeamsStore::removeFromTeam(size_t teamId, size_t userId)
+{
+	std::string query = "DELETE FROM [UsersAndTeams] WHERE [UserId] = " + std::to_string(userId) + " AND [TeamId] = " + std::to_string(teamId);
+	db.executeQuery(query);
+
+	return true;
+}
