@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../pm.dal/UsersStore.h"
+#include "../pm.bll/UsersManagement.h"
 #include "../pm.dal/TeamsStore.h"
 #include "Database.h"
 
@@ -55,7 +55,7 @@ class SubMenu : public MenuItem
 {
 public:
 
-	SubMenu(std::string name, bool horizontal, bool execModule, bool users /*pm::bll::UserManager* uMM, pm::bll::TeamManager* tMM*/);
+	SubMenu(std::string name, bool horizontal, bool execModule, bool users, pm::bll::UsersManagement* tM /*pm::bll::TeamManager* tMM*/ );
 
 	virtual void moveToItem(bool next);
 
@@ -64,7 +64,7 @@ protected:
 	std::vector<pm::dal::UsersStore::USER> users;
 	std::vector<pm::dal::TeamsStore::TEAM> teams;
 
-	//pm::bll::UserManager* tM;
+	pm::bll::UsersManagement* tM;
 	//pm::bll::TeamManager* tM;
 
 private:

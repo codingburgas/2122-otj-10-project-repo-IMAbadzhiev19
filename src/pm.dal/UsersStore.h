@@ -30,7 +30,7 @@ namespace pm::dal
 		USER getUserByEmail(std::string& email);
 		USER getUserById(unsigned id);
 
-		std::vector<USER&> getAllUsers();
+		std::vector<USER> getAllUsers();
 
 	private:
 
