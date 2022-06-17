@@ -104,10 +104,10 @@ public:
 	virtual void runItem();
 
 	void Login();
-	void Create() { }
+	void Create();
 	void Delete() { }
 	void Update() { }
-	void showAll() { }
+	void showAll();
 	void Add() { }
 	void Remove() { }
 

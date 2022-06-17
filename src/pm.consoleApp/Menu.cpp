@@ -305,4 +305,16 @@ void UsersMenu::Create()
 	Sleep(1000);
 }
 
+void UsersMenu::showAll()
+{
+	try
+	{
+		users = uM->getRegisteredUsers();
+	}
+	catch (std::exception& e) {
+		std::cerr << e.what() << std::endl;
+	}
+
+}
+
 /*UsersMenu*/
