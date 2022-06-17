@@ -168,6 +168,11 @@
     <ClCompile Include="TeamsStore.cpp" />
     <ClCompile Include="UsersStore.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\pm.tools\pm.tools.vcxproj">
+      <Project>{78d61b59-5ac7-473b-895a-2f7d60f088e0}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

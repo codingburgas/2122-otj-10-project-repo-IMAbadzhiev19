@@ -226,7 +226,7 @@ void SubMenu::runItem()
 		break;
 	case 5: Add();
 		break;
-	case 6: Remove;
+	case 6: Remove();
 		break;
 	}
 }
@@ -261,6 +261,8 @@ UsersMenu::UsersMenu(pm::bll::UsersManagement* be) : SubMenu("Users", false, fal
 	for (size_t i = 0; i < users.size(); i++)
 		users_data.push_back({ (unsigned short)(++i), 10, users[i] });
 }
+
+
 
 
 /*UsersMenu*/

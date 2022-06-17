@@ -20,7 +20,7 @@ namespace pm::dal
 			short age;
 			std::string password;
 			nanodbc::date createdOn;
-			bool admin;
+			int admin;
 		};
 
 		bool createUser(USER& user);

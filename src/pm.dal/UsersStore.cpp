@@ -44,10 +44,10 @@ pm::dal::UsersStore::USER pm::dal::UsersStore::getUserByEmail(std::string& email
 	usr.firstName = res.get<std::string>(1);
 	usr.lastName = res.get<std::string>(2);
 	usr.email = res.get<std::string>(3);
-	usr.age = res.get<int>(4);
+	usr.age = res.get<short>(4);
 	usr.password = res.get<std::string>(5);
 	usr.createdOn = res.get<nanodbc::date>(6);
-	usr.admin = res.get<bool>(7);
+	usr.admin = res.get<short>(7);
 
 	return usr;
 }
@@ -68,7 +68,7 @@ pm::dal::UsersStore::USER pm::dal::UsersStore::getUserById(unsigned id)
 	usr.age = res.get<int>(4);
 	usr.password = res.get<std::string>(5);
 	usr.createdOn = res.get<nanodbc::date>(6);
-	usr.admin = res.get<bool>(7);
+	usr.admin = res.get<short>(7);
 
 	return usr;
 }
@@ -83,7 +83,7 @@ std::vector<pm::dal::UsersStore::USER> pm::dal::UsersStore::getAllUsers()
 	while (res.next())
 	{
 		users.emplace_back(res.get<int>(0), res.get<std::string>(1), res.get<std::string>(2), res.get<std::string>(3),
-			res.get<int>(4), res.get<std::string>(5), res.get<nanodbc::date>(6), res.get<bool>(7));
+			res.get<int>(4), res.get<std::string>(5), res.get<nanodbc::date>(6), res.get<short>(7));
 	}
 
 	return users;

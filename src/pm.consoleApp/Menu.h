@@ -51,6 +51,13 @@ public:
 
 };
 
+class QuitMenu : public MenuItem
+{
+public:
+	QuitMenu() : MenuItem("Quit", true, true) { }
+	virtual void Run() { exit(0); }
+};
+
 class SubMenu : public MenuItem
 {
 public:
@@ -88,25 +95,21 @@ private:
 
 };
 
-class QuitMenu : public MenuItem
-{
-public:
-	QuitMenu() : MenuItem("Quit", true, true) { }
-	virtual void Run() { exit(0); }
-};
-
 class UsersMenu : public SubMenu
 {
 public:
 
 	UsersMenu(pm::bll::UsersManagement* be);
 
+	virtual void runItem() { };
+	virtual void moveToItem(bool next) { };
+
 	void Create() { };
-	void Login() { };
 	void Delete() { };
 	void Update() { };
-	void Remove() { };
 	void showAll() { };
+	void Add() { };
+	void Remove() { };
 
 private:
 
