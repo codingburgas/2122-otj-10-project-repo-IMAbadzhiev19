@@ -101,15 +101,15 @@ public:
 
 	UsersMenu(pm::bll::UsersManagement* be);
 
-	virtual void runItem() { };
-	virtual void moveToItem(bool next) { };
+	virtual void runItem();
 
-	void Create() { };
-	void Delete() { };
-	void Update() { };
-	void showAll() { };
-	void Add() { };
-	void Remove() { };
+	void Login();
+	void Create() { }
+	void Delete() { }
+	void Update() { }
+	void showAll() { }
+	void Add() { }
+	void Remove() { }
 
 private:
 

@@ -5,10 +5,13 @@
 int main()
 {
 	pm::bll::UsersManagement uman;
-	pm::bll::TeamsManagement tman;
 
-	MainMenu mn("Management", false, false);
+	MainMenu mn("", false, false);
 	MenuItem* mi[2] = { new UsersMenu(&uman), new QuitMenu() };
 
+	for (int i = 0; i < 2; i++)
+		mn.addItem(mi[i]);
+
+	mn.Show();
 
 }
