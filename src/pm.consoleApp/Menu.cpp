@@ -240,10 +240,48 @@ void SubMenu::moveToItem(bool next)
 /*UsersMenu*/
 UsersMenu::UsersMenu(pm::bll::UsersManagement* be) : SubMenu("Users", false, false, true, be, nullptr)
 {
-	users = uM->getRegisteredUsers();
+	users.clear();
 
-	for (size_t i = 0; i < users.size(); i++)
-		users_data.push_back({ (unsigned short)(++i), 10, users[i] });
+	USERS_DATA d_temp;
+
+	try
+	{
+		users = uM->getRegisteredUsers();
+	}
+	catch (std::exception& e)
+	{
+		std::cerr << e.what() << std::endl;
+	}
+
+	for (const auto& x : users)
+	{
+		d_temp.row = x.id + 1;
+		d_temp.column = 3;
+		d_temp.user = { x.id, x.firstName, x.lastName, x.email, x.age, x.password, x.createdOn, x.admin };
+
+		users_data.push_back(d_temp);
+	}
+}
+
+void UsersMenu::moveToUser(bool next)
+{
+	size_t oldSelectedItem = selectedUser;
+
+	if (next && (selectedUser < users_data.size() - 1))
+		selectedUser++;
+
+	if (!next && (selectedUser > 0))
+		selectedUser--;
+
+	if (selectedUser != oldSelectedItem)
+	{
+		gotoXY(users_data[oldSelectedItem].column, users_data[oldSelectedItem].row);
+		for (size_t i = 0; i < selectedItemMarker.length(); i++)
+			std::cout << ' ';
+
+		gotoXY(users_data[selectedUser].column, users_data[selectedUser].row);
+		std::cout << selectedItemMarker;
+	}
 }
 
 void UsersMenu::runItem()
@@ -270,8 +308,8 @@ void UsersMenu::Login()
 	std::string email, password;
 
 	try {
-		getline(std::cin, email);
-		getline(std::cin, password);
+		std::cout << "Email: "; getline(std::cin, email);
+		std::cout << "Password: "; getline(std::cin, password);
 
 		uM->loginUser(email, password);
 	}
@@ -288,18 +326,23 @@ void UsersMenu::Create()
 {
 	pm::dal::UsersStore::USER usr;
 
-	try {
-		std::cout << "Enter first name: "; getline(std::cin, usr.firstName);
-		std::cout << "Enter last name: "; getline(std::cin, usr.lastName);
-		std::cout << "Enter email: "; getline(std::cin, usr.email);
-		std::cin >> usr.age; std::cin.ignore();
-		std::cout << "Enter : "; getline(std::cin, usr.password);
+	do
+	{
+		system("cls");
+		try {
+			std::cout << "Enter first name: "; getline(std::cin, usr.firstName);
+			std::cout << "Enter last name: "; getline(std::cin, usr.lastName);
+			std::cout << "Enter email: "; getline(std::cin, usr.email);
+			std::cout << "Age: "; std::cin >> usr.age; std::cin.ignore();
+			std::cout << "Enter password: "; getline(std::cin, usr.password);
 
-		uM->registerUser(usr);
-	}
-	catch (std::exception& e) {
-		std::cerr << e.what() << std::endl;
-	}
+			uM->registerUser(usr);
+			break;
+		}
+		catch (std::string msg) {
+			std::cout << msg << std::endl;
+		}
+	} while (true);
 
 	std::cout << "You have successfully created an account";
 	Sleep(1000);
@@ -307,14 +350,47 @@ void UsersMenu::Create()
 
 void UsersMenu::showAll()
 {
-	try
+	std::string separator = (horizontal) ? " " : "\r\n";
+
+	int key;
+
+	do
 	{
-		users = uM->getRegisteredUsers();
-	}
-	catch (std::exception& e) {
-		std::cerr << e.what() << std::endl;
-	}
+		system("cls");
+
+		for (size_t i = 0; i < users_data.size(); i++)
+		{
+			gotoXY(users_data[i].column, users_data[i].row);
+			if (i == selectedUser)
+				std::cout << selectedItemMarker;
+			else
+				for (short c = 0; c < selectedItemMarker.size(); c++)
+					std::cout << ' ';
+
+			std::cout << users_data[i].user.firstName << " " << users_data[i].user.lastName << ", " << users_data[i].user.email << ", " << users_data[i].user.age << ", " << users_data[i].user.createdOn.day << "/" << users_data[i].user.createdOn.month << "/" << users_data[i].user.createdOn.year;
+			
+			std::string isAdminOut = (users_data[i].user.admin == 0) ? "| Admin: NO" : "| Admin: YES";
+			std::cout << isAdminOut << separator;
+		}
+
+		key = getKeyPressed();
+
+		switch (key)
+		{
+		case 72:if (!horizontal)
+			moveToUser(false);
+			break;
+		case 75:if (horizontal)
+			moveToUser(false);
+			break;
+		case 80:if (!horizontal)
+			moveToUser(true);
+			break;
+		case 77:if (horizontal)
+			moveToUser(true);
+			break;
+		} // switch
+	} while (key != 27);
 
 }
-
 /*UsersMenu*/

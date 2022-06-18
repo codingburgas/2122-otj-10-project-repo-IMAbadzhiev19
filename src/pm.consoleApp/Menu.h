@@ -102,6 +102,7 @@ public:
 	UsersMenu(pm::bll::UsersManagement* be);
 
 	virtual void runItem();
+	void moveToUser(bool next);
 
 	void Login();
 	void Create();
@@ -118,6 +119,8 @@ private:
 		unsigned short row, column;
 		pm::dal::UsersStore::USER user;
 	};
+
+	size_t selectedUser = 0;
 
 	std::vector<USERS_DATA> users_data;
 
