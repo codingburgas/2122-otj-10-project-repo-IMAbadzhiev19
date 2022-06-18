@@ -281,13 +281,32 @@ void UsersMenu::runItem()
 		break;
 	case 2: Create();
 		break;
-	case 3: Update();
+	case 3: 
+		if (currentUser.firstName != "")
+			Update();
+		else
+		{
+			std::cout << "You should login first" << std::endl;
+			Sleep(1000);
+		}
 		break;
-	case 4: Delete();
+	case 4: 
+		if (currentUser.firstName != "")
+			Delete();
+		else
+		{
+			std::cout << "You should login first" << std::endl;
+			Sleep(1000);
+		}
 		break;
-	case 5: showAll();
-		break;
-	case 6: Remove();
+	case 5:
+		if (currentUser.firstName != "")
+			showAll();
+		else
+		{
+			std::cout << "You should login first" << std::endl;
+			Sleep(1000);
+		}
 		break;
 	}
 }
