@@ -108,22 +108,12 @@ public:
 	void Login();
 	void Create();
 	void Delete();
-	void Update() { }
+	void Update();
 	void showAll();
 	void Add() { }
 	void Remove() { }
 
 private:
-
-	struct USERS_DATA
-	{
-		unsigned short row, column;
-		pm::dal::UsersStore::USER user;
-	};
-
 	size_t selectedUser = 0;
-
-	std::vector<USERS_DATA> users_data;
-	USERS_DATA d_temp;
-
+	pm::dal::UsersStore::USER currentUser;
 };
