@@ -37,6 +37,7 @@ protected:
 	std::string selectedItemMarker;
 	
 	std::vector<MenuItem*> submenu;
+	DatabaseManagement db;
 
 };
 
@@ -106,7 +107,7 @@ public:
 
 	void Login();
 	void Create();
-	void Delete() { }
+	void Delete();
 	void Update() { }
 	void showAll();
 	void Add() { }
@@ -123,5 +124,6 @@ private:
 	size_t selectedUser = 0;
 
 	std::vector<USERS_DATA> users_data;
+	USERS_DATA d_temp;
 
 };

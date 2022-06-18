@@ -13,10 +13,4 @@ int main()
 		mn.addItem(mi[i]);
 
 	mn.Show();
-
-	/*std::vector<pm::dal::UsersStore::USER> user = uman->getRegisteredUsers();
-
-	for (const auto& x : user)
-		std::cout << x.firstName << std::endl;*/
-
 }

@@ -242,8 +242,6 @@ UsersMenu::UsersMenu(pm::bll::UsersManagement* be) : SubMenu("Users", false, fal
 {
 	users.clear();
 
-	USERS_DATA d_temp;
-
 	try
 	{
 		users = uM->getRegisteredUsers();
@@ -337,6 +335,14 @@ void UsersMenu::Create()
 			std::cout << "Enter password: "; getline(std::cin, usr.password);
 
 			uM->registerUser(usr);
+			users = uM->getRegisteredUsers();
+
+			d_temp.row = users[users.size() - 1].id + 1;
+			d_temp.column = 3;
+			d_temp.user = users[users.size() - 1];
+
+			users_data.push_back(d_temp);
+
 			break;
 		}
 		catch (std::string msg) {
@@ -361,6 +367,33 @@ void UsersMenu::showAll()
 		for (size_t i = 0; i < users_data.size(); i++)
 		{
 			gotoXY(users_data[i].column, users_data[i].row);
+
+			std::cout << users_data[i].user.firstName << " " << users_data[i].user.lastName << ", " << users_data[i].user.email << ", " << users_data[i].user.age << ", " << users_data[i].user.createdOn.day << "/" << users_data[i].user.createdOn.month << "/" << users_data[i].user.createdOn.year;
+
+			std::string isAdminOut = (users_data[i].user.admin == 0) ? "| Admin: NO" : "| Admin: YES";
+			std::cout << isAdminOut << separator;
+		}
+
+		key = getKeyPressed();
+
+	} while (key != 27);
+
+}
+
+void UsersMenu::Delete()
+{
+	selectedUser = 0;
+	std::string separator = (horizontal) ? " " : "\r\n";
+
+	int key;
+
+	do
+	{
+		system("cls");
+
+		for (size_t i = 0; i < users_data.size(); i++)
+		{
+			gotoXY(users_data[i].column, users_data[i].row);
 			if (i == selectedUser)
 				std::cout << selectedItemMarker;
 			else
@@ -368,7 +401,7 @@ void UsersMenu::showAll()
 					std::cout << ' ';
 
 			std::cout << users_data[i].user.firstName << " " << users_data[i].user.lastName << ", " << users_data[i].user.email << ", " << users_data[i].user.age << ", " << users_data[i].user.createdOn.day << "/" << users_data[i].user.createdOn.month << "/" << users_data[i].user.createdOn.year;
-			
+
 			std::string isAdminOut = (users_data[i].user.admin == 0) ? "| Admin: NO" : "| Admin: YES";
 			std::cout << isAdminOut << separator;
 		}
@@ -389,8 +422,13 @@ void UsersMenu::showAll()
 		case 77:if (horizontal)
 			moveToUser(true);
 			break;
+		case 13:
+			uM->removeUser(users_data[selectedUser].user.id);
+			users = uM->getRegisteredUsers();
+			users = uM->getRegisteredUsers();
+			users_data.erase(users_data.begin() + selectedUser);
+			Show();
 		} // switch
 	} while (key != 27);
-
 }
 /*UsersMenu*/
