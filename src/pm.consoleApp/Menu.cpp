@@ -1,9 +1,5 @@
 #include "Menu.h"
 
-#include<iostream>
-#include<windows.h>
-#include<conio.h>
-
 //MenuItem & MainMenu
 void MenuItem::gotoXY(int x, int y)
 {
@@ -282,29 +278,29 @@ void UsersMenu::runItem()
 	case 2: Create();
 		break;
 	case 3: 
-		if (currentUser.firstName != "")
+		if (currentUser.firstName != "" && currentUser.admin == true)
 			Update();
 		else
 		{
-			std::cout << "You should login first" << std::endl;
+			std::cout << "You must be admin!" << std::endl;
 			Sleep(1000);
 		}
 		break;
 	case 4: 
-		if (currentUser.firstName != "")
+		if (currentUser.firstName != "" && currentUser.admin == true)
 			Delete();
 		else
 		{
-			std::cout << "You should login first" << std::endl;
+			std::cout << "You must be admin!" << std::endl;
 			Sleep(1000);
 		}
 		break;
 	case 5:
-		if (currentUser.firstName != "")
+		if (currentUser.firstName != "" && currentUser.admin == true)
 			showAll();
 		else
 		{
-			std::cout << "You should login first" << std::endl;
+			std::cout << "You must be admin!" << std::endl;
 			Sleep(1000);
 		}
 		break;
@@ -500,3 +496,21 @@ void UsersMenu::Update()
 	} while (key != 27);
 }
 /*UsersMenu*/
+
+/*TeamsMenu*/
+
+TeamsMenu::TeamsMenu(pm::bll::TeamsManagement* be) : SubMenu("Teams", false, false, true, nullptr, be)
+{
+	teams.clear();
+
+	try
+	{
+		teams = tM->loadTeams();
+	}
+	catch (std::exception& e)
+	{
+		std::cerr << e.what() << std::endl;
+	}
+}
+
+/*TeamsMenu*/

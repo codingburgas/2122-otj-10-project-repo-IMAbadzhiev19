@@ -1,5 +1,9 @@
 #pragma once
 
+#include<iostream>
+#include<windows.h>
+#include<conio.h>
+
 #include "../pm.bll/UsersManagement.h"
 #include "../pm.bll/TeamsManagement.h"
 #include "Database.h"
@@ -84,6 +88,8 @@ protected:
 	pm::bll::UsersManagement* uM;
 	pm::bll::TeamsManagement* tM;
 
+	pm::dal::UsersStore::USER currentUser;
+
 private:
 
 	struct ITEM_INFO
@@ -115,5 +121,21 @@ public:
 
 private:
 	size_t selectedUser = 0;
-	pm::dal::UsersStore::USER currentUser;
+};
+
+class TeamsMenu : public SubMenu
+{
+public:
+
+	TeamsMenu(pm::bll::TeamsManagement* be);
+
+	virtual void Create() = 0;
+	virtual void Delete() = 0;
+	virtual void Update() = 0;
+	virtual void showAll() = 0;
+	virtual void Add() = 0;
+	virtual void Remove() = 0;
+
+private:
+	size_t selectedUser = 0;
 };
