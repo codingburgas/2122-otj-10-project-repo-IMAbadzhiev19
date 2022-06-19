@@ -4,6 +4,7 @@ GO
 USE Management
 GO
 
+--UsersTable
 CREATE TABLE [Users] (
 	[Id] int IDENTITY(1, 1) PRIMARY KEY,
 	[FirstName] varchar(31) NOT NULL,
@@ -15,21 +16,51 @@ CREATE TABLE [Users] (
 	[Admin] bit NOT NULL,
 )
 GO
+--UsersTable
 
-
+--TeamsTable
 CREATE TABLE [Teams] (
 	[Id] int IDENTITY(1, 1) PRIMARY KEY,
 	[Title] varchar(31) NOT NULL,
 	[CreatedOn] datetime NOT NULL,
-	[CreatorId] int CONSTRAINT FK_CreatorId FOREIGN KEY REFERENCES [Users](Id) ON UPDATE CASCADE,
+	[CreatorId] int CONSTRAINT FK_CreatorId_Teams FOREIGN KEY REFERENCES [Users](Id) ON UPDATE CASCADE,
 )
 GO
+--TeamsTable
 
-
+--UsersAndTeams
 CREATE TABLE [UsersAndTeams] (
 	[Id] int IDENTITY(1, 1) PRIMARY KEY,
-	[UserId] int CONSTRAINT FK_UserId FOREIGN KEY REFERENCES [Users](Id) ON DELETE CASCADE, 
-	[TeamId] int CONSTRAINT FK_TeamId FOREIGN KEY REFERENCES [Teams](Id) ON DELETE CASCADE,
+	[UserId] int CONSTRAINT FK_UserId_UT FOREIGN KEY REFERENCES [Users](Id) ON DELETE CASCADE, 
+	[TeamId] int CONSTRAINT FK_TeamId_UT FOREIGN KEY REFERENCES [Teams](Id) ON DELETE CASCADE,
 	UNIQUE(UserId, TeamId)
 )
 GO
+--UsersAndTeams
+
+--Projects
+CREATE TABLE [Projects] (
+	[Id] int IDENTITY(1, 1) PRIMARY KEY,
+	[Title] varchar(31) NOT NULL,
+	[Description] varchar(101) NOT NULL,
+	[CreatedOn] datetime NOT NULL,
+	[CreatorId] int CONSTRAINT FK_CreatorId_Projects FOREIGN KEY REFERENCES [Users](Id) ON UPDATE CASCADE,
+)
+GO
+--Projects
+
+--TeamsAndProjects
+CREATE TABLE [TeamsAndProjects] (
+	[Id] int IDENTITY(1, 1) PRIMARY KEY,
+	[TeamId] int CONSTRAINT FK_TeamId_TP FOREIGN KEY REFERENCES [Teams](Id) ON DELETE CASCADE,
+	[ProjectId] int CONSTRAINT FK_ProjectId_TP FOREIGN KEY REFERENCES [Projects](Id) ON DELETE CASCADE,
+	UNIQUE(TeamId, ProjectId)
+)
+GO
+--TeamsAndProjects
+
+--TasksTable
+CREATE TABLE [Tasks] (
+	Id int IDENTITY(1, 1) PRIMARY KEY,
+	[ProjectId] int CONSTRAINT FK_ProjectId_T FOREIGN KEY REFERENCES [Projects](Id) ON UPDATE CASCADE,
+)
