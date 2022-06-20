@@ -154,6 +154,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
+    <ClInclude Include="ProjectsStore.h" />
+    <ClInclude Include="TasksStore.h" />
     <ClInclude Include="TeamsStore.h" />
     <ClInclude Include="UsersStore.h" />
   </ItemGroup>
@@ -165,6 +167,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="pm.dal.cpp" />
+    <ClCompile Include="ProjectsStore.cpp" />
+    <ClCompile Include="TasksStore.cpp" />
     <ClCompile Include="TeamsStore.cpp" />
     <ClCompile Include="UsersStore.cpp" />
   </ItemGroup>
