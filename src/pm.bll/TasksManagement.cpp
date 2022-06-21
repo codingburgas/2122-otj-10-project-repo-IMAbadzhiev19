@@ -36,3 +36,18 @@ void pm::bll::TasksManagement::removeTaskFromUser(size_t taskId, size_t userId)
 {
 	m_tasksStore.removeTaskFromUser(taskId, userId);
 }
+
+std::vector<pm::dal::TasksStore::TASK> pm::bll::TasksManagement::loadAllTasks()
+{
+	return m_tasksStore.loadAllTasks();
+}
+
+std::vector<pm::dal::ProjectsStore::PROJECT> pm::bll::TasksManagement::getProjectsFromTask(size_t taskId)
+{
+	return m_tasksStore.getProjectsFromTask(taskId);
+}
+
+std::vector<pm::dal::UsersStore::USER> pm::bll::TasksManagement::getUsersFromTask(size_t taskId)
+{
+	return m_tasksStore.getUsersFromTask(taskId);
+}
