@@ -4,8 +4,6 @@ GO
 USE Management
 GO
 
-
-
 --UsersTable
 CREATE TABLE [Users] (
 	[Id] int IDENTITY(1, 1) PRIMARY KEY,
