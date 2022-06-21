@@ -35,6 +35,10 @@ namespace pm::dal
 		void assignTaskToUser(size_t taskId, size_t userId);
 		void removeTaskFromUser(size_t taskId, size_t userId);
 
+		std::vector<TASK> loadAllTasks();
+		std::vector<pm::dal::ProjectsStore::PROJECT> getProjectsFromTask(size_t taskId);
+		std::vector<pm::dal::UsersStore::USER> getUsersFromTask(size_t taskId);
+
 	private:
 		DatabaseManagement db;
 	};

@@ -24,6 +24,12 @@
     <ClInclude Include="TeamsManagement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ProjectsManagement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TasksManagement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pm.bll.cpp">
@@ -36,6 +42,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TeamsManagement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectsManagement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TasksManagement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
