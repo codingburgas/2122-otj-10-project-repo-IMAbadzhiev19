@@ -6,6 +6,9 @@
 
 #include "../pm.bll/UsersManagement.h"
 #include "../pm.bll/TeamsManagement.h"
+#include "../pm.bll/ProjectsManagement.h"
+#include "../pm.bll/TasksManagement.h"
+
 #include "Database.h"
 
 class MenuItem
@@ -67,7 +70,7 @@ class SubMenu : public MenuItem
 {
 public:
 
-	SubMenu(std::string name, bool horizontal, bool execModule, bool users, pm::bll::UsersManagement* uMM, pm::bll::TeamsManagement* tMM);
+	SubMenu(std::string name, bool horizontal, bool execModule, bool users, pm::bll::UsersManagement* uMM, pm::bll::TeamsManagement* tMM, pm::bll::ProjectsManagement* pMM, pm::bll::TasksManagement* taskMM);
 
 	virtual void moveToItem(bool next);
 	virtual void Run() { Show(); }
@@ -84,9 +87,13 @@ protected:
 
 	std::vector<pm::dal::UsersStore::USER> users;
 	std::vector<pm::dal::TeamsStore::TEAM> teams;
+	std::vector<pm::dal::ProjectsStore> projects;
+	std::vector<pm::dal::TasksStore> tasks;
 
 	pm::bll::UsersManagement* uM;
 	pm::bll::TeamsManagement* tM;
+	pm::bll::ProjectsManagement* pM;
+	pm::bll::TasksManagement* taskM;
 
 	pm::dal::UsersStore::USER currentUser;
 
@@ -129,12 +136,12 @@ public:
 
 	TeamsMenu(pm::bll::TeamsManagement* be);
 
-	virtual void Create() = 0;
-	virtual void Delete() = 0;
-	virtual void Update() = 0;
-	virtual void showAll() = 0;
-	virtual void Add() = 0;
-	virtual void Remove() = 0;
+	virtual void Create();
+	virtual void Delete() { };
+	virtual void Update() { };
+	virtual void showAll() { };
+	virtual void Add() { };
+	virtual void Remove() { };
 
 private:
 	size_t selectedUser = 0;

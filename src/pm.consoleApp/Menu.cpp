@@ -121,7 +121,7 @@ void MainMenu::Show()
 }
 
 /*SubMenu*/
-SubMenu::SubMenu(std::string name, bool horizontal, bool execModule, bool users, pm::bll::UsersManagement* uMM, pm::bll::TeamsManagement* tMM ) : MenuItem(name, horizontal, execModule), uM(uMM), tM(tMM)
+SubMenu::SubMenu(std::string name, bool horizontal, bool execModule, bool users, pm::bll::UsersManagement* uMM, pm::bll::TeamsManagement* tMM, pm::bll::ProjectsManagement* pMM, pm::bll::TasksManagement* taskMM ) : MenuItem(name, horizontal, execModule), uM(uMM), tM(tMM), pM(pMM), taskM(taskMM)
 {
 	unsigned short c = 1;
 
@@ -234,7 +234,7 @@ void SubMenu::moveToItem(bool next)
 /*SubMenu*/
 
 /*UsersMenu*/
-UsersMenu::UsersMenu(pm::bll::UsersManagement* be) : SubMenu("Users", false, false, true, be, nullptr)
+UsersMenu::UsersMenu(pm::bll::UsersManagement* be) : SubMenu("Users", false, false, true, be, nullptr, nullptr, nullptr)
 {
 	users.clear();
 
@@ -499,7 +499,7 @@ void UsersMenu::Update()
 
 /*TeamsMenu*/
 
-TeamsMenu::TeamsMenu(pm::bll::TeamsManagement* be) : SubMenu("Teams", false, false, true, nullptr, be)
+TeamsMenu::TeamsMenu(pm::bll::TeamsManagement* be) : SubMenu("Teams", false, false, true, nullptr, be, nullptr, nullptr)
 {
 	teams.clear();
 
@@ -511,6 +511,15 @@ TeamsMenu::TeamsMenu(pm::bll::TeamsManagement* be) : SubMenu("Teams", false, fal
 	{
 		std::cerr << e.what() << std::endl;
 	}
+}
+
+void TeamsMenu::Create()
+{
+	pm::dal::TeamsStore::TEAM team;
+	
+	std::cout << "Enter team's name: "; std::getline(std::cin, team.title);
+
+	tM->createTeam(team, currentUser.id);
 }
 
 /*TeamsMenu*/
