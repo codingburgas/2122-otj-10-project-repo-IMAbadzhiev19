@@ -114,6 +114,12 @@ void MenuItem::Show()
 
 }
 
+void MenuItem::setPosition(unsigned short row, unsigned short column)
+{
+	position.row = row;
+	position.column = column;
+}
+
 void MainMenu::Show()
 {
 	system("cls");
@@ -264,7 +270,7 @@ void UsersMenu::moveToUser(bool next)
 		for (size_t i = 0; i < selectedItemMarker.length(); i++)
 			std::cout << ' ';
 
-		gotoXY(8, selectedItem);
+		gotoXY(8, selectedUser);
 		std::cout << selectedItemMarker;
 	}
 }
@@ -498,7 +504,6 @@ void UsersMenu::Update()
 /*UsersMenu*/
 
 /*TeamsMenu*/
-
 TeamsMenu::TeamsMenu(pm::bll::TeamsManagement* be) : SubMenu("Teams", false, false, true, nullptr, be, nullptr, nullptr)
 {
 	teams.clear();
@@ -510,6 +515,27 @@ TeamsMenu::TeamsMenu(pm::bll::TeamsManagement* be) : SubMenu("Teams", false, fal
 	catch (std::exception& e)
 	{
 		std::cerr << e.what() << std::endl;
+	}
+}
+
+void TeamsMenu::moveToTeam(bool next)
+{
+	size_t oldSelectedItem = selectedTeam;
+
+	if (next && (selectedTeam < users.size() - 1))
+		selectedTeam++;
+
+	if (!next && (selectedTeam > 0))
+		selectedTeam--;
+
+	if (selectedTeam != oldSelectedItem)
+	{
+		gotoXY(8, oldSelectedItem);
+		for (size_t i = 0; i < selectedItemMarker.length(); i++)
+			std::cout << ' ';
+
+		gotoXY(8, selectedTeam);
+		std::cout << selectedItemMarker;
 	}
 }
 
@@ -577,4 +603,54 @@ void TeamsMenu::Update()
 	} while (key != 27);
 }
 
+void TeamsMenu::Delete()
+{
+	selectedTeam = 0;
+	std::string separator = (horizontal) ? " " : "\r\n";
+	int key;
+
+	do
+	{
+		system("cls");
+
+		for (size_t i = 0; i < teams.size(); i++)
+		{
+			gotoXY(5, i + 1);
+			if (i == selectedTeam)
+				std::cout << selectedItemMarker;
+			else
+				for (short c = 0; c < selectedItemMarker.size(); c++)
+					std::cout << ' ';
+
+			std::cout << teams[i].title << " " << teams[i].createdOn.day << "/" << teams[i].createdOn.month << "/" << teams[i].createdOn.day << std::endl;
+		}
+
+		key = getKeyPressed();
+
+		switch (key)
+		{
+		case 72:if (!horizontal)
+			moveToTeam(false);
+			break;
+		case 75:if (horizontal)
+			moveToTeam(false);
+			break;
+		case 80:if (!horizontal)
+			moveToTeam(true);
+			break;
+		case 77:if (horizontal)
+			moveToTeam(true);
+			break;
+		case 13:
+		{
+			system("cls");
+
+			tM->removeTeam(teams[selectedTeam].id);
+			teams = tM->loadTeams();
+
+			break;
+		}
+		} // switch
+	} while (key != 27);
+}
 /*TeamsMenu*/

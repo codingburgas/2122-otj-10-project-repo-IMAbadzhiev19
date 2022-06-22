@@ -6,15 +6,6 @@
 
 int main()
 {
-	/*pm::dal::TasksStore::TASK task;
-	pm::dal::TasksStore ts;
-
-	task.title = "Task 4";
-	task.description = "No desc";
-	task.status = "Done";
-	
-	ts.assignProjectToTask(1, 1);*/
-
 	pm::bll::UsersManagement uman;
 	pm::bll::TeamsManagement tman;
 

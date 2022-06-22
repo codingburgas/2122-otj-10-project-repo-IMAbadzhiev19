@@ -80,8 +80,6 @@ public:
 	virtual void Delete() = 0;
 	virtual void Update() = 0;
 	virtual void showAll() = 0;
-	virtual void Add() = 0;
-	virtual void Remove() = 0;
 
 protected:
 
@@ -123,8 +121,6 @@ public:
 	void Delete();
 	void Update();
 	void showAll();
-	void Add() { }
-	void Remove() { }
 
 private:
 	size_t selectedUser = 0;
@@ -139,11 +135,12 @@ public:
 	void moveToTeam(bool next) { }
 
 	virtual void Create();
-	virtual void Delete() { }
+	virtual void Delete();
 	virtual void Update();
 	virtual void showAll() { }
-	virtual void Add() { }
-	virtual void Remove() { }
+
+	void AddUser();
+	void RemoveUser();
 
 private:
 	size_t selectedTeam = 0;
