@@ -67,7 +67,7 @@ std::vector<pm::dal::TeamsStore::TEAM> pm::dal::TeamsStore::loadTeams()
 
 	while (res.next())
 	{
-		t_teams.emplace_back(res.get<int>(0), res.get<std::string>(1), res.get<nanodbc::date>(2), res.get<int>(3));
+		t_teams.push_back({ res.get<int>(0), res.get<std::string>(1), res.get<nanodbc::date>(2), res.get<int>(3) });
 	}
 
 	return t_teams;
@@ -84,8 +84,8 @@ std::vector<pm::dal::UsersStore::USER> pm::dal::TeamsStore::getUsersFromTeam(siz
 
 	while (res.next())
 	{
-		t_users.emplace_back(res.get<int>(0), res.get<std::string>(1), res.get<std::string>(2), res.get<std::string>(3),
-			res.get<short>(4), res.get<std::string>(5), res.get<nanodbc::date>(6), res.get<short>(7));
+		t_users.push_back({ res.get<int>(0), res.get<std::string>(1), res.get<std::string>(2), res.get<std::string>(3),
+			res.get<short>(4), res.get<std::string>(5), res.get<nanodbc::date>(6), res.get<short>(7) });
 	}
 
 	return t_users;

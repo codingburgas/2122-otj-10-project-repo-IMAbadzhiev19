@@ -57,7 +57,7 @@ std::vector<pm::dal::TasksStore::TASK> pm::dal::TasksStore::loadAllTasks()
 
 	while (res.next())
 	{
-		tasks.emplace_back(res.get<int>(0), res.get<std::string>(1), res.get<std::string>(2), res.get<std::string>(3), res.get<nanodbc::date>(4), res.get<int>(5));
+		tasks.push_back({ res.get<int>(0), res.get<std::string>(1), res.get<std::string>(2), res.get<std::string>(3), res.get<nanodbc::date>(4), res.get<int>(5) });
 	}
 
 	return tasks;
@@ -74,7 +74,7 @@ std::vector<pm::dal::ProjectsStore::PROJECT> pm::dal::TasksStore::getProjectsFro
 
 	while (res.next())
 	{
-		projects.emplace_back(res.get<int>(0), res.get<std::string>(1), res.get<std::string>(2), res.get<nanodbc::date>(3), res.get<int>(4));
+		projects.push_back({ res.get<int>(0), res.get<std::string>(1), res.get<std::string>(2), res.get<nanodbc::date>(3), res.get<int>(4) });
 	}
 
 	return projects;
@@ -91,7 +91,7 @@ std::vector<pm::dal::UsersStore::USER> pm::dal::TasksStore::getUsersFromTask(siz
 
 	while (res.next())
 	{
-		users.emplace_back(res.get<int>(0), res.get<std::string>(1), res.get<std::string>(2), res.get<std::string>(3), res.get<int>(4), res.get<std::string>(5), res.get<nanodbc::date>(6), res.get<short>(7));
+		users.push_back({ res.get<int>(0), res.get<std::string>(1), res.get<std::string>(2), res.get<std::string>(3), res.get<short>(4), res.get<std::string>(5), res.get<nanodbc::date>(6), res.get<short>(7) });
 	}
 
 	return users;
