@@ -210,10 +210,6 @@ void SubMenu::runItem()
 		break;
 	case 4: showAll();
 		break;
-	case 5: Add();
-		break;
-	case 6: Remove();
-		break;
 	}
 }
 
@@ -376,7 +372,7 @@ void UsersMenu::showAll()
 		{
 			gotoXY(5 , i + 1);
 
-			std::cout << users[i].firstName << " " << users[i].lastName << ", " << users[i].email << ", " << users[i].age << ", " << users[i].createdOn.day << "/" << users[i].createdOn.month << "/" << users[i].createdOn.year;
+			std::cout << users[i].id << ". " << users[i].firstName << " " << users[i].lastName << ", " << users[i].email << ", " << users[i].age << ", " << users[i].createdOn.day << "/" << users[i].createdOn.month << "/" << users[i].createdOn.year;
 
 			std::string isAdminOut = (users[i].admin == 0) ? "| Admin: NO" : "| Admin: YES";
 			std::cout << isAdminOut << separator;
@@ -653,4 +649,134 @@ void TeamsMenu::Delete()
 		} // switch
 	} while (key != 27);
 }
+
+void TeamsMenu::AddUser()
+{
+	selectedTeam = 0;
+	std::string separator = (horizontal) ? " " : "\r\n";
+	int key;
+
+	do
+	{
+		system("cls");
+
+		for (size_t i = 0; i < teams.size(); i++)
+		{
+			gotoXY(5, i + 1);
+			if (i == selectedTeam)
+				std::cout << selectedItemMarker;
+			else
+				for (short c = 0; c < selectedItemMarker.size(); c++)
+					std::cout << ' ';
+
+			std::cout << teams[i].title << " " << teams[i].createdOn.day << "/" << teams[i].createdOn.month << "/" << teams[i].createdOn.day << std::endl;
+		}
+
+		key = getKeyPressed();
+
+		switch (key)
+		{
+		case 72:if (!horizontal)
+			moveToTeam(false);
+			break;
+		case 75:if (horizontal)
+			moveToTeam(false);
+			break;
+		case 80:if (!horizontal)
+			moveToTeam(true);
+			break;
+		case 77:if (horizontal)
+			moveToTeam(true);
+			break;
+		case 13:
+		{
+			system("cls");
+
+			UsersMenu usersMenu;
+			usersMenu.showAll();
+
+			int choice;
+			std::cout << "\n\n\nEnter the id of the user who you would like to add in the current team: "; std::cin >> choice;
+
+			tM->addUserToTeam(teams[selectedTeam].id, choice);
+
+			users = uM->getRegisteredUsers();
+			teams = tM->loadTeams();
+
+			break;
+		}
+		} // switch
+	} while (key != 27);
+}
+
+void TeamsMenu::RemoveUser()
+{
+	selectedTeam = 0;
+	std::string separator = (horizontal) ? " " : "\r\n";
+	int key;
+
+	do
+	{
+		system("cls");
+
+		for (size_t i = 0; i < teams.size(); i++)
+		{
+			gotoXY(5, i + 1);
+			if (i == selectedTeam)
+				std::cout << selectedItemMarker;
+			else
+				for (short c = 0; c < selectedItemMarker.size(); c++)
+					std::cout << ' ';
+
+			std::cout << teams[i].title << " " << teams[i].createdOn.day << "/" << teams[i].createdOn.month << "/" << teams[i].createdOn.day << std::endl;
+		}
+
+		key = getKeyPressed();
+
+		switch (key)
+		{
+		case 72:if (!horizontal)
+			moveToTeam(false);
+			break;
+		case 75:if (horizontal)
+			moveToTeam(false);
+			break;
+		case 80:if (!horizontal)
+			moveToTeam(true);
+			break;
+		case 77:if (horizontal)
+			moveToTeam(true);
+			break;
+		case 13:
+		{
+			system("cls");
+
+			std::vector<pm::dal::UsersStore::USER> usersTeam;
+
+			usersTeam = tM->getUsersFromTeam(teams[selectedTeam].id);
+
+			std::cout << std::endl;
+			for (const auto& x : usersTeam)
+			{
+				std::cout << "          ";
+				std::cout << x.id << ". " << x.firstName << " " << x.lastName << ", " << x.email << ", " << x.age << ", " << x.createdOn.day << "/" << x.createdOn.month << "/" << x.createdOn.year;
+
+				std::string isAdminOut = (x.admin == 0) ? "| Admin: NO" : "| Admin: YES";
+				std::cout << isAdminOut << separator;
+			}
+
+			int choice;
+			std::cout << "\n\n\nEnter the id of the user who you would like to remove from the current team: "; std::cin >> choice;
+
+			tM->removeUserFromTeam(teams[selectedTeam].id, choice);
+
+			users = uM->getRegisteredUsers();
+			teams = tM->loadTeams();
+
+			break;
+		}
+		} // switch
+	} while (key != 27);
+}
+
 /*TeamsMenu*/
