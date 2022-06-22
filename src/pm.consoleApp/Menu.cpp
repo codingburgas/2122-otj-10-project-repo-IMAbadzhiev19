@@ -522,4 +522,59 @@ void TeamsMenu::Create()
 	tM->createTeam(team, currentUser.id);
 }
 
+void TeamsMenu::Update()
+{
+	selectedTeam = 0;
+	std::string separator = (horizontal) ? " " : "\r\n";
+	int key;
+
+	do
+	{
+		system("cls");
+
+		for (size_t i = 0; i < teams.size(); i++)
+		{
+			gotoXY(5, i + 1);
+			if (i == selectedTeam)
+				std::cout << selectedItemMarker;
+			else
+				for (short c = 0; c < selectedItemMarker.size(); c++)
+					std::cout << ' ';
+
+			std::cout << teams[i].title << " " << teams[i].createdOn.day << "/" << teams[i].createdOn.month << "/" << teams[i].createdOn.day << std::endl;
+		}
+
+		key = getKeyPressed();
+
+		switch (key)
+		{
+		case 72:if (!horizontal)
+			moveToTeam(false);
+			break;
+		case 75:if (horizontal)
+			moveToTeam(false);
+			break;
+		case 80:if (!horizontal)
+			moveToTeam(true);
+			break;
+		case 77:if (horizontal)
+			moveToTeam(true);
+			break;
+		case 13:
+		{
+			system("cls");
+			
+			pm::dal::TeamsStore::TEAM t;
+
+			std::getline(std::cin, t.title);
+
+			tM->updateTeam(teams[selectedTeam].id, t, currentUser.id);
+			teams = tM->loadTeams();
+
+			break;
+		}
+		} // switch
+	} while (key != 27);
+}
+
 /*TeamsMenu*/

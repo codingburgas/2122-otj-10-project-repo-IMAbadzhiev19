@@ -136,13 +136,15 @@ public:
 
 	TeamsMenu(pm::bll::TeamsManagement* be);
 
+	void moveToTeam(bool next) { }
+
 	virtual void Create();
-	virtual void Delete() { };
-	virtual void Update() { };
-	virtual void showAll() { };
-	virtual void Add() { };
-	virtual void Remove() { };
+	virtual void Delete() { }
+	virtual void Update();
+	virtual void showAll() { }
+	virtual void Add() { }
+	virtual void Remove() { }
 
 private:
-	size_t selectedUser = 0;
+	size_t selectedTeam = 0;
 };

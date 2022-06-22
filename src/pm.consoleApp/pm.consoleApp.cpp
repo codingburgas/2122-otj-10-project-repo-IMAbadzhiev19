@@ -16,11 +16,12 @@ int main()
 	ts.assignProjectToTask(1, 1);*/
 
 	pm::bll::UsersManagement uman;
+	pm::bll::TeamsManagement tman;
 
 	MainMenu mn("", false, false);
-	MenuItem* mi[2] = { new UsersMenu(&uman), new QuitMenu() };
+	MenuItem* mi[3] = { new UsersMenu(&uman), new TeamsMenu(&tman), new QuitMenu() };
 
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 3; i++)
 		mn.addItem(mi[i]);
 
 	mn.Show();
