@@ -143,7 +143,7 @@ public:
 	virtual void Create();
 	virtual void Delete();
 	virtual void Update();
-	virtual void showAll() { }
+	virtual void showAll();
 
 	void AddUser();
 	void RemoveUser();
