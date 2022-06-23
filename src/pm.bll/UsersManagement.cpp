@@ -47,6 +47,7 @@ void pm::bll::UsersManagement::registerUser(pm::dal::UsersStore::USER& user)
 	if (checkPassComplexity(user.password))
 	{
 		std::string hashedPass = sha256(user.password);
+		user.password = hashedPass;
 
 		if (!m_usersStore.createUser(user))
 			throw "Unexpected problem has occured with registering your account!";
@@ -60,7 +61,7 @@ pm::dal::UsersStore::USER& pm::bll::UsersManagement::loginUser(std::string email
 	if (user.email.empty())
 		throw "There isn't an user with this email address";
 
-	if (user.password.compare(password) == 0)
+	if (user.password.compare(sha256(password)) == 0)
 		return user;
 	else
 		throw std::logic_error("Incorrent password: " + password);

@@ -91,12 +91,12 @@ protected:
 	std::vector<pm::dal::ProjectsStore::PROJECT> projects;
 	std::vector<pm::dal::TasksStore::TASK> tasks;
 
+	pm::dal::UsersStore::USER currentUser;
+
 	pm::bll::UsersManagement* uM;
 	pm::bll::TeamsManagement* tM;
 	pm::bll::ProjectsManagement* pM;
 	pm::bll::TasksManagement* taskM;
-
-	pm::dal::UsersStore::USER currentUser;
 
 	DatabaseManagement db_menu;
 

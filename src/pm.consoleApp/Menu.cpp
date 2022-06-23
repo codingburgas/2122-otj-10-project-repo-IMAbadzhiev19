@@ -1,5 +1,7 @@
 #include "Menu.h"
 
+std::string currentUserEmail;
+
 //MenuItem & MainMenu
 void MenuItem::gotoXY(int x, int y)
 {
@@ -329,12 +331,13 @@ void UsersMenu::Login()
 			std::cout << "Password: "; getline(std::cin, password);
 
 			uM->loginUser(email, password);
-			currentUser = uM->m_usersStore.getUserByEmail(email);
+			currentUserEmail = email;
 			break;
 		}
 		catch (std::exception& e)
 		{
-			std::cerr << e.what() << std::endl;
+			std::cout << e.what() << std::endl;
+			Sleep(1000);
 		}
 	} while (true);
 
@@ -556,9 +559,12 @@ void TeamsMenu::Create()
 {
 	pm::dal::TeamsStore::TEAM team;
 
-	std::cout << "Team's name: "; std::getline(std::cin, team.title);
+	pm::dal::UsersStore::USER user = uM->m_usersStore.getUserByEmail(currentUserEmail);
 
-	tM->createTeam(team, currentUser.id);
+	std::cout << "Team's name: "; getline(std::cin, team.title);
+	system("pause");
+
+	tM->createTeam(team, user.id);
 	teams = tM->loadTeams();
 }
 
@@ -606,7 +612,7 @@ void TeamsMenu::Update()
 
 			pm::dal::TeamsStore::TEAM t;
 
-			std::getline(std::cin, t.title);
+			getline(std::cin, t.title);
 
 			tM->updateTeam(teams[selectedTeam].id, t, currentUser.id);
 			teams = tM->loadTeams();
@@ -882,8 +888,8 @@ void ProjectsMenu::Create()
 {
 	pm::dal::ProjectsStore::PROJECT project;
 
-	std::cout << "Enter project's name: "; std::getline(std::cin, project.title);
-	std::cout << "Enter a description of the project: "; std::getline(std::cin, project.description);
+	std::cout << "Enter project's name: "; getline(std::cin, project.title);
+	std::cout << "Enter a description of the project: "; getline(std::cin, project.description);
 
 	pM->createProject(project, currentUser.id);
 	projects = pM->loadAllProjects();
@@ -933,8 +939,8 @@ void ProjectsMenu::Update()
 
 			pm::dal::ProjectsStore::PROJECT p;
 
-			std::cout << "Enter new name or if you don't want to change it enter the same: "; std::getline(std::cin, p.title);
-			std::cout << "Enter new description or if you don't want to change it enter the same: "; std::getline(std::cin, p.description);
+			std::cout << "Enter new name or if you don't want to change it enter the same: "; getline(std::cin, p.title);
+			std::cout << "Enter new description or if you don't want to change it enter the same: "; getline(std::cin, p.description);
 
 			pM->updateProject(p, projects[selectedProject].id, currentUser.id);
 			projects = pM->loadAllProjects();
