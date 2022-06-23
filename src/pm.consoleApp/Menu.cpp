@@ -274,7 +274,7 @@ void UsersMenu::runItem()
 {
 	std::string errorMsg;
 
-	if (currentUser.firstName != "") {
+	if (currentUser.firstName == "") {
 		errorMsg = "You must log in first!";
 	}
 	else if (currentUser.admin != true) {
@@ -288,7 +288,7 @@ void UsersMenu::runItem()
 	case 2: Create();
 		break;
 	case 3: 
-		if (errorMsg.empty()) {
+		if (!errorMsg.empty()) {
 			std::cout << errorMsg << std::endl;
 			Sleep(1000);
 		}
@@ -297,7 +297,7 @@ void UsersMenu::runItem()
 		break;
 
 	case 4:
-		if (errorMsg.empty()) {
+		if (!errorMsg.empty()) {
 			std::cout << errorMsg << std::endl;
 			Sleep(1000);
 		}
@@ -306,7 +306,7 @@ void UsersMenu::runItem()
 		break;
 
 	case 5:
-		if (errorMsg.empty()) {
+		if (!errorMsg.empty()) {
 			std::cout << errorMsg << std::endl;
 			Sleep(1000);
 		}
@@ -318,25 +318,24 @@ void UsersMenu::runItem()
 
 void UsersMenu::Login()
 {
+	std::string email, password;
 	do
 	{
 		try
 		{
-			std::string email, password;
+			system("cls");
 
 			std::cout << "Email: "; getline(std::cin, email);
-			std::cout << "Password: "; getline(std::cin, email);
+			std::cout << "Password: "; getline(std::cin, password);
 
 			uM->loginUser(email, password);
 			currentUser = uM->m_usersStore.getUserByEmail(email);
-
 			break;
 		}
-		catch (std::string& errorMsg)
+		catch (std::exception& e)
 		{
-			std::cout << errorMsg << std::endl;
+			std::cerr << e.what() << std::endl;
 		}
-
 	} while (true);
 
 	std::cout << "You've successfully logged in. Enjoy ;)" << std::endl;

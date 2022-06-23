@@ -108,3 +108,5 @@ CREATE TABLE [TasksAndUsers] (
 )
 GO
 --TasksAndUsers
+
+SELECT * FROM Users
