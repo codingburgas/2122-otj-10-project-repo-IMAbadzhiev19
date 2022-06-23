@@ -542,6 +542,7 @@ void TeamsMenu::Create()
 	std::cout << "Enter team's name: "; std::getline(std::cin, team.title);
 
 	tM->createTeam(team, currentUser.id);
+	teams = tM->loadTeams();
 }
 
 void TeamsMenu::Update()
@@ -845,3 +846,87 @@ void TeamsMenu::showAll()
 	} while (key != 27);
 }
 /*TeamsMenu*/
+
+/*ProjectsMenu*/
+ProjectsMenu::ProjectsMenu(pm::bll::ProjectsManagement* be)
+{
+	projects.clear();
+
+	try
+	{
+		projects = pM->loadAllProjects();
+	}
+	catch (std::exception& e)
+	{
+		std::cerr << e.what() << std::endl;
+	}
+}
+
+void ProjectsMenu::Create()
+{
+	pm::dal::ProjectsStore::PROJECT project;
+
+	std::cout << "Enter project's name: "; std::getline(std::cin, project.title);
+	std::cout << "Enter a description of the project: "; std::getline(std::cin, project.description);
+
+	pM->createProject(project, currentUser.id);
+	projects = pM->loadAllProjects();
+}
+
+void ProjectsMenu::Update()
+{
+	selectedProject = 0;
+	std::string separator = (horizontal) ? " " : "\r\n";
+	int key;
+
+	do
+	{
+		system("cls");
+
+		for (size_t i = 0; i < projects.size(); i++)
+		{
+			gotoXY(5, i + 1);
+			if (i == selectedProject)
+				std::cout << selectedItemMarker;
+			else
+				for (short c = 0; c < selectedItemMarker.size(); c++)
+					std::cout << ' ';
+
+			std::cout << projects[i].title << " " << projects[i].description << " " << projects[i].createdOn.day << "/" << projects[i].createdOn.month << "/" << projects[i].createdOn.day << std::endl;
+		}
+
+		key = getKeyPressed();
+
+		switch (key)
+		{
+		case 72:if (!horizontal)
+			moveToProject(false);
+			break;
+		case 75:if (horizontal)
+			moveToProject(false);
+			break;
+		case 80:if (!horizontal)
+			moveToProject(true);
+			break;
+		case 77:if (horizontal)
+			moveToProject(true);
+			break;
+		case 13:
+		{
+			system("cls");
+
+			pm::dal::ProjectsStore::PROJECT p;
+
+			std::cout << "Enter new name or if you don't want to change it enter the same: "; std::getline(std::cin, p.title);
+			std::cout << "Enter new description or if you don't want to change it enter the same: "; std::getline(std::cin, p.description);
+
+			pM->updateProject(p, projects[selectedProject].id, currentUser.id);
+			projects = pM->loadAllProjects();
+
+			break;
+		}
+		} // switch
+	} while (key != 27);
+}
+
+/*ProjectsMenu*/

@@ -88,8 +88,8 @@ protected:
 
 	std::vector<pm::dal::UsersStore::USER> users;
 	std::vector<pm::dal::TeamsStore::TEAM> teams;
-	std::vector<pm::dal::ProjectsStore> projects;
-	std::vector<pm::dal::TasksStore> tasks;
+	std::vector<pm::dal::ProjectsStore::PROJECT> projects;
+	std::vector<pm::dal::TasksStore::TASK> tasks;
 
 	pm::bll::UsersManagement* uM;
 	pm::bll::TeamsManagement* tM;
@@ -136,6 +136,7 @@ class TeamsMenu : public SubMenu
 {
 public:
 
+	TeamsMenu() { }
 	TeamsMenu(pm::bll::TeamsManagement* be);
 
 	void moveToTeam(bool next);
@@ -150,4 +151,23 @@ public:
 
 private:
 	size_t selectedTeam = 0;
+};
+
+class ProjectsMenu : public SubMenu
+{
+	ProjectsMenu() { }
+	ProjectsMenu(pm::bll::ProjectsManagement* be);
+
+	void moveToProject(bool next);
+
+	virtual void Create();
+	virtual void Delete();
+	virtual void Update();
+	virtual void showAll();
+
+	void AddTeam();
+	void RemoveTeam();
+
+private:
+	size_t selectedProject = 0;
 };
