@@ -18,6 +18,10 @@ CREATE TABLE [Users] (
 GO
 --UsersTable
 
+IF NOT EXISTS (SELECT * FROM Users WHERE Id = 1)
+BEGIN
+	INSERT INTO Users (FirstName, LastName, Email, Age, [Password], CreatedOn, [Admin]) VALUES ('NoFName','NoLName', 'admin', 0, 'adminpass', GETDATE(), 1)
+END
 
 
 --TeamsTable
@@ -104,3 +108,8 @@ CREATE TABLE [TasksAndUsers] (
 )
 GO
 --TasksAndUsers
+
+INSERT INTO Teams (Title, CreatedOn, CreatorId)
+VALUES ('Test1', GETDATE(), 1)
+
+SELECT Users.[Id], Users.[FirstName], Users.[LastName], Users.[Email], Users.[Age], Users.[Password], Users.[CreatedOn], Users.[Admin] FROM [Users], [Teams], [UsersAndTeams] WHERE (UserId = Users.[Id]) AND (TeamId = Teams.[Id]) AND (TeamId = 1)

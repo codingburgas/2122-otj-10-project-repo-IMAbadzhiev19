@@ -7,12 +7,14 @@
 int main()
 {
 	pm::bll::UsersManagement uman;
-	pm::bll::TeamsManagement tman;
+	pm::bll::TeamsManagement teamman;
+	pm::bll::ProjectsManagement pman;
+	pm::bll::TasksManagement taskman;
 
 	MainMenu mn("", false, false);
-	MenuItem* mi[3] = { new UsersMenu(&uman), new TeamsMenu(&tman), new QuitMenu() };
+	MenuItem* mi[4] = { new UsersMenu(&uman), new TeamsMenu(&teamman), new ProjectsMenu(&pman), new QuitMenu() };
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 4; i++)
 		mn.addItem(mi[i]);
 
 	mn.Show();

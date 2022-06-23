@@ -75,7 +75,7 @@ std::vector<pm::dal::TeamsStore::TEAM> pm::dal::TeamsStore::loadTeams()
 
 std::vector<pm::dal::UsersStore::USER> pm::dal::TeamsStore::getUsersFromTeam(size_t teamId)
 {
-	std::string query = "SELECT Users.[Id], Users.[FirstName], Users.[LastName], Users.[Email], Users.[Age], Users.[Password], Users.[CreatedOn], [Users.Admin] "
+	std::string query = "SELECT Users.[Id], Users.[FirstName], Users.[LastName], Users.[Email], Users.[Age], Users.[Password], Users.[CreatedOn], Users.[Admin] "
 		"FROM [Users], [Teams], [UsersAndTeams] WHERE (UserId = Users.[Id]) AND (TeamId = Teams.[Id]) AND (TeamId = " + std::to_string(teamId) + ")";
 
 	nanodbc::result res = db.getResultFromSelect(query);

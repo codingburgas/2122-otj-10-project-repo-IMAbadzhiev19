@@ -155,18 +155,19 @@ private:
 
 class ProjectsMenu : public SubMenu
 {
+public:
 	ProjectsMenu() { }
 	ProjectsMenu(pm::bll::ProjectsManagement* be);
 
-	void moveToProject(bool next);
+	void moveToProject(bool next) { }
 
 	virtual void Create();
-	virtual void Delete();
+	virtual void Delete() { }
 	virtual void Update();
-	virtual void showAll();
+	virtual void showAll() { }
 
-	void AddTeam();
-	void RemoveTeam();
+	void AddTeam() { }
+	void RemoveTeam() { }
 
 private:
 	size_t selectedProject = 0;

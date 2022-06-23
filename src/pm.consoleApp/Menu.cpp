@@ -137,7 +137,7 @@ SubMenu::SubMenu(std::string name, bool horizontal, bool execModule, bool users,
 	itemData.push_back({ c++, 10 , "Create" });
 	itemData.push_back({ c++, 10 , "Update" });
 	itemData.push_back({ c++, 10 , "Delete" });
-	itemData.push_back({ c++, 10 , "ShowAll" });
+	itemData.push_back({ c++, 10 , "Show All" });
 
 	if (!users) {
 
@@ -215,18 +215,16 @@ void SubMenu::runItem()
 
 void SubMenu::moveToItem(bool next)
 {
-	size_t oldSelectedItem = selectedItem;
+	size_t OldSelectedItem = selectedItem;
 
 	if (next && (selectedItem < itemData.size() - 1))
 		selectedItem++;
-
 	if (!next && (selectedItem > 0))
 		selectedItem--;
-
-	if (selectedItem != oldSelectedItem)
+	if (selectedItem != OldSelectedItem)
 	{
-		gotoXY(itemData[oldSelectedItem].column, itemData[oldSelectedItem].row);
-		for (size_t i = 0; i < selectedItemMarker.length(); i++)
+		gotoXY(itemData[OldSelectedItem].column, itemData[OldSelectedItem].row);
+		for (size_t j = 0; j < selectedItemMarker.length(); j++)
 			std::cout << ' ';
 
 		gotoXY(itemData[selectedItem].column, itemData[selectedItem].row);
@@ -244,10 +242,11 @@ UsersMenu::UsersMenu(pm::bll::UsersManagement* be) : SubMenu("Users", false, fal
 	{
 		users = uM->getRegisteredUsers();
 	}
-	catch (std::exception& e)
+	catch (std::string& error)
 	{
-		std::cerr << e.what() << std::endl;
+		std::cout << error << std::endl;
 	}
+
 }
 
 void UsersMenu::moveToUser(bool next)
@@ -273,6 +272,15 @@ void UsersMenu::moveToUser(bool next)
 
 void UsersMenu::runItem()
 {
+	std::string errorMsg;
+
+	if (currentUser.firstName != "") {
+		errorMsg = "You must log in first!";
+	}
+	else if (currentUser.admin != true) {
+		errorMsg = "You must be admin!";
+	}
+
 	switch (selectedItem + 1)
 	{
 	case 1: Login();
@@ -280,53 +288,59 @@ void UsersMenu::runItem()
 	case 2: Create();
 		break;
 	case 3: 
-		if (currentUser.firstName != "" && currentUser.admin == true)
+		if (errorMsg.empty()) {
+			std::cout << errorMsg << std::endl;
+			Sleep(1000);
+		}
+		else
 			Update();
-		else
-		{
-			std::cout << "You must be admin!" << std::endl;
+		break;
+
+	case 4:
+		if (errorMsg.empty()) {
+			std::cout << errorMsg << std::endl;
 			Sleep(1000);
 		}
-		break;
-	case 4: 
-		if (currentUser.firstName != "" && currentUser.admin == true)
+		else
 			Delete();
-		else
-		{
-			std::cout << "You must be admin!" << std::endl;
-			Sleep(1000);
-		}
 		break;
+
 	case 5:
-		if (currentUser.firstName != "" && currentUser.admin == true)
-			showAll();
-		else
-		{
-			std::cout << "You must be admin!" << std::endl;
+		if (errorMsg.empty()) {
+			std::cout << errorMsg << std::endl;
 			Sleep(1000);
 		}
+		else
+			showAll();
 		break;
 	}
 }
 
 void UsersMenu::Login()
 {
-	std::string email, password;
+	do
+	{
+		try
+		{
+			std::string email, password;
 
-	try {
-		std::cout << "Email: "; getline(std::cin, email);
-		std::cout << "Password: "; getline(std::cin, password);
+			std::cout << "Email: "; getline(std::cin, email);
+			std::cout << "Password: "; getline(std::cin, email);
 
-		uM->loginUser(email, password);
-		currentUser = uM->m_usersStore.getUserByEmail(email);
-	}
-	catch (std::exception& e) {
-		std::cerr << e.what() << std::endl;
-	}
+			uM->loginUser(email, password);
+			currentUser = uM->m_usersStore.getUserByEmail(email);
 
-	std::cout << "You have successfully logged in";
+			break;
+		}
+		catch (std::string& errorMsg)
+		{
+			std::cout << errorMsg << std::endl;
+		}
+
+	} while (true);
+
+	std::cout << "You've successfully logged in. Enjoy ;)" << std::endl;
 	Sleep(1000);
-
 }
 
 void UsersMenu::Create()
@@ -335,11 +349,14 @@ void UsersMenu::Create()
 
 	do
 	{
+		
 		system("cls");
-		try {
-			std::cout << "Enter first name: "; getline(std::cin, usr.firstName);
-			std::cout << "Enter last name: "; getline(std::cin, usr.lastName);
-			std::cout << "Enter email: "; getline(std::cin, usr.email);
+
+		try
+		{
+			std::cout << "First name: "; getline(std::cin, usr.firstName);
+			std::cout << "Last name: "; getline(std::cin, usr.lastName);
+			std::cout << "Email: "; getline(std::cin, usr.email);
 			std::cout << "Age: "; std::cin >> usr.age; std::cin.ignore();
 			std::cout << "Enter password: "; getline(std::cin, usr.password);
 
@@ -348,13 +365,15 @@ void UsersMenu::Create()
 
 			break;
 		}
-		catch (std::string msg) {
-			std::cout << msg << std::endl;
+		catch (std::string& errorMsg)
+		{
+			std::cout << errorMsg << std::endl;
 			Sleep(1000);
 		}
+
 	} while (true);
 
-	std::cout << "You have successfully created an account";
+	std::cout << "You've successfully created an account!" << std::endl;
 	Sleep(1000);
 }
 
@@ -370,7 +389,7 @@ void UsersMenu::showAll()
 
 		for (size_t i = 0; i < users.size(); i++)
 		{
-			gotoXY(5 , i + 1);
+			gotoXY(5, i + 1);
 
 			std::cout << users[i].id << ". " << users[i].firstName << " " << users[i].lastName << ", " << users[i].email << ", " << users[i].age << ", " << users[i].createdOn.day << "/" << users[i].createdOn.month << "/" << users[i].createdOn.year;
 
@@ -381,7 +400,6 @@ void UsersMenu::showAll()
 		key = getKeyPressed();
 
 	} while (key != 27);
-
 }
 
 void UsersMenu::Delete()
@@ -489,7 +507,7 @@ void UsersMenu::Update()
 
 			usr.admin = 0;
 
-			uM->updateUser(users[selectedUser].id ,usr);
+			uM->updateUser(users[selectedUser].id, usr);
 
 			users = uM->getRegisteredUsers();
 			break;
@@ -500,7 +518,7 @@ void UsersMenu::Update()
 /*UsersMenu*/
 
 /*TeamsMenu*/
-TeamsMenu::TeamsMenu(pm::bll::TeamsManagement* be) : SubMenu("Teams", false, false, true, nullptr, be, nullptr, nullptr)
+TeamsMenu::TeamsMenu(pm::bll::TeamsManagement* be) : SubMenu("Teams", false, false, false, nullptr, be, nullptr, nullptr)
 {
 	teams.clear();
 
@@ -508,9 +526,9 @@ TeamsMenu::TeamsMenu(pm::bll::TeamsManagement* be) : SubMenu("Teams", false, fal
 	{
 		teams = tM->loadTeams();
 	}
-	catch (std::exception& e)
+	catch (std::string& error)
 	{
-		std::cerr << e.what() << std::endl;
+		std::cout << error << std::endl;
 	}
 }
 
@@ -518,7 +536,7 @@ void TeamsMenu::moveToTeam(bool next)
 {
 	size_t oldSelectedItem = selectedTeam;
 
-	if (next && (selectedTeam < users.size() - 1))
+	if (next && (selectedTeam < teams.size() - 1))
 		selectedTeam++;
 
 	if (!next && (selectedTeam > 0))
@@ -538,8 +556,8 @@ void TeamsMenu::moveToTeam(bool next)
 void TeamsMenu::Create()
 {
 	pm::dal::TeamsStore::TEAM team;
-	
-	std::cout << "Enter team's name: "; std::getline(std::cin, team.title);
+
+	std::cout << "Team's name: "; std::getline(std::cin, team.title);
 
 	tM->createTeam(team, currentUser.id);
 	teams = tM->loadTeams();
@@ -586,7 +604,7 @@ void TeamsMenu::Update()
 		case 13:
 		{
 			system("cls");
-			
+
 			pm::dal::TeamsStore::TEAM t;
 
 			std::getline(std::cin, t.title);
@@ -838,9 +856,8 @@ void TeamsMenu::showAll()
 				std::cout << isAdminOut << separator;
 			}
 
-			std::cout << "\n\nPress enter to go back";
-			system("pause>nul");
-			Show();
+			if (_getch() == 27)
+				break;
 		}
 		} // switch
 	} while (key != 27);
@@ -848,7 +865,7 @@ void TeamsMenu::showAll()
 /*TeamsMenu*/
 
 /*ProjectsMenu*/
-ProjectsMenu::ProjectsMenu(pm::bll::ProjectsManagement* be)
+ProjectsMenu::ProjectsMenu(pm::bll::ProjectsManagement* be) : SubMenu("Projects", false, false, false, nullptr, nullptr, be, nullptr)
 {
 	projects.clear();
 
