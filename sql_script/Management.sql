@@ -108,8 +108,3 @@ CREATE TABLE [TasksAndUsers] (
 )
 GO
 --TasksAndUsers
-
-INSERT INTO Teams (Title, CreatedOn, CreatorId)
-VALUES ('Test1', GETDATE(), 1)
-
-SELECT Users.[Id], Users.[FirstName], Users.[LastName], Users.[Email], Users.[Age], Users.[Password], Users.[CreatedOn], Users.[Admin] FROM [Users], [Teams], [UsersAndTeams] WHERE (UserId = Users.[Id]) AND (TeamId = Teams.[Id]) AND (TeamId = 1)
