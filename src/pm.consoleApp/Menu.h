@@ -126,8 +126,6 @@ public:
 	void Update();
 	void showAll();
 
-	pm::dal::UsersStore::USER currentUser;
-
 private:
 	size_t selectedUser = 0;
 };

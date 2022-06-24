@@ -330,8 +330,8 @@ void UsersMenu::Login()
 		{
 			system("cls");
 
-			std::cout << "Email: "; getline(std::cin, email);
-			std::cout << "Password: "; getline(std::cin, password);
+			std::cout << "Email: "; std::getline(std::cin, email);
+			std::cout << "Password: "; std::getline(std::cin, password);
 
 			uM->loginUser(email, password);
 			structure::currentUserG = uM->m_usersStore.getUserByEmail(email);
@@ -345,7 +345,7 @@ void UsersMenu::Login()
 		}
 	} while (true);
 
-	std::cout << "You've successfully logged in. Enjoy ;)" << std::endl;
+	std::cout << "\nYou've successfully logged in. Enjoy ;)" << std::endl;
 	Sleep(1000);
 }
 
@@ -534,6 +534,7 @@ void UsersMenu::Update()
 TeamsMenu::TeamsMenu(pm::bll::TeamsManagement* be) : SubMenu("Teams", false, false, false, nullptr, be, nullptr, nullptr)
 {
 	teams.clear();
+	users.clear();
 
 	try
 	{
@@ -786,29 +787,57 @@ void TeamsMenu::AddUser()
 		{
 			system("cls");
 
-			std::vector<pm::dal::UsersStore::USER> usersTeam;
+			size_t counter = 0;
+			std::vector<pm::dal::UsersStore::USER> usersTeam = tM->getUsersFromTeam(selectedTeam + 1);
 
-			usersTeam = tM->getUsersFromTeam(teams[selectedTeam].id);
+			std::string query = "SELECT * FROM Users";
+			nanodbc::result res = db.getResultFromSelect(query);
 
-			std::cout << std::endl;
-			for (const auto& x : usersTeam)
+			while (res.next())
 			{
-				std::cout << "          ";
-				std::cout << x.id << ". " << x.firstName << " " << x.lastName << ", " << x.email << ", " << x.age << ", " << x.createdOn.day << "/" << x.createdOn.month << "/" << x.createdOn.year;
+				std::cout << "             " << res.get<int>(0) << ". " << res.get<std::string>(1) << " " << res.get<std::string>(2) << ", " << res.get<std::string>(3) << ", " << res.get<int>(4) << ", " << res.get<nanodbc::date>(6).day << "/" << res.get<nanodbc::date>(6).month << "/" << res.get<nanodbc::date>(6).year << "| Admin: ";
 
-				std::string isAdminOut = (x.admin == 0) ? "| Admin: NO" : "| Admin: YES";
-				std::cout << isAdminOut << separator;
+				std::string end = (res.get<int>(7) == 1) ? "Yes" : "No";
+				
+				bool flag = false;
+				for (const auto& x : usersTeam)
+				{
+					if (res.get<int>(0) == x.id)
+						flag = true;
+				}
+
+				if(flag)
+					end += " | (In the team)\n";
+				else
+					end += " | (Not in the team)\n";
+
+				std::cout << end;
+
+				counter++;
 			}
 
 			int choice;
-			std::cout << "\n\n\nEnter the id of the user who you would like to remove from the current team: "; std::cin >> choice;
+			std::cout << "\n\nEnter the id of the user who you would like to add to the current team: "; std::cin >> choice; std::cin.ignore();
 
-			tM->removeUserFromTeam(teams[selectedTeam].id, choice);
+			bool flag = false;
 
-			users = uM->getRegisteredUsers();
-			teams = tM->loadTeams();
+			for (const auto& x : usersTeam)
+			{
+				if (x.id == choice)
+					flag = true;
+			}
 
-			break;
+			if (!flag) {
+				tM->addUserToTeam(teams[selectedTeam].id, choice);
+				teams = tM->loadTeams();
+				break;
+			}
+			else {
+				system("cls");
+				gotoXY(25, 0); std::cout << "You are trying to add a user who is already in the team!";
+				usersTeam.clear();
+				Sleep(1000);
+			}
 		}
 		} // switch
 	} while (key != 27);
@@ -856,29 +885,45 @@ void TeamsMenu::RemoveUser()
 		{
 			system("cls");
 
-			std::vector<pm::dal::UsersStore::USER> usersTeam;
+			size_t counter = 0;
+			std::vector<pm::dal::UsersStore::USER> usersTeam = tM->getUsersFromTeam(selectedTeam + 1);
 
-			usersTeam = tM->getUsersFromTeam(teams[selectedTeam].id);
+			if (usersTeam.empty()) {
+				std::cout << "There are no users in the current team";
+				Sleep(1000);
+				break;
+			}
 
-			std::cout << std::endl;
 			for (const auto& x : usersTeam)
 			{
-				std::cout << "          ";
-				std::cout << x.id << ". " << x.firstName << " " << x.lastName << ", " << x.email << ", " << x.age << ", " << x.createdOn.day << "/" << x.createdOn.month << "/" << x.createdOn.year;
+				std::cout << "             " << x.id << ". " << x.firstName << " " << x.lastName << ", " << x.email << ", " << x.age << ", " << x.createdOn.day << "/" << x.createdOn.month << "/" << x.createdOn.year << "| Admin: ";
 
-				std::string isAdminOut = (x.admin == 0) ? "| Admin: NO" : "| Admin: YES";
-				std::cout << isAdminOut << separator;
+				std::string end = (x.admin == 1) ? "Yes | (In Team)\n" : "No | (In Team)\n";
+				std::cout << end;
 			}
 
 			int choice;
-			std::cout << "\n\n\nEnter the id of the user who you would like to remove from the current team: "; std::cin >> choice;
+			std::cout << "\n\nEnter the id of the user who you would like to remove from the current team: "; std::cin >> choice; std::cin.ignore();
 
-			tM->removeUserFromTeam(teams[selectedTeam].id, choice);
+			bool flag = false;
 
-			users = uM->getRegisteredUsers();
-			teams = tM->loadTeams();
+			for (const auto& x : usersTeam)
+			{
+				if (x.id == choice)
+					flag = true;
+			}
 
-			break;
+			if (flag) {
+				tM->removeUserFromTeam(teams[selectedTeam].id, choice);
+				teams = tM->loadTeams();
+				break;
+			}
+			else {
+				system("cls");
+				gotoXY(25, 0); std::cout << "You are trying to remove a user who isn't in the team!";
+				usersTeam.clear();
+				Sleep(1000);
+			}
 		}
 		} // switch
 	} while (key != 27);
@@ -932,6 +977,12 @@ void TeamsMenu::showAll()
 			std::vector<pm::dal::UsersStore::USER> usersTeam;
 
 			usersTeam = tM->getUsersFromTeam(teams[selectedTeam].id);
+
+			if (usersTeam.empty()) {
+				std::cout << "There are no users in the current team";
+				Sleep(1000);
+				break;
+			}
 
 			std::cout << std::endl;
 			for (const auto& x : usersTeam)
