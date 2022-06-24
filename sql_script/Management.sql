@@ -110,3 +110,6 @@ GO
 --TasksAndUsers
 
 SELECT * FROM [Users]
+SELECT * FROM Teams
+
+SELECT Users.FirstName, Users.LastName, Users.Age, Users.CreatedOn FROM Users,Teams, UsersAndTeams WHERE Users.Id = UserId AND Teams.Id = TeamId

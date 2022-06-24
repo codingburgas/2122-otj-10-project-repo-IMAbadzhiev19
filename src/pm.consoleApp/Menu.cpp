@@ -511,7 +511,14 @@ void UsersMenu::Update()
 			std::cout << "Age: "; std::cin >> usr.age; std::cin.ignore();
 			std::cout << "Enter password: "; getline(std::cin, usr.password);
 
-			usr.admin = 0;
+			int admin = 0;
+
+			if (structure::currentUserG.admin == true) {
+				std::cout << "Admin: (1 - yes \\ 0 - no)"; 
+				std::cin >> admin;
+			}
+
+			usr.admin = admin;
 
 			uM->updateUser(users[selectedUser].id, usr);
 
@@ -564,7 +571,6 @@ void TeamsMenu::Create()
 	pm::dal::TeamsStore::TEAM team;
 
 	std::cout << "Team's name: "; getline(std::cin, team.title);
-	system("pause");
 
 	tM->createTeam(team, structure::currentUserG.id);
 	teams = tM->loadTeams();
@@ -614,7 +620,7 @@ void TeamsMenu::Update()
 
 			pm::dal::TeamsStore::TEAM t;
 
-			getline(std::cin, t.title);
+			std::cout << "Title: "; getline(std::cin, t.title);
 
 			tM->updateTeam(teams[selectedTeam].id, t, structure::currentUserG.id);
 			teams = tM->loadTeams();
@@ -812,6 +818,7 @@ void TeamsMenu::showAll()
 	int key;
 
 	gotoXY(8, 0); std::cout << "Press enter on the selected team to view the users in it";
+	Sleep(1000);
 
 	do
 	{
