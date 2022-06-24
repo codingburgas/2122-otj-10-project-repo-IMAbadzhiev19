@@ -159,11 +159,12 @@ public:
 	ProjectsMenu(pm::bll::ProjectsManagement* be);
 
 	void moveToProject(bool next) { }
+	void runItem();
 
 	virtual void Create();
-	virtual void Delete() { }
+	virtual void Delete();
 	virtual void Update();
-	virtual void showAll() { }
+	virtual void showAll();
 
 	void AddTeam() { }
 	void RemoveTeam() { }

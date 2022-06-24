@@ -951,7 +951,7 @@ void TeamsMenu::showAll()
 				for (short c = 0; c < selectedItemMarker.size(); c++)
 					std::cout << ' ';
 
-			std::cout << teams[i].title << " " << teams[i].createdOn.day << "/" << teams[i].createdOn.month << "/" << teams[i].createdOn.day << std::endl;
+			std::cout << teams[i].title << " " << teams[i].createdOn.day << "/" << teams[i].createdOn.month << "/" << teams[i].createdOn.year << std::endl;
 		}
 
 		key = getKeyPressed();
@@ -1017,6 +1017,68 @@ ProjectsMenu::ProjectsMenu(pm::bll::ProjectsManagement* be) : SubMenu("Projects"
 	}
 }
 
+void ProjectsMenu::runItem()
+{
+	std::string errorMsg;
+
+	if (structure::currentUserG.firstName == "") {
+		errorMsg = "You must log in first!";
+	}
+	else if (structure::currentUserG.admin != true) {
+		errorMsg = "You must be admin!";
+	}
+
+	switch (selectedItem + 1)
+	{
+	case 1: Create();
+		break;
+	case 2:
+		if (!errorMsg.empty()) {
+			std::cout << errorMsg << std::endl;
+			Sleep(1000);
+		}
+		else
+			Update();
+		break;
+
+	case 3:
+		if (!errorMsg.empty()) {
+			std::cout << errorMsg << std::endl;
+			Sleep(1000);
+		}
+		else
+			Delete();
+		break;
+
+	case 4:
+		if (!errorMsg.empty()) {
+			std::cout << errorMsg << std::endl;
+			Sleep(1000);
+		}
+		else
+			showAll();
+		break;
+
+	case 5:
+		if (!errorMsg.empty()) {
+			std::cout << errorMsg << std::endl;
+			Sleep(1000);
+		}
+		else
+			AddTeam();
+		break;
+
+	case 6:
+		if (!errorMsg.empty()) {
+			std::cout << errorMsg << std::endl;
+			Sleep(1000);
+		}
+		else
+			RemoveTeam();
+		break;
+	}
+}
+
 void ProjectsMenu::Create()
 {
 	pm::dal::ProjectsStore::PROJECT project;
@@ -1047,7 +1109,7 @@ void ProjectsMenu::Update()
 				for (short c = 0; c < selectedItemMarker.size(); c++)
 					std::cout << ' ';
 
-			std::cout << projects[i].title << " " << projects[i].description << " " << projects[i].createdOn.day << "/" << projects[i].createdOn.month << "/" << projects[i].createdOn.day << std::endl;
+			std::cout << projects[i].title << " " << projects[i].createdOn.day << "/" << projects[i].createdOn.month << "/" << projects[i].createdOn.day << std::endl;
 		}
 
 		key = getKeyPressed();
@@ -1079,6 +1141,173 @@ void ProjectsMenu::Update()
 			projects = pM->loadAllProjects();
 
 			break;
+		}
+		} // switch
+	} while (key != 27);
+}
+
+void ProjectsMenu::Delete()
+{
+	selectedProject = 0;
+	std::string separator = (horizontal) ? " " : "\r\n";
+	int key;
+
+	do
+	{
+		system("cls");
+
+		for (size_t i = 0; i < projects.size(); i++)
+		{
+			gotoXY(5, i + 1);
+			if (i == selectedProject)
+				std::cout << selectedItemMarker;
+			else
+				for (short c = 0; c < selectedItemMarker.size(); c++)
+					std::cout << ' ';
+
+			std::cout << projects[i].title << " " << projects[i].createdOn.day << "/" << projects[i].createdOn.month << "/" << projects[i].createdOn.day << std::endl;
+		}
+
+		key = getKeyPressed();
+
+		switch (key)
+		{
+		case 72:if (!horizontal)
+			moveToProject(false);
+			break;
+		case 75:if (horizontal)
+			moveToProject(false);
+			break;
+		case 80:if (!horizontal)
+			moveToProject(true);
+			break;
+		case 77:if (horizontal)
+			moveToProject(true);
+			break;
+		case 13:
+		{
+			system("cls");
+
+			pM->removeProject(projects[selectedProject].id);
+			projects = pM->loadAllProjects();
+
+			break;
+		}
+		} // switch
+	} while (key != 27);
+}
+
+void ProjectsMenu::showAll()
+{
+	selectedProject = 0;
+	std::string separator = (horizontal) ? " " : "\r\n";
+	int key;
+
+	gotoXY(8, 0); std::cout << "Press enter on the selected project to see detailed info about it";
+	Sleep(1000);
+
+	do
+	{
+		system("cls");
+
+		for (size_t i = 0; i < projects.size(); i++)
+		{
+			gotoXY(5, i + 1);
+			if (i == selectedProject)
+				std::cout << selectedItemMarker;
+			else
+				for (short c = 0; c < selectedItemMarker.size(); c++)
+					std::cout << ' ';
+
+			std::cout << projects[i].title << " " << projects[i].createdOn.day << "/" << projects[i].createdOn.month << "/" << projects[i].createdOn.year << std::endl;
+		}
+
+		key = getKeyPressed();
+
+		switch (key)
+		{
+		case 72:if (!horizontal)
+			moveToProject(false);
+			break;
+		case 75:if (horizontal)
+			moveToProject(false);
+			break;
+		case 80:if (!horizontal)
+			moveToProject(true);
+			break;
+		case 77:if (horizontal)
+			moveToProject(true);
+			break;
+		case 13:
+		{
+			system("cls");
+
+			gotoXY(35, 9);  std::cout << "Project's Description";
+			gotoXY(35, 10); std::cout << "Teams In The Project";
+
+			int y = 9, choice = 1;
+
+			while (true)
+			{
+				system("pause>nul");
+
+				if (GetAsyncKeyState(VK_DOWN) && y != 10)
+				{
+					gotoXY(32, y); std::cout << "  ";
+					y++;
+					gotoXY(32, y); std::cout << "-> ";
+					choice++;
+					continue;
+				}
+
+				if (GetAsyncKeyState(VK_UP) && y != 9)
+				{
+					gotoXY(32, y); std::cout << "  ";
+					y--;
+					gotoXY(32, y); std::cout << "-> ";
+					choice--;
+					continue;
+				}
+
+				if (GetAsyncKeyState(VK_RETURN))
+				{
+					switch (choice)
+					{
+					case 1:
+						system("cls");
+
+						std::cout << "         Description: " << projects[selectedProject].description << std::endl;
+
+						system("pause>nul");
+
+						break;
+					case 2:
+						system("cls");
+						std::vector<pm::dal::TeamsStore::TEAM> teamsProject;
+
+						teamsProject = pM->getTeamFromProject(projects[selectedProject].id);
+
+						if (teamsProject.empty()) {
+							std::cout << "There are no teams in the current project";
+							Sleep(1000);
+							break;
+						}
+
+						std::cout << std::endl;
+						for (const auto& x : teamsProject)
+						{
+							std::cout << "          ";
+							std::cout << x.id << ". " << x.title << " " << x.createdOn.day << "/" << x.createdOn.month << "/" << x.createdOn.year << std::endl;
+						}
+
+						if (_getch() == 27)
+							break;
+					}
+
+					break;
+				}
+
+			}
 		}
 		} // switch
 	} while (key != 27);
