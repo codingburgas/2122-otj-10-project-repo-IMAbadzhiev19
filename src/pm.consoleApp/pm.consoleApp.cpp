@@ -12,9 +12,9 @@ int main()
 	pm::bll::TasksManagement taskman;
 
 	MainMenu mn("", false, false);
-	MenuItem* mi[4] = { new UsersMenu(&uman), new TeamsMenu(&teamman), new ProjectsMenu(&pman), new QuitMenu() };
+	MenuItem* mi[5] = { new UsersMenu(&uman), new TeamsMenu(&teamman), new ProjectsMenu(&pman), new TasksMenu(&taskman), new QuitMenu() };
 
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 5; i++)
 		mn.addItem(mi[i]);
 
 	mn.Show();

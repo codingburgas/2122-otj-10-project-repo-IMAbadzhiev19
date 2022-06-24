@@ -786,24 +786,24 @@ void TeamsMenu::AddUser()
 		{
 			system("cls");
 
-			users.clear();
-			/*users = uM->getRegisteredUsers();
+			std::vector<pm::dal::UsersStore::USER> usersTeam;
 
-			for (size_t i = 0; i < users.size(); i++)
+			usersTeam = tM->getUsersFromTeam(teams[selectedTeam].id);
+
+			std::cout << std::endl;
+			for (const auto& x : usersTeam)
 			{
-				gotoXY(8, i + 1);
-				
-				std::cout << users[i].id << ". " << users[i].firstName << " " << users[i].lastName << ", " << users[i].email << ", " << users[i].age << ", " << users[i].createdOn.day << "/" << users[i].createdOn.month << "/" << users[i].createdOn.year;
+				std::cout << "          ";
+				std::cout << x.id << ". " << x.firstName << " " << x.lastName << ", " << x.email << ", " << x.age << ", " << x.createdOn.day << "/" << x.createdOn.month << "/" << x.createdOn.year;
 
-				std::string isAdminOut = (users[i].admin == 0) ? "| Admin: NO" : "| Admin: YES";
+				std::string isAdminOut = (x.admin == 0) ? "| Admin: NO" : "| Admin: YES";
 				std::cout << isAdminOut << separator;
-			}*/
+			}
 
-			std::cout << "\n";
 			int choice;
-			std::cout << "Enter the id of the user who you would like to add in the current team: "; std::cin >> choice;
+			std::cout << "\n\n\nEnter the id of the user who you would like to remove from the current team: "; std::cin >> choice;
 
-			tM->addUserToTeam(teams[selectedTeam].id, choice);
+			tM->removeUserFromTeam(teams[selectedTeam].id, choice);
 
 			users = uM->getRegisteredUsers();
 			teams = tM->loadTeams();
@@ -1033,3 +1033,19 @@ void ProjectsMenu::Update()
 	} while (key != 27);
 }
 /*ProjectsMenu*/
+
+/*TasksMenu*/
+TasksMenu::TasksMenu(pm::bll::TasksManagement* be) : SubMenu("Tasks", false, false, false, nullptr, nullptr, nullptr, be)
+{
+	tasks.clear();
+
+	try
+	{
+		tasks = taskM->loadAllTasks();
+	}
+	catch (std::exception& e)
+	{
+		std::cerr << e.what() << std::endl;
+	}
+}
+/*TasksMenu*/

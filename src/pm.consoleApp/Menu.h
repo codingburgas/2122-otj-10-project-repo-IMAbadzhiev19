@@ -174,7 +174,7 @@ private:
 	size_t selectedProject = 0;
 };
 
-class TasksMenu
+class TasksMenu : public SubMenu
 {
 public:
 	TasksMenu() { }
