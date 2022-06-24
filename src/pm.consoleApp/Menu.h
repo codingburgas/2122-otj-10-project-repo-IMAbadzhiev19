@@ -140,6 +140,7 @@ public:
 	TeamsMenu(pm::bll::TeamsManagement* be);
 
 	void moveToTeam(bool next);
+	virtual void runItem();
 
 	virtual void Create();
 	virtual void Delete();
@@ -150,7 +151,6 @@ public:
 	void RemoveUser();
 
 private:
-	UsersMenu um;
 	size_t selectedTeam = 0;
 };
 
@@ -172,5 +172,28 @@ public:
 
 private:
 	size_t selectedProject = 0;
-	UsersMenu um;
+};
+
+class TasksMenu
+{
+public:
+	TasksMenu() { }
+	TasksMenu(pm::bll::TasksManagement* be);
+
+	void moveToTask(bool next) { }
+
+	virtual void Create() { }
+	virtual void Delete() { }
+	virtual void Update() { }
+	virtual void showAll() { }
+
+	void AddProject() { }
+	void RemoveProject() { }
+
+	void AssignUser() { }
+	void RemoveUser() { }
+
+
+private:
+	size_t selectedProject = 0;
 };

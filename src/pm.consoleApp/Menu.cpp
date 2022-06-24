@@ -566,6 +566,68 @@ void TeamsMenu::moveToTeam(bool next)
 	}
 }
 
+void TeamsMenu::runItem()
+{
+	std::string errorMsg;
+
+	if (structure::currentUserG.firstName == "") {
+		errorMsg = "You must log in first!";
+	}
+	else if (structure::currentUserG.admin != true) {
+		errorMsg = "You must be admin!";
+	}
+
+	switch (selectedItem + 1)
+	{
+	case 1: Create();
+		break;
+	case 2:
+		if (!errorMsg.empty()) {
+			std::cout << errorMsg << std::endl;
+			Sleep(1000);
+		}
+		else
+			Update();
+		break;
+
+	case 3:
+		if (!errorMsg.empty()) {
+			std::cout << errorMsg << std::endl;
+			Sleep(1000);
+		}
+		else
+			Delete();
+		break;
+
+	case 4:
+		if (!errorMsg.empty()) {
+			std::cout << errorMsg << std::endl;
+			Sleep(1000);
+		}
+		else
+			showAll();
+		break;
+
+	case 5:
+		if (!errorMsg.empty()) {
+			std::cout << errorMsg << std::endl;
+			Sleep(1000);
+		}
+		else
+			AddUser();
+		break;
+
+	case 6:
+		if (!errorMsg.empty()) {
+			std::cout << errorMsg << std::endl;
+			Sleep(1000);
+		}
+		else
+			RemoveUser();
+		break;
+	}
+}
+
 void TeamsMenu::Create()
 {
 	pm::dal::TeamsStore::TEAM team;
@@ -724,11 +786,22 @@ void TeamsMenu::AddUser()
 		{
 			system("cls");
 
-			UsersMenu usersMenu;
-			usersMenu.showAll();
+			users.clear();
+			/*users = uM->getRegisteredUsers();
 
+			for (size_t i = 0; i < users.size(); i++)
+			{
+				gotoXY(8, i + 1);
+				
+				std::cout << users[i].id << ". " << users[i].firstName << " " << users[i].lastName << ", " << users[i].email << ", " << users[i].age << ", " << users[i].createdOn.day << "/" << users[i].createdOn.month << "/" << users[i].createdOn.year;
+
+				std::string isAdminOut = (users[i].admin == 0) ? "| Admin: NO" : "| Admin: YES";
+				std::cout << isAdminOut << separator;
+			}*/
+
+			std::cout << "\n";
 			int choice;
-			std::cout << "\n\n\nEnter the id of the user who you would like to add in the current team: "; std::cin >> choice;
+			std::cout << "Enter the id of the user who you would like to add in the current team: "; std::cin >> choice;
 
 			tM->addUserToTeam(teams[selectedTeam].id, choice);
 
@@ -959,5 +1032,4 @@ void ProjectsMenu::Update()
 		} // switch
 	} while (key != 27);
 }
-
 /*ProjectsMenu*/
