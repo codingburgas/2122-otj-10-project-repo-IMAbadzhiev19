@@ -91,8 +91,6 @@ protected:
 	std::vector<pm::dal::ProjectsStore::PROJECT> projects;
 	std::vector<pm::dal::TasksStore::TASK> tasks;
 
-	pm::dal::UsersStore::USER currentUser;
-
 	pm::bll::UsersManagement* uM;
 	pm::bll::TeamsManagement* tM;
 	pm::bll::ProjectsManagement* pM;
@@ -128,6 +126,8 @@ public:
 	void Update();
 	void showAll();
 
+	pm::dal::UsersStore::USER currentUser;
+
 private:
 	size_t selectedUser = 0;
 };
@@ -150,6 +150,7 @@ public:
 	void RemoveUser();
 
 private:
+	UsersMenu um;
 	size_t selectedTeam = 0;
 };
 
@@ -171,4 +172,5 @@ public:
 
 private:
 	size_t selectedProject = 0;
+	UsersMenu um;
 };

@@ -1,6 +1,9 @@
 #include "Menu.h"
 
-std::string currentUserEmail;
+namespace structure
+{
+	pm::dal::UsersStore::USER currentUserG;
+}
 
 //MenuItem & MainMenu
 void MenuItem::gotoXY(int x, int y)
@@ -276,10 +279,10 @@ void UsersMenu::runItem()
 {
 	std::string errorMsg;
 
-	if (currentUser.firstName == "") {
+	if (structure::currentUserG.firstName == "") {
 		errorMsg = "You must log in first!";
 	}
-	else if (currentUser.admin != true) {
+	else if (structure::currentUserG.admin != true) {
 		errorMsg = "You must be admin!";
 	}
 
@@ -331,7 +334,8 @@ void UsersMenu::Login()
 			std::cout << "Password: "; getline(std::cin, password);
 
 			uM->loginUser(email, password);
-			currentUserEmail = email;
+			structure::currentUserG = uM->m_usersStore.getUserByEmail(email);
+
 			break;
 		}
 		catch (std::exception& e)
@@ -559,12 +563,10 @@ void TeamsMenu::Create()
 {
 	pm::dal::TeamsStore::TEAM team;
 
-	pm::dal::UsersStore::USER user = uM->m_usersStore.getUserByEmail(currentUserEmail);
-
 	std::cout << "Team's name: "; getline(std::cin, team.title);
 	system("pause");
 
-	tM->createTeam(team, user.id);
+	tM->createTeam(team, structure::currentUserG.id);
 	teams = tM->loadTeams();
 }
 
@@ -614,7 +616,7 @@ void TeamsMenu::Update()
 
 			getline(std::cin, t.title);
 
-			tM->updateTeam(teams[selectedTeam].id, t, currentUser.id);
+			tM->updateTeam(teams[selectedTeam].id, t, structure::currentUserG.id);
 			teams = tM->loadTeams();
 
 			break;
@@ -891,7 +893,7 @@ void ProjectsMenu::Create()
 	std::cout << "Enter project's name: "; getline(std::cin, project.title);
 	std::cout << "Enter a description of the project: "; getline(std::cin, project.description);
 
-	pM->createProject(project, currentUser.id);
+	pM->createProject(project, structure::currentUserG.id);
 	projects = pM->loadAllProjects();
 }
 
@@ -942,7 +944,7 @@ void ProjectsMenu::Update()
 			std::cout << "Enter new name or if you don't want to change it enter the same: "; getline(std::cin, p.title);
 			std::cout << "Enter new description or if you don't want to change it enter the same: "; getline(std::cin, p.description);
 
-			pM->updateProject(p, projects[selectedProject].id, currentUser.id);
+			pM->updateProject(p, projects[selectedProject].id, structure::currentUserG.id);
 			projects = pM->loadAllProjects();
 
 			break;
