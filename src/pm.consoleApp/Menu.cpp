@@ -148,15 +148,15 @@ void MainMenu::Show()
 /*SubMenu*/
 SubMenu::SubMenu(std::string name, bool horizontal, bool execModule, bool users, pm::bll::UsersManagement* uMM, pm::bll::TeamsManagement* tMM, pm::bll::ProjectsManagement* pMM, pm::bll::TasksManagement* taskMM ) : MenuItem(name, horizontal, execModule), uM(uMM), tM(tMM), pM(pMM), taskM(taskMM)
 {
-	unsigned short c = 1;
+	unsigned short c = 3;
 
 	if (users)
-		itemData.push_back({ c++, 10 , "Login" });
+		itemData.push_back({ c++, 40 , "Login" });
 
-	itemData.push_back({ c++, 10 , "Create" });
-	itemData.push_back({ c++, 10 , "Update" });
-	itemData.push_back({ c++, 10 , "Delete" });
-	itemData.push_back({ c++, 10 , "Show All" });
+	itemData.push_back({ c++, 40 , "Create" });
+	itemData.push_back({ c++, 40 , "Update" });
+	itemData.push_back({ c++, 40 , "Delete" });
+	itemData.push_back({ c++, 40 , "Show All" });
 
 	if (!users) {
 
@@ -169,8 +169,8 @@ SubMenu::SubMenu(std::string name, bool horizontal, bool execModule, bool users,
 		else if (name.compare("Tasks") == 0)
 			func = " Project";
 
-		itemData.push_back({ c++, 10, "Add" + func });
-		itemData.push_back({ c++, 10, "Remove" + func });
+		itemData.push_back({ c++, 40, "Add" + func });
+		itemData.push_back({ c++, 40, "Remove" + func });
 	}
 }
 
@@ -283,11 +283,11 @@ void UsersMenu::moveToUser(bool next)
 
 	if (selectedUser != oldSelectedItem)
 	{
-		gotoXY(8, oldSelectedItem);
+		gotoXY(5, oldSelectedItem);
 		for (size_t i = 0; i < selectedItemMarker.length(); i++)
 			std::cout << ' ';
 
-		gotoXY(8, selectedUser);
+		gotoXY(5, selectedUser);
 		std::cout << selectedItemMarker;
 	}
 }
@@ -357,7 +357,11 @@ void UsersMenu::Login()
 		}
 		catch (std::exception& e)
 		{
-			std::cout << e.what() << std::endl;
+			std::string str = e.what();
+			if (str.compare("index out of range") == 0)
+				std::cout << "Wrong email: " << email << std::endl;
+			else
+				std::cerr << e.what() << std::endl;
 			Sleep(1000);
 		}
 	} while (true);
@@ -440,7 +444,7 @@ void UsersMenu::Delete()
 
 	do
 	{
-		clearScreen();
+		system("cls");
 
 		for (size_t i = 0; i < users.size(); i++)
 		{
@@ -492,7 +496,7 @@ void UsersMenu::Update()
 
 	do
 	{
-		clearScreen();
+		system("cls");
 
 		for (size_t i = 0; i < users.size(); i++)
 		{
@@ -664,6 +668,7 @@ void TeamsMenu::Create()
 
 	tM->createTeam(team, structure::currentUserG.id);
 	teams = tM->loadTeams();
+	system("cls");
 }
 
 void TeamsMenu::Update()
@@ -674,7 +679,7 @@ void TeamsMenu::Update()
 
 	do
 	{
-		clearScreen();
+		system("cls");
 
 		for (size_t i = 0; i < teams.size(); i++)
 		{
@@ -719,6 +724,8 @@ void TeamsMenu::Update()
 		}
 		} // switch
 	} while (key != 27);
+
+	system("cls");
 }
 
 void TeamsMenu::Delete()
@@ -729,7 +736,7 @@ void TeamsMenu::Delete()
 
 	do
 	{
-		clearScreen();
+		system("cls");
 
 		for (size_t i = 0; i < teams.size(); i++)
 		{
@@ -770,6 +777,7 @@ void TeamsMenu::Delete()
 		}
 		} // switch
 	} while (key != 27);
+	system("cls");
 }
 
 void TeamsMenu::AddUser()
@@ -780,7 +788,7 @@ void TeamsMenu::AddUser()
 
 	do
 	{
-		clearScreen();
+		system("cls");
 
 		for (size_t i = 0; i < teams.size(); i++)
 		{
@@ -868,6 +876,8 @@ void TeamsMenu::AddUser()
 		}
 		} // switch
 	} while (key != 27);
+
+	system("cls");
 }
 
 void TeamsMenu::RemoveUser()
@@ -878,7 +888,7 @@ void TeamsMenu::RemoveUser()
 
 	do
 	{
-		clearScreen();
+		system("cls");
 
 		for (size_t i = 0; i < teams.size(); i++)
 		{
@@ -954,6 +964,8 @@ void TeamsMenu::RemoveUser()
 		}
 		} // switch
 	} while (key != 27);
+
+	system("cls");
 }
 
 void TeamsMenu::showAll()
@@ -962,12 +974,12 @@ void TeamsMenu::showAll()
 	std::string separator = (horizontal) ? " " : "\r\n";
 	int key;
 
-	gotoXY(8, 0); std::cout << "Press enter on the selected team to view the users in it";
-	Sleep(1000);
+	gotoXY(20, 0); std::cout << "Press enter on the selected team to view the users in it";
+	Sleep(2000);
 
 	do
 	{
-		clearScreen();
+		system("cls");
 
 		for (size_t i = 0; i < teams.size(); i++)
 		{
@@ -1026,6 +1038,8 @@ void TeamsMenu::showAll()
 		}
 		} // switch
 	} while (key != 27);
+
+	system("cls");
 }
 /*TeamsMenu*/
 
@@ -1115,6 +1129,8 @@ void ProjectsMenu::Create()
 
 	pM->createProject(project, structure::currentUserG.id);
 	projects = pM->loadAllProjects();
+
+	system("cls");
 }
 
 void ProjectsMenu::Update()
@@ -1125,7 +1141,7 @@ void ProjectsMenu::Update()
 
 	do
 	{
-		clearScreen();
+		system("cls");
 
 		for (size_t i = 0; i < projects.size(); i++)
 		{
@@ -1171,6 +1187,8 @@ void ProjectsMenu::Update()
 		}
 		} // switch
 	} while (key != 27);
+
+	system("cls");
 }
 
 void ProjectsMenu::Delete()
@@ -1181,7 +1199,7 @@ void ProjectsMenu::Delete()
 
 	do
 	{
-		clearScreen();
+		system("cls");
 
 		for (size_t i = 0; i < projects.size(); i++)
 		{
@@ -1222,6 +1240,8 @@ void ProjectsMenu::Delete()
 		}
 		} // switch
 	} while (key != 27);
+
+	system("cls");
 }
 
 void ProjectsMenu::showAll()
@@ -1235,7 +1255,7 @@ void ProjectsMenu::showAll()
 
 	do
 	{
-		clearScreen();
+		system("cls");
 
 		for (size_t i = 0; i < projects.size(); i++)
 		{
@@ -1338,6 +1358,8 @@ void ProjectsMenu::showAll()
 		}
 		} // switch
 	} while (key != 27);
+
+	system("cls");
 }
 /*ProjectsMenu*/
 
