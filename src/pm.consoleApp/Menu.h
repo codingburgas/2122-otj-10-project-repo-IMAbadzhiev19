@@ -35,6 +35,7 @@ protected:
 	void gotoXY(int x, int y);
 	int getKeyPressed();
 	virtual void moveToItem(bool next);
+	void clearScreen();
 
 	std::string name;
 	bool horizontal;

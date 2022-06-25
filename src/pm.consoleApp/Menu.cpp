@@ -6,12 +6,23 @@ namespace structure
 }
 
 //MenuItem & MainMenu
+
 void MenuItem::gotoXY(int x, int y)
 {
 	COORD coords;
 	coords.X = x;
 	coords.Y = y;
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coords);
+}
+
+void MenuItem::clearScreen()
+{
+	COORD cursorPosition;
+
+	cursorPosition.X = 0;
+	cursorPosition.Y = 0;
+
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
 }
 
 int MenuItem::getKeyPressed()
@@ -77,10 +88,11 @@ void MenuItem::Show()
 
 	do
 	{
-		system("cls");
+		clearScreen();
 
 		for (size_t i = 0; i < submenu.size(); i++)
 		{
+			gotoXY(submenu[i]->position.column, submenu[i]->position.row);
 			if (i == selectedItem)
 				std::cout << selectedItemMarker;
 			else
@@ -116,6 +128,8 @@ void MenuItem::Show()
 		}
 
 	} while (key != 27);
+
+	system("cls");
 
 }
 
@@ -167,9 +181,10 @@ void SubMenu::Show()
 
 	int key;
 	std::string separator = (horizontal) ? " " : "\r\n";
+
 	do
 	{
-		system("cls");
+		clearScreen();
 		for (size_t i = 0; i < itemData.size(); i++)
 		{
 			gotoXY(itemData[i].column, itemData[i].row);
@@ -201,6 +216,8 @@ void SubMenu::Show()
 			break;
 		} // switch
 	} while (key != 27);
+
+	system("cls");
 }
 
 void SubMenu::runItem()
@@ -347,6 +364,8 @@ void UsersMenu::Login()
 
 	std::cout << "\nYou've successfully logged in. Enjoy ;)" << std::endl;
 	Sleep(1000);
+
+	system("cls");
 }
 
 void UsersMenu::Create()
@@ -381,6 +400,8 @@ void UsersMenu::Create()
 
 	std::cout << "You've successfully created an account!" << std::endl;
 	Sleep(1000);
+
+	system("cls");
 }
 
 void UsersMenu::showAll()
@@ -391,7 +412,7 @@ void UsersMenu::showAll()
 
 	do
 	{
-		system("cls");
+		clearScreen();
 
 		for (size_t i = 0; i < users.size(); i++)
 		{
@@ -406,6 +427,8 @@ void UsersMenu::showAll()
 		key = getKeyPressed();
 
 	} while (key != 27);
+
+	system("cls");
 }
 
 void UsersMenu::Delete()
@@ -417,7 +440,7 @@ void UsersMenu::Delete()
 
 	do
 	{
-		system("cls");
+		clearScreen();
 
 		for (size_t i = 0; i < users.size(); i++)
 		{
@@ -456,6 +479,8 @@ void UsersMenu::Delete()
 			break;
 		} // switch
 	} while (key != 27);
+
+	system("cls");
 }
 
 void UsersMenu::Update()
@@ -467,7 +492,7 @@ void UsersMenu::Update()
 
 	do
 	{
-		system("cls");
+		clearScreen();
 
 		for (size_t i = 0; i < users.size(); i++)
 		{
@@ -527,6 +552,8 @@ void UsersMenu::Update()
 		}
 		} // switch
 	} while (key != 27);
+
+	system("cls");
 }
 /*UsersMenu*/
 
@@ -647,7 +674,7 @@ void TeamsMenu::Update()
 
 	do
 	{
-		system("cls");
+		clearScreen();
 
 		for (size_t i = 0; i < teams.size(); i++)
 		{
@@ -702,7 +729,7 @@ void TeamsMenu::Delete()
 
 	do
 	{
-		system("cls");
+		clearScreen();
 
 		for (size_t i = 0; i < teams.size(); i++)
 		{
@@ -753,7 +780,7 @@ void TeamsMenu::AddUser()
 
 	do
 	{
-		system("cls");
+		clearScreen();
 
 		for (size_t i = 0; i < teams.size(); i++)
 		{
@@ -851,7 +878,7 @@ void TeamsMenu::RemoveUser()
 
 	do
 	{
-		system("cls");
+		clearScreen();
 
 		for (size_t i = 0; i < teams.size(); i++)
 		{
@@ -940,7 +967,7 @@ void TeamsMenu::showAll()
 
 	do
 	{
-		system("cls");
+		clearScreen();
 
 		for (size_t i = 0; i < teams.size(); i++)
 		{
@@ -1098,7 +1125,7 @@ void ProjectsMenu::Update()
 
 	do
 	{
-		system("cls");
+		clearScreen();
 
 		for (size_t i = 0; i < projects.size(); i++)
 		{
@@ -1154,7 +1181,7 @@ void ProjectsMenu::Delete()
 
 	do
 	{
-		system("cls");
+		clearScreen();
 
 		for (size_t i = 0; i < projects.size(); i++)
 		{
@@ -1208,7 +1235,7 @@ void ProjectsMenu::showAll()
 
 	do
 	{
-		system("cls");
+		clearScreen();
 
 		for (size_t i = 0; i < projects.size(); i++)
 		{

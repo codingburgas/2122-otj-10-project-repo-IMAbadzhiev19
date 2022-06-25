@@ -15,7 +15,7 @@ int main()
 	MenuItem* mi[5] = { new UsersMenu(&uman), new TeamsMenu(&teamman), new ProjectsMenu(&pman), new TasksMenu(&taskman), new QuitMenu() };
 
 	for (int i = 0; i < 5; i++)
-		mn.addItem(mi[i]);
+		mn.addItem(mi[i], i + 3, 40);
 
 	mn.Show();
 }
