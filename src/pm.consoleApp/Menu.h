@@ -128,7 +128,7 @@ public:
 	void showAll();
 
 private:
-	size_t selectedUser = 0;
+	size_t selectedUser;
 };
 
 class TeamsMenu : public SubMenu
@@ -150,7 +150,7 @@ public:
 	void RemoveUser();
 
 private:
-	size_t selectedTeam = 0;
+	size_t selectedTeam;
 };
 
 class ProjectsMenu : public SubMenu
@@ -159,7 +159,7 @@ public:
 	ProjectsMenu() { }
 	ProjectsMenu(pm::bll::ProjectsManagement* be);
 
-	void moveToProject(bool next) { }
+	void moveToProject(bool next);
 	void runItem();
 
 	virtual void Create();
@@ -171,7 +171,7 @@ public:
 	void RemoveTeam() { }
 
 private:
-	size_t selectedProject = 0;
+	size_t selectedProject;
 };
 
 class TasksMenu : public SubMenu
@@ -195,5 +195,5 @@ public:
 
 
 private:
-	size_t selectedProject = 0;
+	size_t selectedTask;
 };

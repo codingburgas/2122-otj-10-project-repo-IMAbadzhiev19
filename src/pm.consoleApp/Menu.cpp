@@ -256,7 +256,7 @@ void SubMenu::moveToItem(bool next)
 /*SubMenu*/
 
 /*UsersMenu*/
-UsersMenu::UsersMenu(pm::bll::UsersManagement* be) : SubMenu("Users", false, false, true, be, nullptr, nullptr, nullptr)
+UsersMenu::UsersMenu(pm::bll::UsersManagement* be) : SubMenu("Users", false, false, true, be, nullptr, nullptr, nullptr), selectedUser(0)
 {
 	users.clear();
 
@@ -283,11 +283,11 @@ void UsersMenu::moveToUser(bool next)
 
 	if (selectedUser != oldSelectedItem)
 	{
-		gotoXY(5, oldSelectedItem);
+		gotoXY(5, oldSelectedItem + 1);
 		for (size_t i = 0; i < selectedItemMarker.length(); i++)
 			std::cout << ' ';
 
-		gotoXY(5, selectedUser);
+		gotoXY(5, selectedUser + 1);
 		std::cout << selectedItemMarker;
 	}
 }
@@ -562,7 +562,7 @@ void UsersMenu::Update()
 /*UsersMenu*/
 
 /*TeamsMenu*/
-TeamsMenu::TeamsMenu(pm::bll::TeamsManagement* be) : SubMenu("Teams", false, false, false, nullptr, be, nullptr, nullptr)
+TeamsMenu::TeamsMenu(pm::bll::TeamsManagement* be) : SubMenu("Teams", false, false, false, nullptr, be, nullptr, nullptr), selectedTeam(0)
 {
 	teams.clear();
 	users.clear();
@@ -589,11 +589,11 @@ void TeamsMenu::moveToTeam(bool next)
 
 	if (selectedTeam != oldSelectedItem)
 	{
-		gotoXY(8, oldSelectedItem);
+		gotoXY(8, oldSelectedItem + 1);
 		for (size_t i = 0; i < selectedItemMarker.length(); i++)
 			std::cout << ' ';
 
-		gotoXY(8, selectedTeam);
+		gotoXY(8, selectedTeam + 1);
 		std::cout << selectedItemMarker;
 	}
 }
@@ -1044,7 +1044,7 @@ void TeamsMenu::showAll()
 /*TeamsMenu*/
 
 /*ProjectsMenu*/
-ProjectsMenu::ProjectsMenu(pm::bll::ProjectsManagement* be) : SubMenu("Projects", false, false, false, nullptr, nullptr, be, nullptr)
+ProjectsMenu::ProjectsMenu(pm::bll::ProjectsManagement* be) : SubMenu("Projects", false, false, false, nullptr, nullptr, be, nullptr), selectedProject(0)
 {
 	projects.clear();
 
@@ -1117,6 +1117,26 @@ void ProjectsMenu::runItem()
 		else
 			RemoveTeam();
 		break;
+	}
+}
+
+void ProjectsMenu::moveToProject(bool next)
+{
+	size_t OldSelectedItem = selectedProject;
+
+	if (next && (selectedProject < projects.size() - 1))
+		selectedProject++;
+
+	if (!next && (selectedProject > 0))
+		selectedProject--;
+
+	if (selectedProject != OldSelectedItem)
+	{
+		gotoXY(5, OldSelectedItem + 1);
+		for (size_t j = 0; j < selectedItemMarker.length(); j++)
+			std::cout << ' ';
+		gotoXY(5, selectedProject + 1);
+		std::cout << selectedItemMarker;
 	}
 }
 
@@ -1364,7 +1384,7 @@ void ProjectsMenu::showAll()
 /*ProjectsMenu*/
 
 /*TasksMenu*/
-TasksMenu::TasksMenu(pm::bll::TasksManagement* be) : SubMenu("Tasks", false, false, false, nullptr, nullptr, nullptr, be)
+TasksMenu::TasksMenu(pm::bll::TasksManagement* be) : SubMenu("Tasks", false, false, false, nullptr, nullptr, nullptr, be), selectedTask(0)
 {
 	tasks.clear();
 
