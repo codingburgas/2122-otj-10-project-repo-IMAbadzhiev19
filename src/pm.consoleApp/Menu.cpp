@@ -383,7 +383,7 @@ void UsersMenu::Login()
 				std::cout << "Wrong email: " << email << std::endl;
 			else
 				std::cerr << e.what() << std::endl;
-			Sleep(4000);
+			Sleep(1000);
 		}
 	} while (true);
 
@@ -396,6 +396,7 @@ void UsersMenu::Login()
 void UsersMenu::Create()
 {
 	pm::dal::UsersStore::USER usr;
+	int key;
 
 	do
 	{
@@ -414,7 +415,17 @@ void UsersMenu::Create()
 			gotoXY(11, 1); getline(std::cin, usr.lastName);
 			gotoXY(7, 2); getline(std::cin, usr.email);
 			gotoXY(5, 3); std::cin >> usr.age; std::cin.ignore();
-			gotoXY(16, 4); getline(std::cin, usr.password);
+			gotoXY(16, 4);
+
+			for (int i = 0; i < 301; i++)
+			{
+				key = getKeyPressed();
+				if (key == 13)
+					break;
+
+				usr.password += key;
+				_putch('*');
+			}
 
 			uM->registerUser(usr);
 			users = uM->getRegisteredUsers();
@@ -423,13 +434,14 @@ void UsersMenu::Create()
 		}
 		catch (std::string& errorMsg)
 		{
+			std::cout << std::endl;
 			std::cout << errorMsg << std::endl;
 			Sleep(1000);
 		}
 
 	} while (true);
 
-	std::cout << "You've successfully created an account!" << std::endl;
+	std::cout << "\nYou've successfully created an account!" << std::endl;
 	Sleep(1000);
 
 	system("cls");
