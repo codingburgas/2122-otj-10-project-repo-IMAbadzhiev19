@@ -115,7 +115,7 @@ class UsersMenu : public SubMenu
 {
 public:
 
-	UsersMenu() { }
+	UsersMenu() : selectedUser(0) { }
 	UsersMenu(pm::bll::UsersManagement* be);
 
 	virtual void runItem();
@@ -135,7 +135,7 @@ class TeamsMenu : public SubMenu
 {
 public:
 
-	TeamsMenu() { }
+	TeamsMenu() : selectedTeam(0) { }
 	TeamsMenu(pm::bll::TeamsManagement* be);
 
 	void moveToTeam(bool next);
@@ -156,7 +156,7 @@ private:
 class ProjectsMenu : public SubMenu
 {
 public:
-	ProjectsMenu() { }
+	ProjectsMenu() : selectedProject(0) { }
 	ProjectsMenu(pm::bll::ProjectsManagement* be);
 
 	void moveToProject(bool next);
@@ -167,8 +167,8 @@ public:
 	virtual void Update();
 	virtual void showAll();
 
-	void AddTeam() { }
-	void RemoveTeam() { }
+	void AddTeam();
+	void RemoveTeam();
 
 private:
 	size_t selectedProject;

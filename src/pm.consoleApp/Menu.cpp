@@ -336,6 +336,8 @@ void UsersMenu::runItem()
 			showAll();
 		break;
 	}
+
+	system("cls");
 }
 
 void UsersMenu::Login()
@@ -573,16 +575,32 @@ void UsersMenu::Update()
 			system("cls");
 			pm::dal::UsersStore::USER usr;
 
-			std::cout << "Enter first name: "; getline(std::cin, usr.firstName);
-			std::cout << "Enter last name: "; getline(std::cin, usr.lastName);
-			std::cout << "Enter email: "; getline(std::cin, usr.email);
-			std::cout << "Age: "; std::cin >> usr.age; std::cin.ignore();
-			std::cout << "Enter password: "; getline(std::cin, usr.password);
+			std::cout << "First name: " << std::endl;
+			std::cout << "Last name: " << std::endl;
+			std::cout << "Email: " << std::endl;
+			std::cout << "Age: " << std::endl;
+			std::cout << "Enter password: " << std::endl;
+
+			gotoXY(12, 0); getline(std::cin, usr.firstName);
+			gotoXY(11, 1); getline(std::cin, usr.lastName);
+			gotoXY(7, 2); getline(std::cin, usr.email);
+			gotoXY(5, 3); std::cin >> usr.age; std::cin.ignore();
+			gotoXY(16, 4);
+
+			for (int i = 0; i < 301; i++)
+			{
+				key = getKeyPressed();
+				if (key == 13)
+					break;
+
+				usr.password += key;
+				_putch('*');
+			}
 
 			int admin = 0;
 
 			if (structure::currentUserG.admin == true) {
-				std::cout << "Admin: (1 - yes \\ 0 - no)"; 
+				std::cout << "\nAdmin (1 - yes \\ 0 - no) -> "; 
 				std::cin >> admin;
 			}
 
@@ -697,13 +715,16 @@ void TeamsMenu::runItem()
 			RemoveUser();
 		break;
 	}
+
+	system("cls");
 }
 
 void TeamsMenu::Create()
 {
 	pm::dal::TeamsStore::TEAM team;
 
-	std::cout << "Team's name: "; getline(std::cin, team.title);
+	std::cout << "Team's name: ";
+	gotoXY(14, 0); getline(std::cin, team.title);
 
 	tM->createTeam(team, structure::currentUserG.id);
 	teams = tM->loadTeams();
@@ -754,7 +775,8 @@ void TeamsMenu::Update()
 
 			pm::dal::TeamsStore::TEAM t;
 
-			std::cout << "Title: "; getline(std::cin, t.title);
+			std::cout << "Team's name: ";
+			gotoXY(14, 0); std::getline(std::cin, t.title);
 
 			tM->updateTeam(teams[selectedTeam].id, t, structure::currentUserG.id);
 			teams = tM->loadTeams();
@@ -1157,6 +1179,7 @@ void ProjectsMenu::runItem()
 			RemoveTeam();
 		break;
 	}
+	system("cls");
 }
 
 void ProjectsMenu::moveToProject(bool next)
@@ -1183,8 +1206,11 @@ void ProjectsMenu::Create()
 {
 	pm::dal::ProjectsStore::PROJECT project;
 
-	std::cout << "Enter project's name: "; getline(std::cin, project.title);
-	std::cout << "Enter a description of the project: "; getline(std::cin, project.description);
+	std::cout << "Enter project's name: " << std::endl;
+	std::cout << "Enter a description of the project: " << std::endl;
+
+	gotoXY(22, 0); std::getline(std::cin, project.title);
+	gotoXY(36, 1); std::getline(std::cin, project.description);
 
 	pM->createProject(project, structure::currentUserG.id);
 	projects = pM->loadAllProjects();
@@ -1236,8 +1262,11 @@ void ProjectsMenu::Update()
 
 			pm::dal::ProjectsStore::PROJECT p;
 
-			std::cout << "Enter new name or if you don't want to change it enter the same: "; getline(std::cin, p.title);
-			std::cout << "Enter new description or if you don't want to change it enter the same: "; getline(std::cin, p.description);
+			std::cout << "Enter project's name: " << std::endl;
+			std::cout << "Enter a description of the project: " << std::endl;
+
+			gotoXY(22, 0); std::getline(std::cin, p.title);
+			gotoXY(36, 1); std::getline(std::cin, p.description);
 
 			pM->updateProject(p, projects[selectedProject].id, structure::currentUserG.id);
 			projects = pM->loadAllProjects();
@@ -1413,6 +1442,199 @@ void ProjectsMenu::showAll()
 					break;
 				}
 
+			}
+		}
+		} // switch
+	} while (key != 27);
+
+	system("cls");
+}
+
+void ProjectsMenu::AddTeam()
+{
+	selectedProject = 0;
+	std::string separator = (horizontal) ? " " : "\r\n";
+	int key;
+
+	do
+	{
+		system("cls");
+
+		for (size_t i = 0; i < projects.size(); i++)
+		{
+			gotoXY(5, i + 1);
+			if (i == selectedProject)
+				std::cout << selectedItemMarker;
+			else
+				for (short c = 0; c < selectedItemMarker.size(); c++)
+					std::cout << ' ';
+
+			std::cout << projects[i].title << " " << projects[i].createdOn.day << "/" << projects[i].createdOn.month << "/" << projects[i].createdOn.day << std::endl;
+		}
+
+		key = getKeyPressed();
+
+		switch (key)
+		{
+		case 72:if (!horizontal)
+			moveToProject(false);
+			break;
+		case 75:if (horizontal)
+			moveToProject(false);
+			break;
+		case 80:if (!horizontal)
+			moveToProject(true);
+			break;
+		case 77:if (horizontal)
+			moveToProject(true);
+			break;
+		case 13:
+		{
+			system("cls");
+
+			size_t counter = 0;
+			std::vector<pm::dal::TeamsStore::TEAM> teamsProject = pM->getTeamFromProject(selectedProject + 1);
+
+			std::string query = "SELECT * FROM Teams";
+			nanodbc::result res = db.getResultFromSelect(query);
+
+			while (res.next())
+			{
+				std::cout << "             " << res.get<int>(0) << ". " << res.get<std::string>(1) << " " << res.get<nanodbc::date>(2).day << "/" << res.get<nanodbc::date>(2).month << " " << res.get<nanodbc::date>(2).year;
+
+				bool flag = false;
+				for (const auto& x : teamsProject)
+				{
+					if (res.get<int>(0) == x.id)
+						flag = true;
+				}
+
+				std::string end;
+
+				if (flag)
+					end += " | (In the project)\n";
+				else
+					end += " | (Not in the project)\n";
+
+				std::cout << end;
+
+				counter++;
+			}
+
+			int choice;
+			std::cout << "\n\nEnter the id of the team who you would like to add to the current project: "; std::cin >> choice; std::cin.ignore();
+
+			if (choice < 1 || choice > counter) {
+				system("cls");
+				gotoXY(45, 0); std::cout << "Invalid id" << std::endl;
+				Sleep(1000);
+
+				continue;
+			}
+
+			bool flag = false;
+
+			for (const auto& x : teamsProject)
+			{
+				if (x.id == choice)
+					flag = true;
+			}
+
+			if (!flag) {
+				pM->assignTeamToProject(projects[selectedProject].id, choice);
+				projects = pM->loadAllProjects();
+				break;
+			}
+			else {
+				system("cls");
+				gotoXY(25, 0); std::cout << "You are trying to add a team who is already in the project!";
+				teamsProject.clear();
+				Sleep(1000);
+			}
+		}
+		} // switch
+	} while (key != 27);
+
+	system("cls");
+}
+
+void ProjectsMenu::RemoveTeam()
+{
+	selectedProject = 0;
+	std::string separator = (horizontal) ? " " : "\r\n";
+	int key;
+
+	do
+	{
+		system("cls");
+
+		for (size_t i = 0; i < projects.size(); i++)
+		{
+			gotoXY(5, i + 1);
+			if (i == selectedProject)
+				std::cout << selectedItemMarker;
+			else
+				for (short c = 0; c < selectedItemMarker.size(); c++)
+					std::cout << ' ';
+
+			std::cout << projects[i].title << " " << projects[i].createdOn.day << "/" << projects[i].createdOn.month << "/" << projects[i].createdOn.day << std::endl;
+		}
+
+		key = getKeyPressed();
+
+		switch (key)
+		{
+		case 72:if (!horizontal)
+			moveToProject(false);
+			break;
+		case 75:if (horizontal)
+			moveToProject(false);
+			break;
+		case 80:if (!horizontal)
+			moveToProject(true);
+			break;
+		case 77:if (horizontal)
+			moveToProject(true);
+			break;
+		case 13:
+		{
+			system("cls");
+
+			size_t counter = 0;
+			std::vector<pm::dal::TeamsStore::TEAM> teamsProject = pM->getTeamFromProject(selectedProject + 1);
+
+			if (teamsProject.empty()) {
+				std::cout << "There are no teams in the current project";
+				Sleep(1000);
+				break;
+			}
+
+			for (const auto& x : teamsProject)
+			{
+				std::cout << "             " << x.id << ". " << x.title << " " << x.createdOn.day << "/" << x.createdOn.month << " " << x.createdOn.year << " | (In Team)" << std::endl;
+			}
+
+			int choice;
+			std::cout << "\n\nEnter the id of the team which you would like to remove from the current project: "; std::cin >> choice; std::cin.ignore();
+
+			bool flag = false;
+
+			for (const auto& x : teamsProject)
+			{
+				if (x.id == choice)
+					flag = true;
+			}
+
+			if (flag) {
+				pM->removeTeamFromProject(projects[selectedProject].id, choice);
+				projects = pM->loadAllProjects();
+				break;
+			}
+			else {
+				system("cls");
+				gotoXY(25, 0); std::cout << "You are trying to remove a team which isn't in the project!";
+				teamsProject.clear();
+				Sleep(1000);
 			}
 		}
 		} // switch
