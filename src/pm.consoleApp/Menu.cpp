@@ -340,15 +340,35 @@ void UsersMenu::runItem()
 
 void UsersMenu::Login()
 {
-	std::string email, password;
+	std::string password;
+	std::string email;
+
+	char key;
+
 	do
 	{
+		email.clear();
+		password.clear();
+
 		try
 		{
 			system("cls");
 
-			std::cout << "Email: "; std::getline(std::cin, email);
-			std::cout << "Password: "; std::getline(std::cin, password);
+			std::cout << "Email: " << std::endl;
+			std::cout << "Password: " << std::endl;
+
+			gotoXY(7, 0); getline(std::cin, email);
+
+			gotoXY(10, 1); 
+			for (int i = 0; i < 301; i++)
+			{
+				key = getKeyPressed();
+				if (key == 13)
+					break;
+
+				password += key; 
+				_putch('*');
+			}
 
 			uM->loginUser(email, password);
 			structure::currentUserG = uM->m_usersStore.getUserByEmail(email);
@@ -357,12 +377,13 @@ void UsersMenu::Login()
 		}
 		catch (std::exception& e)
 		{
+			std::cout << std::endl;
 			std::string str = e.what();
 			if (str.compare("index out of range") == 0)
 				std::cout << "Wrong email: " << email << std::endl;
 			else
 				std::cerr << e.what() << std::endl;
-			Sleep(1000);
+			Sleep(4000);
 		}
 	} while (true);
 
@@ -383,11 +404,17 @@ void UsersMenu::Create()
 
 		try
 		{
-			std::cout << "First name: "; getline(std::cin, usr.firstName);
-			std::cout << "Last name: "; getline(std::cin, usr.lastName);
-			std::cout << "Email: "; getline(std::cin, usr.email);
-			std::cout << "Age: "; std::cin >> usr.age; std::cin.ignore();
-			std::cout << "Enter password: "; getline(std::cin, usr.password);
+			std::cout << "First name: " << std::endl;
+			std::cout << "Last name: " << std::endl;
+			std::cout << "Email: " << std::endl;
+			std::cout << "Age: " << std::endl;
+			std::cout << "Enter password: " << std::endl;
+
+			gotoXY(12, 0); getline(std::cin, usr.firstName);
+			gotoXY(11, 1); getline(std::cin, usr.lastName);
+			gotoXY(7, 2); getline(std::cin, usr.email);
+			gotoXY(5, 3); std::cin >> usr.age; std::cin.ignore();
+			gotoXY(16, 4); getline(std::cin, usr.password);
 
 			uM->registerUser(usr);
 			users = uM->getRegisteredUsers();
