@@ -68,7 +68,12 @@ class QuitMenu : public MenuItem
 {
 public:
 	QuitMenu() : MenuItem("Quit", true, true) { }
-	virtual void Run() { exit(0); }
+
+	virtual void Run() { 
+		gotoXY(45, 0); 
+		std::cout << "Successfully exited" << std::endl; 
+		exit(0); 
+	}
 };
 
 class SubMenu : public MenuItem

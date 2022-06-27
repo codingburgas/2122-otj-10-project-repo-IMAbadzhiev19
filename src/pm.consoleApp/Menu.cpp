@@ -527,6 +527,23 @@ void UsersMenu::Delete()
 			moveToUser(true);
 			break;
 		case 13:
+
+			system("cls");
+
+			int n1 = random_in_range(1, 99);
+			int tmp = random_in_range(1, 99);
+
+			int n2 = (tmp != n1) ? tmp : rand();
+			int res;
+
+			std::cout << n1 << " + " << n2 << " = "; std::cin >> res;
+
+			if (res != (n1 + n2)) {
+				std::cout << "Wrong answer :(" << std::endl;
+				Sleep(1000);
+				continue;
+			}
+
 			uM->removeUser(users[selectedUser].id);
 			users = uM->getRegisteredUsers();
 			break;
@@ -838,6 +855,20 @@ void TeamsMenu::Delete()
 		case 13:
 		{
 			system("cls");
+
+			int n1 = random_in_range(1, 99);
+			int tmp = random_in_range(1, 99);
+
+			int n2 = (tmp != n1) ? tmp : rand();
+			int res;
+
+			std::cout << n1 << " + " << n2 << " = "; std::cin >> res;
+
+			if (res != (n1 + n2)) {
+				std::cout << "Wrong answer :(" << std::endl;
+				Sleep(1000);
+				continue;
+			}
 
 			tM->removeTeam(teams[selectedTeam].id);
 			teams = tM->loadTeams();
@@ -1402,31 +1433,35 @@ void ProjectsMenu::showAll()
 			gotoXY(35, 9);  std::cout << "Project's Description";
 			gotoXY(35, 10); std::cout << "Teams In The Project";
 
-			int y = 9, choice = 1;
+			gotoXY(32, 9); std::cout << "-> ";
+
+			int y = 9, choice = 1, key;
 
 			while (true)
 			{
-				system("pause>nul");
+				key = getKeyPressed();
 
-				if (GetAsyncKeyState(VK_DOWN) && y != 10)
+				if (key == 72 && y != 9)
 				{
-					gotoXY(32, y); std::cout << "  ";
-					y++;
-					gotoXY(32, y); std::cout << "-> ";
-					choice++;
-					continue;
-				}
-
-				if (GetAsyncKeyState(VK_UP) && y != 9)
-				{
-					gotoXY(32, y); std::cout << "  ";
-					y--;
-					gotoXY(32, y); std::cout << "-> ";
+					gotoXY(32, 10); std::cout << "   ";
 					choice--;
+					gotoXY(32, 9); std::cout << "-> ";
+					y--;
+
 					continue;
 				}
 
-				if (GetAsyncKeyState(VK_RETURN))
+				if (key == 80 && y != 10)
+				{
+					gotoXY(32, 9); std::cout << "   ";
+					choice++;
+					gotoXY(32, 10); std::cout << "-> ";
+					y++;
+
+					continue;
+				}
+
+				if (key == 13)
 				{
 					switch (choice)
 					{
@@ -1463,8 +1498,8 @@ void ProjectsMenu::showAll()
 
 					break;
 				}
-
 			}
+			
 		}
 		} // switch
 	} while (key != 27);
@@ -1545,7 +1580,7 @@ void ProjectsMenu::AddTeam()
 
 			if (counter == 0)
 			{
-				std::cout << "There are no teams in the current project" << std::endl;
+				std::cout << "There are no created teams" << std::endl;
 				Sleep(1000);
 				
 				continue;
