@@ -25,6 +25,14 @@ void MenuItem::clearScreen()
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
 }
 
+int MenuItem::random_in_range(int min, int max)
+{
+	thread_local std::ranlux48 rng(
+		std::chrono::system_clock::now().time_since_epoch().count());
+
+	return std::uniform_int_distribution <int>(min, max)(rng);
+}
+
 int MenuItem::getKeyPressed()
 {
 	int k = _getch();
@@ -1321,9 +1329,23 @@ void ProjectsMenu::Delete()
 		{
 			system("cls");
 
+			int n1 = random_in_range(1, 99);
+			int tmp = random_in_range(1, 99);
+
+			int n2 = (tmp != n1) ? tmp : rand();
+			int res;
+
+			std::cout << n1 << " + " << n2 << " = "; std::cin >> res;
+
+			if (res != (n1 + n2)) {
+				std::cout << "Wrong answer :(" << std::endl;
+				Sleep(1000);
+				continue;
+			}
+			
+
 			pM->removeProject(projects[selectedProject].id);
 			projects = pM->loadAllProjects();
-
 			break;
 		}
 		} // switch
@@ -1519,6 +1541,14 @@ void ProjectsMenu::AddTeam()
 				std::cout << end;
 
 				counter++;
+			}
+
+			if (counter == 0)
+			{
+				std::cout << "There are no teams in the current project" << std::endl;
+				Sleep(1000);
+				
+				continue;
 			}
 
 			int choice;

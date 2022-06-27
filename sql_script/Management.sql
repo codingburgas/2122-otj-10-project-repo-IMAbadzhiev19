@@ -52,7 +52,7 @@ GO
 CREATE TABLE [Projects] (
 	[Id] int IDENTITY(1, 1) PRIMARY KEY,
 	[Title] varchar(31) NOT NULL,
-	[Description] varchar(101) NOT NULL,
+	[Description] varchar(401) NOT NULL,
 	[CreatedOn] datetime NOT NULL,
 	[CreatorId] int CONSTRAINT FK_CreatorId_Projects FOREIGN KEY REFERENCES [Users](Id) ON UPDATE CASCADE,
 )
@@ -107,4 +107,4 @@ CREATE TABLE [TasksAndUsers] (
 	UNIQUE(UserId, TaskId)
 )
 GO
---TasksAndUsers
+--TasksAndUsersv

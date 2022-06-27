@@ -3,6 +3,8 @@
 #include<iostream>
 #include<windows.h>
 #include<conio.h>
+#include <chrono>
+#include <random>
 
 #include "../pm.bll/UsersManagement.h"
 #include "../pm.bll/TeamsManagement.h"
@@ -36,6 +38,7 @@ protected:
 	int getKeyPressed();
 	virtual void moveToItem(bool next);
 	void clearScreen();
+	int random_in_range(int minimum, int maximum);
 
 	std::string name;
 	bool horizontal;
