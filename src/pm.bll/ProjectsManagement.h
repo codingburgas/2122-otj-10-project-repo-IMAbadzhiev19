@@ -26,6 +26,7 @@ namespace pm::bll
 
 		std::vector<pm::dal::ProjectsStore::PROJECT> loadAllProjects();
 		std::vector<pm::dal::TeamsStore::TEAM> getTeamFromProject(size_t projectId);
+		//std::vector<pm::dal::TasksStore::TASK> getTasksFromProject(size_t projectId);
 
 	};
 }

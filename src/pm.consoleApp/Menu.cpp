@@ -1498,6 +1498,9 @@ void ProjectsMenu::showAll()
 	std::string separator = (horizontal) ? " " : "\r\n";
 	int key;
 
+	pm::dal::TasksStore tmp_taskStore;
+	
+
 	gotoXY(8, 0); std::cout << "Press enter on the selected project to see detailed info about it";
 	Sleep(1000);
 
@@ -1539,6 +1542,7 @@ void ProjectsMenu::showAll()
 
 			gotoXY(35, 9);  std::cout << "Project's Description";
 			gotoXY(35, 10); std::cout << "Teams In The Project";
+			gotoXY(35, 11); std::cout << "View assigned tasks";
 
 			gotoXY(32, 9); std::cout << "-> ";
 
@@ -1550,19 +1554,19 @@ void ProjectsMenu::showAll()
 
 				if (key == 72 && y != 9)
 				{
-					gotoXY(32, 10); std::cout << "   ";
+					gotoXY(32, y + 1); std::cout << "   ";
 					choice--;
-					gotoXY(32, 9); std::cout << "-> ";
+					gotoXY(32, y); std::cout << "-> ";
 					y--;
 
 					continue;
 				}
 
-				if (key == 80 && y != 10)
+				if (key == 80 && y != 11)
 				{
-					gotoXY(32, 9); std::cout << "   ";
+					gotoXY(32, y - 1); std::cout << "   ";
 					choice++;
-					gotoXY(32, 10); std::cout << "-> ";
+					gotoXY(32, y); std::cout << "-> ";
 					y++;
 
 					continue;
@@ -1580,27 +1584,60 @@ void ProjectsMenu::showAll()
 						system("pause>nul");
 
 						break;
-					case 2:
-						system("cls");
-						std::vector<pm::dal::TeamsStore::TEAM> teamsProject;
-
-						teamsProject = pM->getTeamFromProject(projects[selectedProject].id);
-
-						if (teamsProject.empty()) {
-							std::cout << "There are no teams in the current project";
-							Sleep(1000);
-							break;
-						}
-
-						std::cout << std::endl;
-						for (const auto& x : teamsProject)
+					case 2: {
+						while (true)
 						{
-							std::cout << "          ";
-							std::cout << x.id << ". " << x.title << " " << x.createdOn.day << "/" << x.createdOn.month << "/" << x.createdOn.year << std::endl;
+							system("cls");
+							std::vector<pm::dal::TeamsStore::TEAM> teamsProject;
+
+							teamsProject = pM->getTeamFromProject(projects[selectedProject].id);
+
+							if (teamsProject.empty()) {
+								std::cout << "There are no teams in the current project";
+								Sleep(1000);
+								break;
+							}
+
+							std::cout << std::endl;
+							for (const auto& x : teamsProject)
+							{
+								std::cout << "          ";
+								std::cout << x.id << ". " << x.title << " " << x.createdOn.day << "/" << x.createdOn.month << "/" << x.createdOn.year << std::endl;
+							}
+
+							if (_getch() == 27)
+								break;
 						}
 
-						if (_getch() == 27)
+						break;
+					}
+					case 3: {
+						system("cls");
+
+						std::string query = "SELECT Tasks.Id, Tasks.Title, Tasks.Description, Tasks.Status, Tasks.CreatedOn, Tasks.CreatorId FROM ProjectsAndTasks, Projects, Tasks WHERE (Projects.Id = ProjectId) AND (TaskId = Tasks.Id) AND (ProjectId = " + std::to_string(selectedProject) + ")";
+
+						nanodbc::result res = db.getResultFromSelect(query);
+
+						unsigned short i = 0;
+
+						while (res.next())
+						{
+							gotoXY(5, i + 1);
+
+							std::cout << res.get<int>(0) << ". " << res.get<std::string>(1) << " | " << res.get<std::string>(3) << " " << res.get<nanodbc::date>(4).day << "/" << res.get<nanodbc::date>(4).month << "/" << res.get<nanodbc::date>(5).year << " | Created by: " << users[res.get<int>(6)].firstName << " " << users[res.get<int>(6)].lastName;
+
+							i++;
+						}
+
+						if (i > 1) {
+							std::cout << "There are no tasks assigned to the current project" << std::endl;
+							Sleep(1500);
 							break;
+						}
+
+						if(_getch() == 27)
+							break;
+					}
 					}
 
 					break;

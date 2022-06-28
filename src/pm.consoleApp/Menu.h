@@ -180,7 +180,7 @@ class TasksMenu : public SubMenu
 public:
 	TasksMenu(pm::bll::TasksManagement* be);
 
-	void moveToTask(bool next) { }
+	void moveToTask(bool next);
 
 	virtual void Create() { }
 	virtual void Delete() { }

@@ -67,3 +67,19 @@ std::vector<pm::dal::TeamsStore::TEAM> pm::dal::ProjectsStore::getTeamFromProjec
 
 	return teams;
 }
+
+//std::vector<pm::dal::TasksStore::TASK> pm::dal::ProjectsStore::getTasksFromProject(size_t projectId)
+//{
+//	std::vector<pm::dal::TasksStore::TASK> tasks;
+//
+//	std::string query = "SELECT Tasks.Id, Tasks.Title, Tasks.Description, Tasks.Status, Tasks.CreatedOn, Tasks.CreatorId FROM ProjectsAndTasks, Projects, Tasks WHERE (Projects.Id = ProjectId) AND (TaskId = Tasks.Id) AND (ProjectId = " + std::to_string(projectId) + ")";
+//
+//	nanodbc::result res = db.getResultFromSelect(query);
+//
+//	while (res.next())
+//	{
+//		tasks.push_back({ res.get<int>(0), res.get<std::string>(1), res.get<std::string>(2), res.get<std::string>(3), res.get<nanodbc::date>(4), res.get<int>(3) });
+//	}
+//
+//	return tasks;
+//}

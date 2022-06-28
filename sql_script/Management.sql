@@ -108,3 +108,5 @@ CREATE TABLE [TasksAndUsers] (
 )
 GO
 --TasksAndUsersv
+
+SELECT Tasks.Id, Tasks.Title, Tasks.Description, Tasks.Status, Tasks.CreatedOn, Tasks.CreatorId FROM ProjectsAndTasks, Projects, Tasks WHERE 

@@ -36,3 +36,8 @@ std::vector<pm::dal::TeamsStore::TEAM> pm::bll::ProjectsManagement::getTeamFromP
 {
 	return m_projectStore.getTeamFromProject(projectId);
 }
+
+//std::vector<pm::dal::TasksStore::TASK> pm::bll::ProjectsManagement::getTasksFromProject(size_t projectId)
+//{
+//	return m_projectStore.getTasksFromProject(projectId);
+//}
