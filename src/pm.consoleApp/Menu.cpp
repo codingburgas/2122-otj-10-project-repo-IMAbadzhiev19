@@ -1231,11 +1231,11 @@ void ProjectsMenu::runItem()
 	system("cls");
 }
 
-void ProjectsMenu::moveToProject(bool next)
+void ProjectsMenu::moveToProject(bool next, std::vector<pm::dal::ProjectsStore::PROJECT> tmp)
 {
 	size_t OldSelectedItem = selectedProject;
 
-	if (next && (selectedProject < projects.size() - 1))
+	if (next && (selectedProject < tmp.size() - 1))
 		selectedProject++;
 
 	if (!next && (selectedProject > 0))
@@ -1268,67 +1268,6 @@ void ProjectsMenu::Create()
 }
 
 void ProjectsMenu::Update()
-{
-	selectedProject = 0;
-	std::string separator = (horizontal) ? " " : "\r\n";
-	int key;
-
-	do
-	{
-		system("cls");
-
-		for (size_t i = 0; i < projects.size(); i++)
-		{
-			gotoXY(5, i + 1);
-			if (i == selectedProject)
-				std::cout << selectedItemMarker;
-			else
-				for (size_t c = 0; c < selectedItemMarker.size(); c++)
-					std::cout << ' ';
-
-			std::cout << projects[i].title << " " << projects[i].createdOn.day << "/" << projects[i].createdOn.month << "/" << projects[i].createdOn.day << std::endl;
-		}
-
-		key = getKeyPressed();
-
-		switch (key)
-		{
-		case 72:if (!horizontal)
-			moveToProject(false);
-			break;
-		case 75:if (horizontal)
-			moveToProject(false);
-			break;
-		case 80:if (!horizontal)
-			moveToProject(true);
-			break;
-		case 77:if (horizontal)
-			moveToProject(true);
-			break;
-		case 13:
-		{
-			system("cls");
-
-			pm::dal::ProjectsStore::PROJECT p;
-
-			std::cout << "Enter project's name: " << std::endl;
-			std::cout << "Enter a description of the project: " << std::endl;
-
-			gotoXY(22, 0); std::getline(std::cin, p.title);
-			gotoXY(36, 1); std::getline(std::cin, p.description);
-
-			pM->updateProject(p, projects[selectedProject].id, structure::currentUserG.id);
-			projects = pM->loadAllProjects();
-
-			break;
-		}
-		} // switch
-	} while (key != 27);
-
-	system("cls");
-}
-
-void ProjectsMenu::Delete()
 {
 	selectedProject = 0;
 	std::string separator = (horizontal) ? " " : "\r\n";
@@ -1388,16 +1327,138 @@ void ProjectsMenu::Delete()
 		switch (key)
 		{
 		case 72:if (!horizontal)
-			moveToProject(false);
+			if (structure::currentUserG.admin == 1)
+				moveToProject(false, projects);
+			else
+				moveToProject(false, projects_user);
 			break;
 		case 75:if (horizontal)
-			moveToProject(false);
+			if (structure::currentUserG.admin == 1)
+				moveToProject(false, projects);
+			else
+				moveToProject(false, projects_user);
 			break;
 		case 80:if (!horizontal)
-			moveToProject(true);
+			if (structure::currentUserG.admin == 1)
+				moveToProject(true, projects);
+			else
+				moveToProject(true, projects_user);
 			break;
 		case 77:if (horizontal)
-			moveToProject(true);
+			if (structure::currentUserG.admin == 1)
+				moveToProject(true, projects);
+			else
+				moveToProject(true, projects_user);
+			break;
+		case 13:
+		{
+			system("cls");
+
+			pm::dal::ProjectsStore::PROJECT p;
+
+			std::cout << "Enter project's name: " << std::endl;
+			std::cout << "Enter a description of the project: " << std::endl;
+
+			gotoXY(22, 0); std::getline(std::cin, p.title);
+			gotoXY(36, 1); std::getline(std::cin, p.description);
+
+			if(structure::currentUserG.admin == 1)
+				pM->updateProject(p, projects[selectedProject].id, structure::currentUserG.id);
+			else
+				pM->updateProject(p, projects_user[selectedProject].id, structure::currentUserG.id);
+			projects = pM->loadAllProjects();
+
+			break;
+		}
+		} // switch
+	} while (key != 27);
+
+	system("cls");
+}
+
+void ProjectsMenu::Delete()
+{
+	selectedProject = 0;
+	std::string separator = (horizontal) ? " " : "\r\n";
+	int key;
+
+	std::vector<pm::dal::ProjectsStore::PROJECT> projects_user;
+
+	do
+	{
+		system("cls");
+
+		if (structure::currentUserG.admin == 1)
+		{
+			for (size_t i = 0; i < projects.size(); i++)
+			{
+				gotoXY(5, i + 1);
+				if (i == selectedProject)
+					std::cout << selectedItemMarker;
+				else
+					for (size_t c = 0; c < selectedItemMarker.size(); c++)
+						std::cout << ' ';
+
+				std::cout << projects[i].title << " " << projects[i].createdOn.day << "/" << projects[i].createdOn.month << "/" << projects[i].createdOn.day << std::endl;
+			}
+		}
+		else {
+			projects_user.clear();
+
+			for (const auto& x : projects)
+			{
+				if (x.creatorId == structure::currentUserG.id)
+					projects_user.push_back({ x.id, x.title, x.description, x.createdOn, x.creatorId });
+			}
+
+
+			for (size_t i = 0; i < projects_user.size(); i++)
+			{
+				gotoXY(5, i + 1);
+				if (i == selectedProject)
+					std::cout << selectedItemMarker;
+				else
+					for (size_t c = 0; c < selectedItemMarker.size(); c++)
+						std::cout << ' ';
+
+				std::cout << projects_user[i].title << " " << projects_user[i].createdOn.day << "/" << projects_user[i].createdOn.month << "/" << projects_user[i].createdOn.day << std::endl;
+			}
+
+			if (projects_user.empty()) {
+				system("cls");
+				std::cout << "There are no projects created by you that you can delete" << std::endl;
+				Sleep(1500);
+				break;
+			}
+		}
+
+		key = getKeyPressed();
+
+		switch (key)
+		{
+		case 72:if (!horizontal)
+					if(structure::currentUserG.admin == 1)
+						moveToProject(false, projects);
+					else
+						moveToProject(false, projects_user);
+			break;
+		case 75:if (horizontal)
+					if (structure::currentUserG.admin == 1)
+						moveToProject(false, projects);
+					else
+						moveToProject(false, projects_user);
+			break;
+		case 80:if (!horizontal)
+					if (structure::currentUserG.admin == 1)
+						moveToProject(true, projects);
+					else
+						moveToProject(true, projects_user);
+			break;
+		case 77:if (horizontal)
+					if (structure::currentUserG.admin == 1)
+						moveToProject(true, projects);
+					else
+						moveToProject(true, projects_user);
 			break;
 		case 13:
 		{
@@ -1461,16 +1522,16 @@ void ProjectsMenu::showAll()
 		switch (key)
 		{
 		case 72:if (!horizontal)
-			moveToProject(false);
+			moveToProject(false, projects);
 			break;
 		case 75:if (horizontal)
-			moveToProject(false);
+			moveToProject(false, projects);
 			break;
 		case 80:if (!horizontal)
-			moveToProject(true);
+			moveToProject(true, projects);
 			break;
 		case 77:if (horizontal)
-			moveToProject(true);
+			moveToProject(true, projects);
 			break;
 		case 13:
 		{
@@ -1580,16 +1641,16 @@ void ProjectsMenu::AddTeam()
 		switch (key)
 		{
 		case 72:if (!horizontal)
-			moveToProject(false);
+			moveToProject(false, projects);
 			break;
 		case 75:if (horizontal)
-			moveToProject(false);
+			moveToProject(false, projects);
 			break;
 		case 80:if (!horizontal)
-			moveToProject(true);
+			moveToProject(true, projects);
 			break;
 		case 77:if (horizontal)
-			moveToProject(true);
+			moveToProject(true, projects);
 			break;
 		case 13:
 		{
@@ -1696,16 +1757,16 @@ void ProjectsMenu::RemoveTeam()
 		switch (key)
 		{
 		case 72:if (!horizontal)
-			moveToProject(false);
+			moveToProject(false, projects);
 			break;
 		case 75:if (horizontal)
-			moveToProject(false);
+			moveToProject(false, projects);
 			break;
 		case 80:if (!horizontal)
-			moveToProject(true);
+			moveToProject(true, projects);
 			break;
 		case 77:if (horizontal)
-			moveToProject(true);
+			moveToProject(true, projects);
 			break;
 		case 13:
 		{

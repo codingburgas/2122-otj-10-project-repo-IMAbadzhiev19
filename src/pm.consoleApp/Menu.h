@@ -160,7 +160,7 @@ class ProjectsMenu : public SubMenu
 public:
 	ProjectsMenu(pm::bll::ProjectsManagement* be);
 
-	void moveToProject(bool next);
+	void moveToProject(bool next, std::vector<pm::dal::ProjectsStore::PROJECT> tmp);
 	void runItem();
 
 	virtual void Create();
