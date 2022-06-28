@@ -71,7 +71,7 @@ void MenuItem::addItem(MenuItem* i, unsigned short row, unsigned short column)
 	if ((row == 0) && (column == 0) && (l > 0))
 		if (horizontal) {
 			i->position.row = submenu[0]->position.row;
-			i->position.column = submenu[l - 1]->position.column + submenu[l - 1]->name.length() + selectedItemMarker.length();
+			i->position.column = static_cast<unsigned short>(submenu[l - 1]->position.column + submenu[l - 1]->name.length() + selectedItemMarker.length());
 		}
 		else { //Vertical
 			i->position.row = submenu[l - 1]->position.row + 1;
@@ -104,7 +104,7 @@ void MenuItem::Show()
 			if (i == selectedItem)
 				std::cout << selectedItemMarker;
 			else
-				for (short c = 0; c < selectedItemMarker.length(); c++)
+				for (size_t c = 0; c < selectedItemMarker.length(); c++)
 					std::cout << ' ';
 
 			std::cout << submenu[i]->name << separator;
@@ -199,7 +199,7 @@ void SubMenu::Show()
 			if (i == selectedItem)
 				std::cout << selectedItemMarker;
 			else
-				for (short c = 0; c < selectedItemMarker.size(); c++)
+				for (size_t c = 0; c < selectedItemMarker.size(); c++)
 					std::cout << ' ';
 			std::cout << itemData[i].itemName << separator;
 		}
@@ -307,7 +307,7 @@ void UsersMenu::runItem()
 	if (structure::currentUserG.firstName == "") {
 		errorMsg = "You must log in first!";
 	}
-	else if (structure::currentUserG.admin != true) {
+	else if (structure::currentUserG.admin != 1) {
 		errorMsg = "You must be admin!";
 	}
 
@@ -420,6 +420,7 @@ void UsersMenu::Create()
 			std::cout << "Email: " << std::endl;
 			std::cout << "Age: " << std::endl;
 			std::cout << "Enter password: " << std::endl;
+			if (structure::currentUserG.admin == 1) std::cout << "Admin (1 - true / 0 - false) -> " << std::endl;
 
 			gotoXY(12, 0); getline(std::cin, usr.firstName);
 			gotoXY(11, 1); getline(std::cin, usr.lastName);
@@ -435,6 +436,21 @@ void UsersMenu::Create()
 
 				usr.password += key;
 				_putch('*');
+			}
+
+			if (structure::currentUserG.admin == 1)
+			{
+				while (true)
+				{
+					gotoXY(34, 5); std::cin >> usr.admin;
+
+					if (usr.admin >= 0 && usr.admin <= 1)
+						break;
+					else
+						std::cout << "Wrong input! ;(" << std::endl;
+
+					continue;
+				}
 			}
 
 			uM->registerUser(usr);
@@ -501,7 +517,7 @@ void UsersMenu::Delete()
 			if (i == selectedUser)
 				std::cout << selectedItemMarker;
 			else
-				for (short c = 0; c < selectedItemMarker.size(); c++)
+				for (size_t c = 0; c < selectedItemMarker.size(); c++)
 					std::cout << ' ';
 
 			std::cout << users[i].firstName << " " << users[i].lastName << ", " << users[i].email << ", " << users[i].age << ", " << users[i].createdOn.day << "/" << users[i].createdOn.month << "/" << users[i].createdOn.year;
@@ -570,7 +586,7 @@ void UsersMenu::Update()
 			if (i == selectedUser)
 				std::cout << selectedItemMarker;
 			else
-				for (short c = 0; c < selectedItemMarker.size(); c++)
+				for (size_t c = 0; c < selectedItemMarker.size(); c++)
 					std::cout << ' ';
 
 			std::cout << users[i].firstName << " " << users[i].lastName << ", " << users[i].email << ", " << users[i].age << ", " << users[i].createdOn.day << "/" << users[i].createdOn.month << "/" << users[i].createdOn.year;
@@ -624,7 +640,7 @@ void UsersMenu::Update()
 
 			int admin = 0;
 
-			if (structure::currentUserG.admin == true) {
+			if (structure::currentUserG.admin == 1) {
 				std::cout << "\nAdmin (1 - yes \\ 0 - no) -> "; 
 				std::cin >> admin;
 			}
@@ -687,7 +703,7 @@ void TeamsMenu::runItem()
 	if (structure::currentUserG.firstName == "") {
 		errorMsg = "You must log in first!";
 	}
-	else if (structure::currentUserG.admin != true) {
+	else if (structure::currentUserG.admin != 1) {
 		errorMsg = "You must be admin!";
 	}
 
@@ -772,7 +788,7 @@ void TeamsMenu::Update()
 			if (i == selectedTeam)
 				std::cout << selectedItemMarker;
 			else
-				for (short c = 0; c < selectedItemMarker.size(); c++)
+				for (size_t c = 0; c < selectedItemMarker.size(); c++)
 					std::cout << ' ';
 
 			std::cout << teams[i].title << " " << teams[i].createdOn.day << "/" << teams[i].createdOn.month << "/" << teams[i].createdOn.day << std::endl;
@@ -830,7 +846,7 @@ void TeamsMenu::Delete()
 			if (i == selectedTeam)
 				std::cout << selectedItemMarker;
 			else
-				for (short c = 0; c < selectedItemMarker.size(); c++)
+				for (size_t c = 0; c < selectedItemMarker.size(); c++)
 					std::cout << ' ';
 
 			std::cout << teams[i].title << " " << teams[i].createdOn.day << "/" << teams[i].createdOn.month << "/" << teams[i].createdOn.day << std::endl;
@@ -896,7 +912,7 @@ void TeamsMenu::AddUser()
 			if (i == selectedTeam)
 				std::cout << selectedItemMarker;
 			else
-				for (short c = 0; c < selectedItemMarker.size(); c++)
+				for (size_t c = 0; c < selectedItemMarker.size(); c++)
 					std::cout << ' ';
 
 			std::cout << teams[i].title << " " << teams[i].createdOn.day << "/" << teams[i].createdOn.month << "/" << teams[i].createdOn.day << std::endl;
@@ -996,7 +1012,7 @@ void TeamsMenu::RemoveUser()
 			if (i == selectedTeam)
 				std::cout << selectedItemMarker;
 			else
-				for (short c = 0; c < selectedItemMarker.size(); c++)
+				for (size_t c = 0; c < selectedItemMarker.size(); c++)
 					std::cout << ' ';
 
 			std::cout << teams[i].title << " " << teams[i].createdOn.day << "/" << teams[i].createdOn.month << "/" << teams[i].createdOn.day << std::endl;
@@ -1087,7 +1103,7 @@ void TeamsMenu::showAll()
 			if (i == selectedTeam)
 				std::cout << selectedItemMarker;
 			else
-				for (short c = 0; c < selectedItemMarker.size(); c++)
+				for (size_t c = 0; c < selectedItemMarker.size(); c++)
 					std::cout << ' ';
 
 			std::cout << teams[i].title << " " << teams[i].createdOn.day << "/" << teams[i].createdOn.month << "/" << teams[i].createdOn.year << std::endl;
@@ -1162,12 +1178,8 @@ void ProjectsMenu::runItem()
 {
 	std::string errorMsg;
 
-	if (structure::currentUserG.firstName == "") {
+	if (structure::currentUserG.firstName == "")
 		errorMsg = "You must log in first!";
-	}
-	else if (structure::currentUserG.admin != true) {
-		errorMsg = "You must be admin!";
-	}
 
 	switch (selectedItem + 1)
 	{
@@ -1181,7 +1193,6 @@ void ProjectsMenu::runItem()
 		else
 			Update();
 		break;
-
 	case 3:
 		if (!errorMsg.empty()) {
 			std::cout << errorMsg << std::endl;
@@ -1190,7 +1201,6 @@ void ProjectsMenu::runItem()
 		else
 			Delete();
 		break;
-
 	case 4:
 		if (!errorMsg.empty()) {
 			std::cout << errorMsg << std::endl;
@@ -1273,7 +1283,7 @@ void ProjectsMenu::Update()
 			if (i == selectedProject)
 				std::cout << selectedItemMarker;
 			else
-				for (short c = 0; c < selectedItemMarker.size(); c++)
+				for (size_t c = 0; c < selectedItemMarker.size(); c++)
 					std::cout << ' ';
 
 			std::cout << projects[i].title << " " << projects[i].createdOn.day << "/" << projects[i].createdOn.month << "/" << projects[i].createdOn.day << std::endl;
@@ -1324,20 +1334,53 @@ void ProjectsMenu::Delete()
 	std::string separator = (horizontal) ? " " : "\r\n";
 	int key;
 
+	std::vector<pm::dal::ProjectsStore::PROJECT> projects_user;
+
 	do
 	{
 		system("cls");
 
-		for (size_t i = 0; i < projects.size(); i++)
+		if (structure::currentUserG.admin == 1)
 		{
-			gotoXY(5, i + 1);
-			if (i == selectedProject)
-				std::cout << selectedItemMarker;
-			else
-				for (short c = 0; c < selectedItemMarker.size(); c++)
-					std::cout << ' ';
+			for (size_t i = 0; i < projects.size(); i++)
+			{
+				gotoXY(5, i + 1);
+				if (i == selectedProject)
+					std::cout << selectedItemMarker;
+				else
+					for (size_t c = 0; c < selectedItemMarker.size(); c++)
+						std::cout << ' ';
 
-			std::cout << projects[i].title << " " << projects[i].createdOn.day << "/" << projects[i].createdOn.month << "/" << projects[i].createdOn.day << std::endl;
+				std::cout << projects[i].title << " " << projects[i].createdOn.day << "/" << projects[i].createdOn.month << "/" << projects[i].createdOn.day << std::endl;
+			}
+		}
+		else {
+			projects_user.clear();
+
+			for (const auto& x : projects)
+			{
+				if (x.creatorId == structure::currentUserG.id)
+					projects_user.push_back({ x.id, x.title, x.description, x.createdOn, x.creatorId });
+			}
+
+			for (size_t i = 0; i < projects_user.size(); i++)
+			{
+				gotoXY(5, i + 1);
+				if (i == selectedProject)
+					std::cout << selectedItemMarker;
+				else
+					for (size_t c = 0; c < selectedItemMarker.size(); c++)
+						std::cout << ' ';
+
+				std::cout << projects_user[i].title << " " << projects_user[i].createdOn.day << "/" << projects_user[i].createdOn.month << "/" << projects_user[i].createdOn.day << std::endl;
+			}
+
+			if (projects_user.empty()) {
+				system("cls");
+				std::cout << "There are no projects created by you that you can delete" << std::endl;
+				Sleep(1500);
+				break;
+			}
 		}
 
 		key = getKeyPressed();
@@ -1374,8 +1417,11 @@ void ProjectsMenu::Delete()
 				continue;
 			}
 			
+			if(structure::currentUserG.admin == 1)
+				pM->removeProject(projects[selectedProject].id);
+			else
+				pM->removeProject(projects_user[selectedProject].id);
 
-			pM->removeProject(projects[selectedProject].id);
 			projects = pM->loadAllProjects();
 			break;
 		}
@@ -1404,7 +1450,7 @@ void ProjectsMenu::showAll()
 			if (i == selectedProject)
 				std::cout << selectedItemMarker;
 			else
-				for (short c = 0; c < selectedItemMarker.size(); c++)
+				for (size_t c = 0; c < selectedItemMarker.size(); c++)
 					std::cout << ' ';
 
 			std::cout << projects[i].title << " " << projects[i].createdOn.day << "/" << projects[i].createdOn.month << "/" << projects[i].createdOn.year << std::endl;
@@ -1523,7 +1569,7 @@ void ProjectsMenu::AddTeam()
 			if (i == selectedProject)
 				std::cout << selectedItemMarker;
 			else
-				for (short c = 0; c < selectedItemMarker.size(); c++)
+				for (size_t c = 0; c < selectedItemMarker.size(); c++)
 					std::cout << ' ';
 
 			std::cout << projects[i].title << " " << projects[i].createdOn.day << "/" << projects[i].createdOn.month << "/" << projects[i].createdOn.day << std::endl;
@@ -1586,7 +1632,7 @@ void ProjectsMenu::AddTeam()
 				continue;
 			}
 
-			int choice;
+			size_t choice;
 			std::cout << "\n\nEnter the id of the team who you would like to add to the current project: "; std::cin >> choice; std::cin.ignore();
 
 			if (choice < 1 || choice > counter) {
@@ -1639,7 +1685,7 @@ void ProjectsMenu::RemoveTeam()
 			if (i == selectedProject)
 				std::cout << selectedItemMarker;
 			else
-				for (short c = 0; c < selectedItemMarker.size(); c++)
+				for (size_t c = 0; c < selectedItemMarker.size(); c++)
 					std::cout << ' ';
 
 			std::cout << projects[i].title << " " << projects[i].createdOn.day << "/" << projects[i].createdOn.month << "/" << projects[i].createdOn.day << std::endl;

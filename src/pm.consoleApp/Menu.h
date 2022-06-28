@@ -17,7 +17,6 @@ class MenuItem
 {
 public:
 
-	MenuItem() { }
 	MenuItem(std::string n, bool h, bool eM) : name(n), horizontal(h), execModule(eM), position(POINT{ 0, 0 }), selectedItem(0), selectedItemMarker("  ->") { }
 
 	struct POINT 
@@ -80,8 +79,6 @@ class SubMenu : public MenuItem
 {
 public:
 
-	SubMenu() { }
-
 	SubMenu(std::string name, bool horizontal, bool execModule, bool users, pm::bll::UsersManagement* uMM, pm::bll::TeamsManagement* tMM, pm::bll::ProjectsManagement* pMM, pm::bll::TasksManagement* taskMM);
 
 	virtual void moveToItem(bool next);
@@ -123,7 +120,6 @@ class UsersMenu : public SubMenu
 {
 public:
 
-	UsersMenu() : selectedUser(0) { }
 	UsersMenu(pm::bll::UsersManagement* be);
 
 	virtual void runItem();
@@ -142,8 +138,6 @@ private:
 class TeamsMenu : public SubMenu
 {
 public:
-
-	TeamsMenu() : selectedTeam(0) { }
 	TeamsMenu(pm::bll::TeamsManagement* be);
 
 	void moveToTeam(bool next);
@@ -164,7 +158,6 @@ private:
 class ProjectsMenu : public SubMenu
 {
 public:
-	ProjectsMenu() : selectedProject(0) { }
 	ProjectsMenu(pm::bll::ProjectsManagement* be);
 
 	void moveToProject(bool next);
@@ -185,7 +178,6 @@ private:
 class TasksMenu : public SubMenu
 {
 public:
-	TasksMenu() { }
 	TasksMenu(pm::bll::TasksManagement* be);
 
 	void moveToTask(bool next) { }

@@ -54,7 +54,7 @@ void pm::bll::UsersManagement::registerUser(pm::dal::UsersStore::USER& user)
 	}
 }
 
-pm::dal::UsersStore::USER& pm::bll::UsersManagement::loginUser(std::string email, std::string password)
+pm::dal::UsersStore::USER pm::bll::UsersManagement::loginUser(std::string email, std::string password)
 {
 	pm::dal::UsersStore::USER user = m_usersStore.getUserByEmail(email);
 

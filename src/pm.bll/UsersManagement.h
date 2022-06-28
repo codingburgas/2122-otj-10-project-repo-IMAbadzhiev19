@@ -21,7 +21,7 @@ namespace pm::bll
 		bool checkPassComplexity(const std::string& pass);
 
 		void registerUser(pm::dal::UsersStore::USER& user);
-		pm::dal::UsersStore::USER& loginUser(std::string email, std::string password);
+		pm::dal::UsersStore::USER loginUser(std::string email, std::string password);
 
 		std::vector<pm::dal::UsersStore::USER> getRegisteredUsers();
 
