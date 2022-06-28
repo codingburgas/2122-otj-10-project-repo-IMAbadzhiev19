@@ -1554,20 +1554,20 @@ void ProjectsMenu::showAll()
 
 				if (key == 72 && y != 9)
 				{
-					gotoXY(32, y + 1); std::cout << "   ";
-					choice--;
-					gotoXY(32, y); std::cout << "-> ";
+					gotoXY(32, y); std::cout << "   ";
 					y--;
+					gotoXY(32, y); std::cout << "-> ";
+					choice--;
 
 					continue;
 				}
 
 				if (key == 80 && y != 11)
 				{
-					gotoXY(32, y - 1); std::cout << "   ";
-					choice++;
-					gotoXY(32, y); std::cout << "-> ";
+					gotoXY(32, y); std::cout << "   ";
 					y++;
+					gotoXY(32, y); std::cout << "-> ";
+					choice++;
 
 					continue;
 				}
@@ -1614,22 +1614,35 @@ void ProjectsMenu::showAll()
 					case 3: {
 						system("cls");
 
-						std::string query = "SELECT Tasks.Id, Tasks.Title, Tasks.Description, Tasks.Status, Tasks.CreatedOn, Tasks.CreatorId FROM ProjectsAndTasks, Projects, Tasks WHERE (Projects.Id = ProjectId) AND (TaskId = Tasks.Id) AND (ProjectId = " + std::to_string(selectedProject) + ")";
+						std::string query = "SELECT Tasks.Id, Tasks.Title, Tasks.[Description], Tasks.[Status], Tasks.CreatedOn, Tasks.CreatorId FROM ProjectsAndTasks, Projects, Tasks WHERE (Projects.Id = ProjectId) AND (TaskId = Tasks.Id) AND (ProjectId = " + std::to_string(selectedProject + 1) + ")";
 
 						nanodbc::result res = db.getResultFromSelect(query);
 
 						unsigned short i = 0;
-
 						while (res.next())
 						{
 							gotoXY(5, i + 1);
 
-							std::cout << res.get<int>(0) << ". " << res.get<std::string>(1) << " | " << res.get<std::string>(3) << " " << res.get<nanodbc::date>(4).day << "/" << res.get<nanodbc::date>(4).month << "/" << res.get<nanodbc::date>(5).year << " | Created by: " << users[res.get<int>(6)].firstName << " " << users[res.get<int>(6)].lastName;
+							std::cout << res.get<int>(0) << ". " << res.get<std::string>(1) << " | Status: " << res.get<std::string>(3) << " | " << res.get<nanodbc::date>(4).day << "/" << res.get<nanodbc::date>(4).month << "/" << res.get<nanodbc::date>(4).year << " | Created by: ";
+
+							nanodbc::result users_res = db.getResultFromSelect("SELECT Id, FirstName, LastName FROM Users");
+							std::pair<std::string, std::string> name;
+
+							while (users_res.next())
+							{
+								if (users_res.get<int>(0) == res.get<int>(5))
+								{
+									name.first = users_res.get<std::string>(1);
+									name.second = users_res.get<std::string>(2);
+								}
+							}
+
+							std::cout << name.first << " " << name.second << std::endl;
 
 							i++;
 						}
 
-						if (i > 1) {
+						if (i < 1) {
 							std::cout << "There are no tasks assigned to the current project" << std::endl;
 							Sleep(1500);
 							break;
