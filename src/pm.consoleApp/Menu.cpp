@@ -2307,4 +2307,205 @@ void TasksMenu::showAll()
 	system("cls");
 }
 
+void TasksMenu::AddProject()
+{
+	selectedTask = 0;
+	std::string separator = (horizontal) ? " " : "\r\n";
+	int key;
+
+	do
+	{
+		system("cls");
+
+		for (size_t i = 0; i < tasks.size(); i++)
+		{
+			gotoXY(5, i + 1);
+			if (i == selectedTask)
+				std::cout << selectedItemMarker;
+			else
+				for (size_t c = 0; c < selectedItemMarker.size(); c++)
+					std::cout << ' ';
+
+			std::cout << tasks[i].title << " | Status: " << tasks[i].status << " | " << tasks[i].createdOn.day << "/" << projects[i].createdOn.month << "/" << projects[i].createdOn.day << std::endl;
+		}
+
+		key = getKeyPressed();
+
+		switch (key)
+		{
+		case 72:if (!horizontal)
+			moveToTask(false, tasks);
+			break;
+		case 75:if (horizontal)
+			moveToTask(false, tasks);
+			break;
+		case 80:if (!horizontal)
+			moveToTask(true, tasks);
+			break;
+		case 77:if (horizontal)
+			moveToTask(true, tasks);
+			break;
+		case 13:
+		{
+			system("cls");
+
+			size_t counter = 0;
+			std::vector<pm::dal::ProjectsStore::PROJECT> projectsTask = taskM->getProjectsFromTask(selectedTask + 1);
+
+			std::string query = "SELECT * FROM Projects";
+			nanodbc::result res = db.getResultFromSelect(query);
+
+			while (res.next())
+			{
+				std::cout << "             " << res.get<int>(0) << ". " << res.get<std::string>(1) << " " << res.get<nanodbc::date>(3).day << "/" << res.get<nanodbc::date>(3).month << " " << res.get<nanodbc::date>(3).year;
+
+				bool flag = false;
+				for (const auto& x : projectsTask)
+				{
+					if (res.get<int>(0) == x.id)
+						flag = true;
+				}
+
+				std::string end;
+
+				if (flag)
+					end += " | (Assigned to the current task)\n";
+				else
+					end += " | (Not assigned to the current task)\n";
+
+				std::cout << end;
+
+				counter++;
+			}
+
+			if (counter == 0)
+			{
+				std::cout << "There are no created projects" << std::endl;
+				Sleep(1000);
+
+				continue;
+			}
+
+			size_t choice;
+			std::cout << "\n\nEnter the id of the project which you would like to add to the current task: "; std::cin >> choice; std::cin.ignore();
+
+			if (choice < 1 || choice > counter) {
+				system("cls");
+				gotoXY(45, 0); std::cout << "Invalid id" << std::endl;
+				Sleep(1000);
+
+				continue;
+			}
+
+			bool flag = false;
+
+			for (const auto& x : projectsTask)
+			{
+				if (x.id == choice)
+					flag = true;
+			}
+
+			if (!flag) {
+				taskM->assignProjectToTask(choice, tasks[selectedTask].id);
+				tasks = taskM->loadAllTasks();
+				break;
+			}
+			else {
+				system("cls");
+				gotoXY(25, 0); std::cout << "You are trying to add a team who is already in the project!";
+				projectsTask.clear();
+				Sleep(1000);
+			}
+		}
+		} // switch
+	} while (key != 27);
+
+	system("cls");
+}
+
+void TasksMenu::RemoveProject()
+{
+	selectedTask = 0;
+	std::string separator = (horizontal) ? " " : "\r\n";
+	int key;
+
+	do
+	{
+		system("cls");
+
+		for (size_t i = 0; i < tasks.size(); i++)
+		{
+			gotoXY(5, i + 1);
+			if (i == selectedTask)
+				std::cout << selectedItemMarker;
+			else
+				for (size_t c = 0; c < selectedItemMarker.size(); c++)
+					std::cout << ' ';
+
+			std::cout << tasks[i].title << " | Status: " << tasks[i].status << " | " << tasks[i].createdOn.day << "/" << projects[i].createdOn.month << "/" << projects[i].createdOn.day << std::endl;
+		}
+
+		key = getKeyPressed();
+
+		switch (key)
+		{
+		case 72:if (!horizontal)
+			moveToTask(false, tasks);
+			break;
+		case 75:if (horizontal)
+			moveToTask(false, tasks);
+			break;
+		case 80:if (!horizontal)
+			moveToTask(true, tasks);
+			break;
+		case 77:if (horizontal)
+			moveToTask(true, tasks);
+			break;
+		case 13:
+		{
+			system("cls");
+
+			size_t counter = 0;
+			std::vector<pm::dal::ProjectsStore::PROJECT> projectsTask = taskM->getProjectsFromTask(selectedTask + 1);
+
+			if (projectsTask.empty()) {
+				std::cout << "The task isn't assigned to any project";
+				Sleep(1000);
+				break;
+			}
+
+			for (const auto& x : projectsTask)
+			{
+				std::cout << "             " << x.id << ". " << x.title << " | " << x.createdOn.day << "/" << x.createdOn.month << " " << x.createdOn.year << " | (Assigned to the current task)" << std::endl;
+			}
+
+			int choice;
+			std::cout << "\n\nEnter the id of the project which you would like to remove from the current task: "; std::cin >> choice; std::cin.ignore();
+
+			bool flag = false;
+
+			for (const auto& x : projectsTask)
+			{
+				if (x.id == choice)
+					flag = true;
+			}
+
+			if (flag) {
+				taskM->removeProjectFromTask(choice, projectsTask[selectedTask].id);
+				tasks = taskM->loadAllTasks();
+				break;
+			}
+			else {
+				system("cls");
+				gotoXY(25, 0); std::cout << "You are trying to remove a project which isn't assigned to the current task!";
+				projectsTask.clear();
+				Sleep(1000);
+			}
+		}
+		} // switch
+	} while (key != 27);
+
+	system("cls");
+}
+
 /*TasksMenu*/

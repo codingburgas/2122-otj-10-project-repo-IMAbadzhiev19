@@ -187,7 +187,7 @@ public:
 	virtual void Update();
 	virtual void showAll();
 
-	void AddProject() { }
+	void AddProject();
 	void RemoveProject() { }
 
 	void AssignUser() { }
