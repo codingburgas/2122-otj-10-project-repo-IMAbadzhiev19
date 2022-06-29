@@ -1880,4 +1880,27 @@ TasksMenu::TasksMenu(pm::bll::TasksManagement* be) : SubMenu("Tasks", false, fal
 		std::cerr << e.what() << std::endl;
 	}
 }
+
+void TasksMenu::moveToTask(bool next)
+{
+
+}
+
+void TasksMenu::Create()
+{
+	pm::dal::TasksStore::TASK task;
+
+	std::cout << "Enter tasks's name: " << std::endl;
+	std::cout << "Enter a description of the project: " << std::endl;
+
+	gotoXY(22, 0); std::getline(std::cin, task.title);
+	gotoXY(36, 1); std::getline(std::cin, task.description);
+
+	task.status = "Pending";
+
+	taskM->createTask(task, structure::currentUserG.id);
+	tasks = taskM->loadAllTasks();
+
+	system("cls");
+}
 /*TasksMenu*/

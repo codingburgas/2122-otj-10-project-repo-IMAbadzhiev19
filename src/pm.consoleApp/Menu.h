@@ -182,7 +182,7 @@ public:
 
 	void moveToTask(bool next);
 
-	virtual void Create() { }
+	virtual void Create();
 	virtual void Delete() { }
 	virtual void Update() { }
 	virtual void showAll() { }
