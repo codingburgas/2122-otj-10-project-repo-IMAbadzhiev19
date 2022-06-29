@@ -1316,7 +1316,7 @@ void ProjectsMenu::Update()
 
 			if (projects_user.empty()) {
 				system("cls");
-				std::cout << "There are no projects created by you that you can delete" << std::endl;
+				std::cout << "There are no projects created by you that you can update" << std::endl;
 				Sleep(1500);
 				break;
 			}
@@ -1881,9 +1881,24 @@ TasksMenu::TasksMenu(pm::bll::TasksManagement* be) : SubMenu("Tasks", false, fal
 	}
 }
 
-void TasksMenu::moveToTask(bool next)
+void TasksMenu::moveToTask(bool next, std::vector<pm::dal::TasksStore::TASK> tmp)
 {
+	size_t OldSelectedItem = selectedTask;
 
+	if (next && (selectedTask < tmp.size() - 1))
+		selectedTask++;
+
+	if (!next && (selectedTask > 0))
+		selectedTask--;
+
+	if (selectedTask != OldSelectedItem)
+	{
+		gotoXY(5, OldSelectedItem + 1);
+		for (size_t j = 0; j < selectedItemMarker.length(); j++)
+			std::cout << ' ';
+		gotoXY(5, selectedTask + 1);
+		std::cout << selectedItemMarker;
+	}
 }
 
 void TasksMenu::Create()
@@ -1903,4 +1918,130 @@ void TasksMenu::Create()
 
 	system("cls");
 }
+
+void TasksMenu::Update()
+{
+	selectedTask = 0;
+	std::string separator = (horizontal) ? " " : "\r\n";
+	int key;
+
+	std::vector<pm::dal::TasksStore::TASK> tasks_user;
+
+	do
+	{
+		system("cls");
+
+		if (structure::currentUserG.admin == 1)
+		{
+			for (size_t i = 0; i < tasks.size(); i++)
+			{
+				gotoXY(5, i + 1);
+				if (i == selectedTask)
+					std::cout << selectedItemMarker;
+				else
+					for (size_t c = 0; c < selectedItemMarker.size(); c++)
+						std::cout << ' ';
+
+				std::cout << tasks[i].title << " | Status: " << tasks[i].status << " | " << tasks[i].createdOn.day << "/" << projects[i].createdOn.month << "/" << projects[i].createdOn.day << std::endl;
+			}
+		}
+		else {
+			tasks_user.clear();
+
+			for (const auto& x : tasks)
+			{
+				if (x.creatorId == structure::currentUserG.id)
+					tasks.push_back({ x.id, x.title, x.description, x.status, x.createdOn, x.creatorId });
+			}
+
+			for (size_t i = 0; i < tasks_user.size(); i++)
+			{
+				gotoXY(5, i + 1);
+				if (i == selectedTask)
+					std::cout << selectedItemMarker;
+				else
+					for (size_t c = 0; c < selectedItemMarker.size(); c++)
+						std::cout << ' ';
+
+				std::cout << tasks_user[i].title << " | Status: " << tasks_user[i].status << " | " << tasks_user[i].createdOn.day << "/" << tasks_user[i].createdOn.month << "/" << tasks_user[i].createdOn.day << std::endl;
+			}
+
+			if (tasks_user.empty()) {
+				system("cls");
+				std::cout << "There are no tasks created by you that you can update" << std::endl;
+				Sleep(1500);
+				break;
+			}
+		}
+
+		key = getKeyPressed();
+
+		switch (key)
+		{
+		case 72:if (!horizontal)
+			if (structure::currentUserG.admin == 1)
+				moveToTask(false, tasks);
+			else
+				moveToTask(false, tasks_user);
+			break;
+		case 75:if (horizontal)
+			if (structure::currentUserG.admin == 1)
+				moveToTask(false, tasks);
+			else
+				moveToTask(false, tasks_user); 
+			break;
+		case 80:if (!horizontal)
+			if (structure::currentUserG.admin == 1)
+				moveToTask(true, tasks);
+			else
+				moveToTask(true, tasks_user);
+			break;
+		case 77:if (horizontal)
+			if (structure::currentUserG.admin == 1)
+				moveToTask(true, tasks);
+			else
+				moveToTask(true, tasks_user); 
+			break;
+		case 13:
+		{
+			system("cls");
+			while (true)
+			{
+				pm::dal::TasksStore::TASK t;
+
+				std::cout << "Enter task's name: " << std::endl;
+				std::cout << "Enter a description of the task: " << std::endl;
+				std::cout << "Enter status of the task (Pending/InProgress/Completed): " << std::endl;
+
+				gotoXY(22, 0); std::getline(std::cin, t.title);
+				gotoXY(36, 1); std::getline(std::cin, t.description);
+				gotoXY(59, 2);
+
+				std::string status_temp; std::getline(std::cin, status_temp);
+
+				if (status_temp.compare("Pending") == 0 || status_temp.compare("InProgress") == 0 || status_temp.compare("Completed") == 0)
+					t.status = status_temp;
+				else {
+					std::cout << "\n The status you've entered doesn't meet the requirements" << std::endl;
+					Sleep(1500);
+					continue;
+				}
+
+
+				if (structure::currentUserG.admin == 1)
+					taskM->updateTask(t, tasks[selectedTask].id, structure::currentUserG.id);
+				else
+					taskM->updateTask(t, tasks_user[selectedTask].id, structure::currentUserG.id);
+
+				tasks = taskM->loadAllTasks();
+				break;
+			}
+			break;
+		}
+		} // switch
+	} while (key != 27);
+
+	system("cls");
+}
+
 /*TasksMenu*/

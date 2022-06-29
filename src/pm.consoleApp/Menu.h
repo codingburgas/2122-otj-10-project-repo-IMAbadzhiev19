@@ -180,11 +180,11 @@ class TasksMenu : public SubMenu
 public:
 	TasksMenu(pm::bll::TasksManagement* be);
 
-	void moveToTask(bool next);
+	void moveToTask(bool next, std::vector<pm::dal::TasksStore::TASK> tmp);
 
 	virtual void Create();
 	virtual void Delete() { }
-	virtual void Update() { }
+	virtual void Update();
 	virtual void showAll() { }
 
 	void AddProject() { }
