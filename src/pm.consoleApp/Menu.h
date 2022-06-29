@@ -183,9 +183,9 @@ public:
 	void moveToTask(bool next, std::vector<pm::dal::TasksStore::TASK> tmp);
 
 	virtual void Create();
-	virtual void Delete() { }
+	virtual void Delete();
 	virtual void Update();
-	virtual void showAll() { }
+	virtual void showAll();
 
 	void AddProject() { }
 	void RemoveProject() { }

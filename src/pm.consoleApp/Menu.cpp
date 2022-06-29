@@ -2044,4 +2044,267 @@ void TasksMenu::Update()
 	system("cls");
 }
 
+void TasksMenu::Delete()
+{
+	selectedTask = 0;
+	std::string separator = (horizontal) ? " " : "\r\n";
+	int key;
+
+	std::vector<pm::dal::TasksStore::TASK> tasks_user;
+
+	do
+	{
+		system("cls");
+
+		if (structure::currentUserG.admin == 1)
+		{
+			for (size_t i = 0; i < tasks.size(); i++)
+			{
+				gotoXY(5, i + 1);
+				if (i == selectedTask)
+					std::cout << selectedItemMarker;
+				else
+					for (size_t c = 0; c < selectedItemMarker.size(); c++)
+						std::cout << ' ';
+
+				std::cout << tasks[i].title << " | Status: " << tasks[i].status << " | " << tasks[i].createdOn.day << "/" << projects[i].createdOn.month << "/" << projects[i].createdOn.day << std::endl;
+			}
+		}
+		else {
+			tasks_user.clear();
+
+			for (const auto& x : tasks)
+			{
+				if (x.creatorId == structure::currentUserG.id)
+					tasks.push_back({ x.id, x.title, x.description, x.status, x.createdOn, x.creatorId });
+			}
+
+			for (size_t i = 0; i < tasks_user.size(); i++)
+			{
+				gotoXY(5, i + 1);
+				if (i == selectedTask)
+					std::cout << selectedItemMarker;
+				else
+					for (size_t c = 0; c < selectedItemMarker.size(); c++)
+						std::cout << ' ';
+
+				std::cout << tasks_user[i].title << " | Status: " << tasks_user[i].status << " | " << tasks_user[i].createdOn.day << "/" << tasks_user[i].createdOn.month << "/" << tasks_user[i].createdOn.day << std::endl;
+			}
+
+			if (tasks_user.empty()) {
+				system("cls");
+				std::cout << "There are no tasks created by you that you can delete" << std::endl;
+				Sleep(1500);
+				break;
+			}
+		}
+
+		key = getKeyPressed();
+
+		switch (key)
+		{
+		case 72:if (!horizontal)
+			if (structure::currentUserG.admin == 1)
+				moveToTask(false, tasks);
+			else
+				moveToTask(false, tasks_user);
+			break;
+		case 75:if (horizontal)
+			if (structure::currentUserG.admin == 1)
+				moveToTask(false, tasks);
+			else
+				moveToTask(false, tasks_user);
+			break;
+		case 80:if (!horizontal)
+			if (structure::currentUserG.admin == 1)
+				moveToTask(true, tasks);
+			else
+				moveToTask(true, tasks_user);
+			break;
+		case 77:if (horizontal)
+			if (structure::currentUserG.admin == 1)
+				moveToTask(true, tasks);
+			else
+				moveToTask(true, tasks_user);
+			break;
+		case 13:
+		{
+			system("cls");
+			while (true)
+			{
+				if (structure::currentUserG.admin == 1)
+					taskM->deleteTask(tasks[selectedTask].id);
+				else
+					taskM->deleteTask(tasks_user[selectedTask].id);
+
+				tasks = taskM->loadAllTasks();
+				break;
+			}
+			break;
+		}
+		} // switch
+	} while (key != 27);
+
+	system("cls");
+}
+
+void TasksMenu::showAll()
+{
+	selectedTask = 0;
+	std::string separator = (horizontal) ? " " : "\r\n";
+	int key;
+
+	pm::dal::TasksStore tmp_taskStore;
+
+
+	gotoXY(8, 0); std::cout << "Press enter on the selected task to see detailed info about it";
+	Sleep(1000);
+
+	do
+	{
+		system("cls");
+
+		for (size_t i = 0; i < projects.size(); i++)
+		{
+			gotoXY(5, i + 1);
+			if (i == selectedTask)
+				std::cout << selectedItemMarker;
+			else
+				for (size_t c = 0; c < selectedItemMarker.size(); c++)
+					std::cout << ' ';
+
+			std::cout << tasks[i].title << " | Status: " << tasks[i].status << " | " << tasks[i].createdOn.day << "/" << projects[i].createdOn.month << "/" << projects[i].createdOn.year << std::endl;
+		}
+
+		key = getKeyPressed();
+
+		switch (key)
+		{
+		case 72:if (!horizontal)
+			moveToTask(false, tasks);
+			break;
+		case 75:if (horizontal)
+			moveToTask(false, tasks);
+			break;
+		case 80:if (!horizontal)
+			moveToTask(true, tasks);
+			break;
+		case 77:if (horizontal)
+			moveToTask(true, tasks);
+			break;
+		case 13:
+		{
+			system("cls");
+
+			gotoXY(35, 9);  std::cout << "Task's Description";
+			gotoXY(35, 10); std::cout << "Projects to which the task has been asssigned";
+			gotoXY(35, 11); std::cout << "Users to whom the tasks has been assigned";
+
+			gotoXY(32, 9); std::cout << "-> ";
+
+			int y = 9, choice = 1, key;
+
+			while (true)
+			{
+				key = getKeyPressed();
+
+				if (key == 72 && y != 9)
+				{
+					gotoXY(32, y); std::cout << "   ";
+					y--;
+					gotoXY(32, y); std::cout << "-> ";
+					choice--;
+
+					continue;
+				}
+
+				if (key == 80 && y != 11)
+				{
+					gotoXY(32, y); std::cout << "   ";
+					y++;
+					gotoXY(32, y); std::cout << "-> ";
+					choice++;
+
+					continue;
+				}
+
+				if (key == 13)
+				{
+					switch (choice)
+					{
+					case 1:
+						system("cls");
+
+						std::cout << "         Description: " << tasks[selectedTask].description << std::endl;
+
+						system("pause>nul");
+
+						break;
+					case 2: {
+						while (true)
+						{
+							system("cls");
+							std::vector<pm::dal::ProjectsStore::PROJECT> projectsTask;
+
+							projectsTask = taskM->getProjectsFromTask(tasks[selectedTask].id);
+
+							if (projectsTask.empty()) {
+								std::cout << "There are no projects to which the current task has been assigned";
+								Sleep(1000);
+								break;
+							}
+
+							std::cout << std::endl;
+							for (const auto& x : projectsTask)
+							{
+								std::cout << "          ";
+								std::cout << x.id << ". " << x.title << " | " << x.createdOn.day << "/" << x.createdOn.month << "/" << x.createdOn.year << std::endl;
+							}
+
+							if (_getch() == 27)
+								break;
+						}
+
+						break;
+					}
+					case 3: {
+						system("cls");
+
+						std::vector<pm::dal::UsersStore::USER> task_users;
+						task_users = taskM->getUsersFromTask(tasks[selectedTask].id);
+
+						std::cout << std::endl;
+						
+						unsigned short i = 0;
+
+						for (const auto& x : task_users)
+						{
+							std::cout << "          ";
+							std::cout << x.id << ". " << x.firstName << " " << x.lastName << " | " << x.email << " " << x.createdOn.day << "/" << x.createdOn.month << "/" << x.createdOn.year << std::endl;
+
+							i++;
+						}
+
+						if (i < 1) {
+							std::cout << "The task has no assigned users to it" << std::endl;
+							Sleep(1500);
+							break;
+						}
+
+						if (_getch() == 27)
+							break;
+					}
+					}
+
+					break;
+				}
+			}
+
+		}
+		} // switch
+	} while (key != 27);
+
+	system("cls");
+}
+
 /*TasksMenu*/
