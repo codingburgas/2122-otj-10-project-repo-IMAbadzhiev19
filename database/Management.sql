@@ -108,5 +108,3 @@ CREATE TABLE [TasksAndUsers] (
 )
 GO
 --TasksAndUsersv
-
-SELECT * FROM [ProjectsAndTasks]
