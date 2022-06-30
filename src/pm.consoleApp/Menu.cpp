@@ -606,6 +606,7 @@ void UsersMenu::Update()
 			std::cout << "Email: " << std::endl;
 			std::cout << "Age: " << std::endl;
 			std::cout << "Enter password: " << std::endl;
+			std::cout << "Admin (1 - yes \\ 0 - no) -> ";
 
 			gotoXY(12, 0); getline(std::cin, usr.firstName);
 			gotoXY(11, 1); getline(std::cin, usr.lastName);
@@ -623,14 +624,14 @@ void UsersMenu::Update()
 				_putch('*');
 			}
 
-			int admin = 0;
+			unsigned short admin = 0;
 
-			if (structure::currentUserG.admin == 1) {
-				std::cout << "\nAdmin (1 - yes \\ 0 - no) -> "; 
-				std::cin >> admin;
+			if (admin <= 1 && admin >= 0)
+			{
+				gotoXY(34, 5); std::cin >> usr.admin;
 			}
-
-			usr.admin = admin;
+			else
+				continue;
 
 			uM->updateUser(users[selectedUser].id, usr);
 
@@ -1693,6 +1694,7 @@ void ProjectsMenu::AddTeam()
 
 			size_t counter = 0;
 			std::vector<pm::dal::TeamsStore::TEAM> teamsProject = pM->getTeamFromProject(selectedProject + 1);
+			std::vector<int> ids;
 
 			std::string query = "SELECT * FROM Teams";
 			nanodbc::result res = db.getResultFromSelect(query);
@@ -1718,6 +1720,7 @@ void ProjectsMenu::AddTeam()
 				std::cout << end;
 
 				counter++;
+				ids.push_back(res.get<int>(0));
 			}
 
 			if (counter == 0)
@@ -1731,30 +1734,36 @@ void ProjectsMenu::AddTeam()
 			size_t choice;
 			std::cout << "\n\nEnter the id of the team who you would like to add to the current project: "; std::cin >> choice; std::cin.ignore();
 
-			if (choice < 1 || choice > counter) {
-				system("cls");
-				gotoXY(45, 0); std::cout << "Invalid id" << std::endl;
-				Sleep(1000);
+			bool inTeam = false, invalid = true;
 
-				continue;
+			for (const auto& x : ids)
+			{
+				if (x == choice)
+					invalid = false;
 			}
 
-			bool flag = false;
+			if (invalid)
+			{
+				system("cls");
+				std::cout << "Invalid id" << std::endl;
+				Sleep(1000);
+				continue;
+			}
 
 			for (const auto& x : teamsProject)
 			{
 				if (x.id == choice)
-					flag = true;
+					inTeam = true;
 			}
 
-			if (!flag) {
+			if (!inTeam) {
 				pM->assignTeamToProject(projects[selectedProject].id, choice);
 				projects = pM->loadAllProjects();
 				break;
 			}
 			else {
 				system("cls");
-				gotoXY(25, 0); std::cout << "You are trying to add a team who is already in the project!";
+				gotoXY(17, 0); std::cout << "You are trying to add a team who is already in the project";
 				teamsProject.clear();
 				Sleep(1000);
 			}
@@ -2691,5 +2700,4 @@ void TasksMenu::RemoveUser()
 
 	system("cls");
 }
-
 /*TasksMenu*/
