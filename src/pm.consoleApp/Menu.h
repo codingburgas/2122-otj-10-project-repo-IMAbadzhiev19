@@ -70,7 +70,7 @@ public:
 
 	virtual void Run() { 
 		gotoXY(45, 0); 
-		std::cout << "Successfully exited" << std::endl; 
+		std::cout << "Have a nice day! ;)" << std::endl; 
 		exit(0); 
 	}
 };
@@ -182,7 +182,7 @@ public:
 	TasksMenu(pm::bll::TasksManagement* be);
 
 	void moveToTask(bool next, std::vector<pm::dal::TasksStore::TASK> tmp);
-	virtual void runItem() { }
+	virtual void runItem();
 
 	virtual void Create();
 	virtual void Delete();
@@ -194,6 +194,9 @@ public:
 
 	void AssignUser();
 	void RemoveUser();
+
+	void AssignMenu();
+	void RemoveMenu();
 
 
 private:

@@ -151,6 +151,8 @@ void MainMenu::Show()
 {
 	system("cls");
 	MenuItem::Show();
+	
+	gotoXY(40, 0); std::cout << "Have a nice day! ;)";
 }
 
 /*SubMenu*/
@@ -166,7 +168,7 @@ SubMenu::SubMenu(std::string name, bool horizontal, bool execModule, bool users,
 	itemData.push_back({ c++, 40 , "Delete" });
 	itemData.push_back({ c++, 40 , "Show All" });
 
-	if (!users) {
+	if (!users && name != "Tasks") {
 
 		std::string func;
 
@@ -174,11 +176,14 @@ SubMenu::SubMenu(std::string name, bool horizontal, bool execModule, bool users,
 			func = " User";
 		else if (name.compare("Projects") == 0)
 			func = " Team";
-		else if (name.compare("Tasks") == 0)
-			func = " Project";
 
 		itemData.push_back({ c++, 40, "Add" + func });
 		itemData.push_back({ c++, 40, "Remove" + func });
+	}
+	else if (name.compare("Tasks") == 0)
+	{
+		itemData.push_back({ c++, 40, "Assign"});
+		itemData.push_back({ c++, 40, "Remove" });
 	}
 }
 
@@ -1532,9 +1537,9 @@ void ProjectsMenu::showAll()
 
 			gotoXY(32, 9); std::cout << "-> ";
 
-			int y = 9, choice = 1, key;
+			int y = 9, choice = 1, key = 0;
 
-			while (true)
+			while (key != 27)
 			{
 				key = getKeyPressed();
 
@@ -1873,6 +1878,65 @@ TasksMenu::TasksMenu(pm::bll::TasksManagement* be) : SubMenu("Tasks", false, fal
 	{
 		std::cerr << e.what() << std::endl;
 	}
+}
+
+void TasksMenu::runItem()
+{
+	std::string errorMsg;
+
+	if (structure::currentUserG.firstName == "")
+		errorMsg = "You must log in first!";
+
+	switch (selectedItem + 1)
+	{
+	case 1: Create();
+		break;
+	case 2:
+		if (!errorMsg.empty()) {
+			std::cout << errorMsg << std::endl;
+			Sleep(1000);
+		}
+		else
+			Update();
+		break;
+	case 3:
+		if (!errorMsg.empty()) {
+			std::cout << errorMsg << std::endl;
+			Sleep(1000);
+		}
+		else
+			Delete();
+		break;
+	case 4:
+		if (!errorMsg.empty()) {
+			std::cout << errorMsg << std::endl;
+			Sleep(1000);
+		}
+		else
+			showAll();
+		break;
+
+	case 5:
+		if (!errorMsg.empty()) {
+			std::cout << errorMsg << std::endl;
+			Sleep(1000);
+		}
+		else
+			AssignMenu();
+
+		break;
+
+	case 6:
+		if (!errorMsg.empty()) {
+			std::cout << errorMsg << std::endl;
+			Sleep(1000);
+		}
+		else
+			RemoveMenu();
+
+		break;
+	}
+	system("cls");
 }
 
 void TasksMenu::moveToTask(bool next, std::vector<pm::dal::TasksStore::TASK> tmp)
@@ -2699,5 +2763,110 @@ void TasksMenu::RemoveUser()
 	} while (key != 27);
 
 	system("cls");
+}
+
+void TasksMenu::AssignMenu()
+{
+	system("cls");
+
+	gotoXY(40, 9);  std::cout << "Assign project";
+	gotoXY(40, 10); std::cout << "Assign user";
+
+	gotoXY(32, 9); std::cout << "-> ";
+
+	int y = 9, choice = 1, key = 0;
+
+	while (key != 27)
+	{
+		key = getKeyPressed();
+
+		if (key == 72 && y != 9)
+		{
+			gotoXY(32, y); std::cout << "   ";
+			y--;
+			gotoXY(32, y); std::cout << "-> ";
+			choice--;
+
+			continue;
+		}
+
+		if (key == 80 && y != 10)
+		{
+			gotoXY(32, y); std::cout << "   ";
+			y++;
+			gotoXY(32, y); std::cout << "-> ";
+			choice++;
+
+			continue;
+		}
+
+		if (key == 13)
+		{
+			switch (choice)
+			{
+			case 1:
+				AddProject();
+				break;
+			case 2: 
+				AssignUser();
+				break;
+			}
+
+			break;
+		}
+	}
+}
+
+void TasksMenu::RemoveMenu()
+{
+	system("cls");
+
+	gotoXY(35, 9);  std::cout << "Remove project";
+	gotoXY(35, 10); std::cout << "Unassign user";
+
+	gotoXY(32, 9); std::cout << "-> ";
+
+	int y = 9, choice = 1, key = 0;
+
+	while (key != 27)
+	{
+		key = getKeyPressed();
+
+		if (key == 72 && y != 9)
+		{
+			gotoXY(32, y); std::cout << "   ";
+			y--;
+			gotoXY(32, y); std::cout << "-> ";
+			choice--;
+
+			continue;
+		}
+
+		if (key == 80 && y != 10)
+		{
+			gotoXY(32, y); std::cout << "   ";
+			y++;
+			gotoXY(32, y); std::cout << "-> ";
+			choice++;
+
+			continue;
+		}
+
+		if (key == 13)
+		{
+			switch (choice)
+			{
+			case 1:
+				RemoveProject();
+				break;
+			case 2:
+				RemoveUser();
+				break;
+			}
+
+			break;
+		}
+	}
+
 }
 /*TasksMenu*/
