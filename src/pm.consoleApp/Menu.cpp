@@ -410,7 +410,8 @@ void UsersMenu::Create()
 			std::cout << "Email: " << std::endl;
 			std::cout << "Age: " << std::endl;
 			std::cout << "Enter password: " << std::endl;
-			if (structure::currentUserG.admin == 1) std::cout << "Admin (1 - true / 0 - false) -> " << std::endl;
+			if (structure::currentUserG.admin == 1) 
+				std::cout << "Admin (1 - true / 0 - false) -> " << std::endl;
 
 			gotoXY(12, 0); getline(std::cin, usr.firstName);
 			gotoXY(11, 1); getline(std::cin, usr.lastName);
@@ -1966,7 +1967,7 @@ void TasksMenu::Create()
 	std::cout << "Enter tasks's name: " << std::endl;
 	std::cout << "Enter a description of the project: " << std::endl;
 
-	gotoXY(22, 0); std::getline(std::cin, task.title);
+	gotoXY(20, 0); std::getline(std::cin, task.title);
 	gotoXY(36, 1); std::getline(std::cin, task.description);
 
 	task.status = "Pending";
@@ -2000,7 +2001,7 @@ void TasksMenu::Update()
 					for (size_t c = 0; c < selectedItemMarker.size(); c++)
 						std::cout << ' ';
 
-				std::cout << tasks[i].title << " | Status: " << tasks[i].status << " | " << tasks[i].createdOn.day << "/" << projects[i].createdOn.month << "/" << projects[i].createdOn.day << std::endl;
+				std::cout << tasks[i].title << " | Status: " << tasks[i].status << " | " << tasks[i].createdOn.day << "/" << tasks[i].createdOn.month << "/" << tasks[i].createdOn.day << std::endl;
 			}
 		}
 		else {
@@ -2065,15 +2066,16 @@ void TasksMenu::Update()
 			system("cls");
 			while (true)
 			{
+				system("cls");
 				pm::dal::TasksStore::TASK t;
 
 				std::cout << "Enter task's name: " << std::endl;
 				std::cout << "Enter a description of the task: " << std::endl;
 				std::cout << "Enter status of the task (Pending/InProgress/Completed): " << std::endl;
 
-				gotoXY(22, 0); std::getline(std::cin, t.title);
-				gotoXY(36, 1); std::getline(std::cin, t.description);
-				gotoXY(59, 2);
+				gotoXY(20, 0); std::getline(std::cin, t.title);
+				gotoXY(34, 1); std::getline(std::cin, t.description);
+				gotoXY(57, 2);
 
 				std::string status_temp; std::getline(std::cin, status_temp);
 
@@ -2125,7 +2127,7 @@ void TasksMenu::Delete()
 					for (size_t c = 0; c < selectedItemMarker.size(); c++)
 						std::cout << ' ';
 
-				std::cout << tasks[i].title << " | Status: " << tasks[i].status << " | " << tasks[i].createdOn.day << "/" << projects[i].createdOn.month << "/" << projects[i].createdOn.day << std::endl;
+				std::cout << tasks[i].title << " | Status: " << tasks[i].status << " | " << tasks[i].createdOn.day << "/" << tasks[i].createdOn.month << "/" << tasks[i].createdOn.day << std::endl;
 			}
 		}
 		else {
@@ -2222,7 +2224,7 @@ void TasksMenu::showAll()
 	{
 		system("cls");
 
-		for (size_t i = 0; i < projects.size(); i++)
+		for (size_t i = 0; i < tasks.size(); i++)
 		{
 			gotoXY(5, i + 1);
 			if (i == selectedTask)
@@ -2231,7 +2233,7 @@ void TasksMenu::showAll()
 				for (size_t c = 0; c < selectedItemMarker.size(); c++)
 					std::cout << ' ';
 
-			std::cout << tasks[i].title << " | Status: " << tasks[i].status << " | " << tasks[i].createdOn.day << "/" << projects[i].createdOn.month << "/" << projects[i].createdOn.year << std::endl;
+			std::cout << tasks[i].title << " | Status: " << tasks[i].status << " | " << tasks[i].createdOn.day << "/" << tasks[i].createdOn.month << "/" << tasks[i].createdOn.year << std::endl;
 		}
 
 		key = getKeyPressed();
@@ -2384,7 +2386,7 @@ void TasksMenu::AddProject()
 				for (size_t c = 0; c < selectedItemMarker.size(); c++)
 					std::cout << ' ';
 
-			std::cout << tasks[i].title << " | Status: " << tasks[i].status << " | " << tasks[i].createdOn.day << "/" << projects[i].createdOn.month << "/" << projects[i].createdOn.day << std::endl;
+			std::cout << tasks[i].title << " | Status: " << tasks[i].status << " | " << tasks[i].createdOn.day << "/" << tasks[i].createdOn.month << "/" << tasks[i].createdOn.day << std::endl;
 		}
 
 		key = getKeyPressed();
@@ -2412,6 +2414,7 @@ void TasksMenu::AddProject()
 
 			std::string query = "SELECT * FROM Projects";
 			nanodbc::result res = db.getResultFromSelect(query);
+			std::vector<int> ids;
 
 			while (res.next())
 			{
@@ -2434,7 +2437,10 @@ void TasksMenu::AddProject()
 				std::cout << end;
 
 				counter++;
+				ids.push_back(res.get<int>(0));
 			}
+
+
 
 			if (counter == 0)
 			{
@@ -2447,30 +2453,36 @@ void TasksMenu::AddProject()
 			size_t choice;
 			std::cout << "\n\nEnter the id of the project which you would like to add to the current task: "; std::cin >> choice; std::cin.ignore();
 
-			if (choice < 1 || choice > counter) {
-				system("cls");
-				gotoXY(45, 0); std::cout << "Invalid id" << std::endl;
-				Sleep(1000);
+			bool inTask = false, invalid = true;
 
-				continue;
+			for (const auto& x : ids)
+			{
+				if (x == choice)
+					invalid = false;
 			}
 
-			bool flag = false;
+			if (invalid)
+			{
+				system("cls");
+				std::cout << "Invalid id" << std::endl;
+				Sleep(1000);
+				continue;
+			}
 
 			for (const auto& x : projectsTask)
 			{
 				if (x.id == choice)
-					flag = true;
+					inTask = true;
 			}
 
-			if (!flag) {
+			if (!inTask) {
 				taskM->assignProjectToTask(choice, tasks[selectedTask].id);
 				tasks = taskM->loadAllTasks();
 				break;
 			}
 			else {
 				system("cls");
-				gotoXY(25, 0); std::cout << "You are trying to add a project who is already in the project!";
+				gotoXY(25, 0); std::cout << "You are trying to add a project who is already in the task!";
 				projectsTask.clear();
 				Sleep(1000);
 			}
@@ -2500,7 +2512,7 @@ void TasksMenu::RemoveProject()
 				for (size_t c = 0; c < selectedItemMarker.size(); c++)
 					std::cout << ' ';
 
-			std::cout << tasks[i].title << " | Status: " << tasks[i].status << " | " << tasks[i].createdOn.day << "/" << projects[i].createdOn.month << "/" << projects[i].createdOn.day << std::endl;
+			std::cout << tasks[i].title << " | Status: " << tasks[i].status << " | " << tasks[i].createdOn.day << "/" << tasks[i].createdOn.month << "/" << tasks[i].createdOn.day << std::endl;
 		}
 
 		key = getKeyPressed();
@@ -2549,7 +2561,7 @@ void TasksMenu::RemoveProject()
 			}
 
 			if (flag) {
-				taskM->removeProjectFromTask(choice, projectsTask[selectedTask].id);
+				taskM->removeProjectFromTask(choice, tasks[selectedTask].id);
 				tasks = taskM->loadAllTasks();
 				break;
 			}
@@ -2585,7 +2597,7 @@ void TasksMenu::AssignUser()
 				for (size_t c = 0; c < selectedItemMarker.size(); c++)
 					std::cout << ' ';
 
-			std::cout << tasks[i].title << " | Status: " << tasks[i].status << " | " << tasks[i].createdOn.day << "/" << projects[i].createdOn.month << "/" << projects[i].createdOn.day << std::endl;
+			std::cout << tasks[i].title << " | Status: " << tasks[i].status << " | " << tasks[i].createdOn.day << "/" << tasks[i].createdOn.month << "/" << tasks[i].createdOn.day << std::endl;
 		}
 
 		key = getKeyPressed();
@@ -2611,17 +2623,18 @@ void TasksMenu::AssignUser()
 			size_t counter = 0;
 			std::vector<pm::dal::UsersStore::USER> usersTask = taskM->getUsersFromTask(selectedTask + 1);
 
+			std::string query = "SELECT * FROM Users";
+			nanodbc::result res = db.getResultFromSelect(query);
+			std::vector<int> ids;
 
-			std::vector<pm::dal::UsersStore::USER> users_temp = uM->getRegisteredUsers();
-
-			for(counter = 0; counter < users_temp.size(); counter++)
+			while (res.next())
 			{
-				std::cout << "             " << users_temp[counter].id << ". " << users_temp[counter].firstName << " " << users_temp[counter].lastName << " | " << users_temp[counter].email << std::endl;
+				std::cout << "             " << res.get<int>(0) << ". " << res.get<std::string>(1) << " " << res.get<std::string>(2) << " | " << res.get<std::string>(3) << " | " << res.get<nanodbc::date>(6).day << "/" << res.get<nanodbc::date>(6).month << "/" << res.get<nanodbc::date>(6).year;
 
 				bool flag = false;
 				for (const auto& x : usersTask)
 				{
-					if (users_temp[counter].id == x.id)
+					if (res.get<int>(0) == x.id)
 						flag = true;
 				}
 
@@ -2633,43 +2646,54 @@ void TasksMenu::AssignUser()
 					end += " | (Not assigned to the current task)\n";
 
 				std::cout << end;
+
+				counter++;
+				ids.push_back(res.get<int>(0));
 			}
+
+
 
 			if (counter == 0)
 			{
-				std::cout << "There aren't any created users" << std::endl;
+				std::cout << "There are no created users" << std::endl;
 				Sleep(1000);
 
 				continue;
 			}
 
 			size_t choice;
-			std::cout << "\n\nEnter the id of the user who you would like to assign to the current task: "; std::cin >> choice; std::cin.ignore();
+			std::cout << "\n\nEnter the id of the user who you would like to add to the current task: "; std::cin >> choice; std::cin.ignore();
 
-			if (choice < 1 || choice > counter) {
-				system("cls");
-				gotoXY(45, 0); std::cout << "Invalid id" << std::endl;
-				Sleep(1000);
+			bool inTask = false, invalid = true;
 
-				continue;
+			for (const auto& x : ids)
+			{
+				if (x == choice)
+					invalid = false;
 			}
 
-			bool flag = false;
+			if (invalid)
+			{
+				system("cls");
+				std::cout << "Invalid id" << std::endl;
+				Sleep(1000);
+				continue;
+			}
 
 			for (const auto& x : usersTask)
 			{
 				if (x.id == choice)
-					flag = true;
+					inTask = true;
 			}
 
-			if (!flag) {
-				taskM->assignProjectToTask(choice, tasks[selectedTask].id);
+			if (!inTask) {
+				taskM->assignTaskToUser(tasks[selectedTask].id, choice);
 				tasks = taskM->loadAllTasks();
 				break;
 			}
 			else {
 				system("cls");
-				gotoXY(25, 0); std::cout << "You are trying to add a user who is already in the project!";
+				gotoXY(25, 0); std::cout << "You are trying to add a user who is already in the task!";
 				usersTask.clear();
 				Sleep(1000);
 			}
@@ -2699,7 +2723,7 @@ void TasksMenu::RemoveUser()
 				for (size_t c = 0; c < selectedItemMarker.size(); c++)
 					std::cout << ' ';
 
-			std::cout << tasks[i].title << " | Status: " << tasks[i].status << " | " << tasks[i].createdOn.day << "/" << projects[i].createdOn.month << "/" << projects[i].createdOn.day << std::endl;
+			std::cout << tasks[i].title << " | Status: " << tasks[i].status << " | " << tasks[i].createdOn.day << "/" << tasks[i].createdOn.month << "/" << tasks[i].createdOn.day << std::endl;
 		}
 
 		key = getKeyPressed();
@@ -2723,41 +2747,46 @@ void TasksMenu::RemoveUser()
 			system("cls");
 
 			size_t counter = 0;
-			std::vector<pm::dal::ProjectsStore::PROJECT> projectsTask = taskM->getProjectsFromTask(selectedTask + 1);
+			std::vector<pm::dal::UsersStore::USER> usersTask = taskM->getUsersFromTask(selectedTask + 1);
 
-			if (projectsTask.empty()) {
-				std::cout << "The task isn't assigned to any user";
-				Sleep(1000);
-				break;
-			}
-
-			for (const auto& x : projectsTask)
+			for (const auto& x : usersTask)
 			{
-				std::cout << "             " << x.id << ". " << x.title << " | " << x.createdOn.day << "/" << x.createdOn.month << " " << x.createdOn.year << " | (Assigned to the current task)" << std::endl;
+				std::cout << "             " << x.id << ". " << x.firstName << " " << x.lastName << " | " << x.email << " | " << x.createdOn.day << "/" << x.createdOn.month << "/" << x.createdOn.year << " (Assigned to the current task) " << std::endl;
+
+				counter++;
 			}
 
-			int choice;
-			std::cout << "\n\nEnter the id of the user who you would like to remove from the current task: "; std::cin >> choice; std::cin.ignore();
+
+			if (counter == 0)
+			{
+				std::cout << "There are no created users" << std::endl;
+				Sleep(1000);
+
+				continue;
+			}
+
+			size_t choice;
+			std::cout << "\n\nEnter the id of the user who you would like to add to the current task: "; std::cin >> choice; std::cin.ignore();
 
 			bool flag = false;
-
-			for (const auto& x : projectsTask)
+			for (const auto& x : usersTask)
 			{
-				if (x.id == choice)
+				if (choice == x.id)
 					flag = true;
 			}
 
-			if (flag) {
-				taskM->removeProjectFromTask(choice, projectsTask[selectedTask].id);
-				tasks = taskM->loadAllTasks();
-				break;
-			}
-			else {
+			if (!flag)
+			{
 				system("cls");
-				gotoXY(25, 0); std::cout << "You are trying to remove a user which isn't assigned to the current task!";
-				projectsTask.clear();
+				std::cout << "Invalid id";
 				Sleep(1000);
+				usersTask.clear();
+				continue;
 			}
+
+			taskM->removeTaskFromUser(tasks[selectedTask].id, choice);
+			tasks = taskM->loadAllTasks();
+			break;
 		}
 		} // switch
 	} while (key != 27);
@@ -2772,7 +2801,7 @@ void TasksMenu::AssignMenu()
 	gotoXY(40, 9);  std::cout << "Assign project";
 	gotoXY(40, 10); std::cout << "Assign user";
 
-	gotoXY(32, 9); std::cout << "-> ";
+	gotoXY(37, 9); std::cout << "-> ";
 
 	int y = 9, choice = 1, key = 0;
 
@@ -2782,9 +2811,9 @@ void TasksMenu::AssignMenu()
 
 		if (key == 72 && y != 9)
 		{
-			gotoXY(32, y); std::cout << "   ";
+			gotoXY(37, y); std::cout << "   ";
 			y--;
-			gotoXY(32, y); std::cout << "-> ";
+			gotoXY(37, y); std::cout << "-> ";
 			choice--;
 
 			continue;
@@ -2792,9 +2821,9 @@ void TasksMenu::AssignMenu()
 
 		if (key == 80 && y != 10)
 		{
-			gotoXY(32, y); std::cout << "   ";
+			gotoXY(37, y); std::cout << "   ";
 			y++;
-			gotoXY(32, y); std::cout << "-> ";
+			gotoXY(37, y); std::cout << "-> ";
 			choice++;
 
 			continue;
@@ -2821,10 +2850,10 @@ void TasksMenu::RemoveMenu()
 {
 	system("cls");
 
-	gotoXY(35, 9);  std::cout << "Remove project";
-	gotoXY(35, 10); std::cout << "Unassign user";
+	gotoXY(40, 9);  std::cout << "Remove project";
+	gotoXY(40, 10); std::cout << "Unassign user";
 
-	gotoXY(32, 9); std::cout << "-> ";
+	gotoXY(37, 9); std::cout << "-> ";
 
 	int y = 9, choice = 1, key = 0;
 
@@ -2834,9 +2863,9 @@ void TasksMenu::RemoveMenu()
 
 		if (key == 72 && y != 9)
 		{
-			gotoXY(32, y); std::cout << "   ";
+			gotoXY(37, y); std::cout << "   ";
 			y--;
-			gotoXY(32, y); std::cout << "-> ";
+			gotoXY(37, y); std::cout << "-> ";
 			choice--;
 
 			continue;
@@ -2844,9 +2873,9 @@ void TasksMenu::RemoveMenu()
 
 		if (key == 80 && y != 10)
 		{
-			gotoXY(32, y); std::cout << "   ";
+			gotoXY(37, y); std::cout << "   ";
 			y++;
-			gotoXY(32, y); std::cout << "-> ";
+			gotoXY(37, y); std::cout << "-> ";
 			choice++;
 
 			continue;
