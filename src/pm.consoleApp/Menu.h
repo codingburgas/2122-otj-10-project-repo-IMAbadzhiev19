@@ -83,8 +83,9 @@ public:
 
 	virtual void moveToItem(bool next);
 	virtual void Run() { Show(); }
-	virtual void runItem();
 	virtual void Show();
+
+	virtual void runItem() = 0;
 	virtual void Create() = 0;
 	virtual void Delete() = 0;
 	virtual void Update() = 0;
@@ -122,8 +123,8 @@ public:
 
 	UsersMenu(pm::bll::UsersManagement* be);
 
-	virtual void runItem();
 	void moveToUser(bool next);
+	virtual void runItem();
 
 	void Login();
 	void Create();
@@ -181,6 +182,7 @@ public:
 	TasksMenu(pm::bll::TasksManagement* be);
 
 	void moveToTask(bool next, std::vector<pm::dal::TasksStore::TASK> tmp);
+	virtual void runItem() { }
 
 	virtual void Create();
 	virtual void Delete();
@@ -188,10 +190,10 @@ public:
 	virtual void showAll();
 
 	void AddProject();
-	void RemoveProject() { }
+	void RemoveProject();
 
-	void AssignUser() { }
-	void RemoveUser() { }
+	void AssignUser();
+	void RemoveUser();
 
 
 private:
