@@ -38,6 +38,7 @@ protected:
 	virtual void moveToItem(bool next);
 	void clearScreen();
 	int random_in_range(int minimum, int maximum);
+	void writeInColor(unsigned short color, std::string output);
 
 	std::string name;
 	bool horizontal;

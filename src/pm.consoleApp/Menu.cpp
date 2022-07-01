@@ -33,6 +33,13 @@ int MenuItem::random_in_range(int min, int max)
 	return std::uniform_int_distribution <int>(min, max)(rng);
 }
 
+void MenuItem::writeInColor(unsigned short color, std::string output)
+{
+	HANDLE handler = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(handler, color);
+	std::cout << output;
+}
+
 int MenuItem::getKeyPressed()
 {
 	int k = _getch();
@@ -607,18 +614,24 @@ void UsersMenu::Update()
 			system("cls");
 			pm::dal::UsersStore::USER usr;
 
-			std::cout << "First name: " << std::endl;
-			std::cout << "Last name: " << std::endl;
-			std::cout << "Email: " << std::endl;
-			std::cout << "Age: " << std::endl;
-			std::cout << "Enter password: " << std::endl;
-			std::cout << "Admin (1 - yes \\ 0 - no) -> ";
+			writeInColor(6, "Don't type anything if you don't want to update the field! If you don't want to update the age field, enter 0!\n");
+			writeInColor(6, "IMPORTANT: Admin field is mandatory and you are required to enter a value there!");
 
-			gotoXY(12, 0); getline(std::cin, usr.firstName);
-			gotoXY(11, 1); getline(std::cin, usr.lastName);
-			gotoXY(7, 2); getline(std::cin, usr.email);
-			gotoXY(5, 3); std::cin >> usr.age; std::cin.ignore();
-			gotoXY(16, 4);
+			writeInColor(7, "");
+			gotoXY(0, 3); std::cout << "First name: " << std::endl;
+			gotoXY(0, 4); std::cout << "Last name: " << std::endl;
+			gotoXY(0, 5); std::cout << "Email: " << std::endl;
+			gotoXY(0, 6); std::cout << "Age: " << std::endl;
+			gotoXY(0, 7); std::cout << "Enter password: " << std::endl;
+			gotoXY(0, 8); std::cout << "Admin (1 - yes \\ 0 - no) -> ";
+
+			pm::dal::UsersStore::USER temp = uM->m_usersStore.getUserById(users[selectedUser].id);
+
+			gotoXY(12, 3); getline(std::cin, usr.firstName);
+			gotoXY(11, 4); getline(std::cin, usr.lastName);
+			gotoXY(7, 5); getline(std::cin, usr.email);
+			gotoXY(5, 6); std::cin >> usr.age; std::cin.ignore();
+			gotoXY(16, 7);
 
 			for (int i = 0; i < 301; i++)
 			{
@@ -634,10 +647,21 @@ void UsersMenu::Update()
 
 			if (admin <= 1 && admin >= 0)
 			{
-				gotoXY(34, 5); std::cin >> usr.admin;
+				gotoXY(28, 8); std::cin >> usr.admin;
 			}
 			else
 				continue;
+
+			if (usr.firstName.empty())
+				usr.firstName = temp.firstName;
+			if (usr.lastName.empty())
+				usr.lastName = temp.lastName;
+			if (usr.email.empty())
+				usr.email = temp.email;
+			if (usr.age == 0)
+				usr.age = temp.age;
+			if (usr.password.empty())
+				usr.password = temp.password;
 
 			uM->updateUser(users[selectedUser].id, usr);
 
