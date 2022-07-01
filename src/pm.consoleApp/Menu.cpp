@@ -673,8 +673,6 @@ void UsersMenu::Update()
 	} while (key != 27);
 
 	system("cls");
-
-	std::cin.ignore();
 }
 /*UsersMenu*/
 
@@ -849,7 +847,6 @@ void TeamsMenu::Update()
 	} while (key != 27);
 
 	system("cls");
-	std::cin.ignore();
 }
 
 void TeamsMenu::Delete()
@@ -1397,7 +1394,6 @@ void ProjectsMenu::Update()
 	} while (key != 27);
 
 	system("cls");
-	std::cin.ignore();
 }
 
 void ProjectsMenu::Delete()
@@ -2135,7 +2131,6 @@ void TasksMenu::Update()
 	} while (key != 27);
 
 	system("cls");
-	std::cin.ignore();
 }
 
 void TasksMenu::Delete()
