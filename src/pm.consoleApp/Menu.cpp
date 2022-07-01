@@ -398,6 +398,7 @@ void UsersMenu::Login()
 	Sleep(1000);
 
 	system("cls");
+	std::cin.ignore();
 }
 
 void UsersMenu::Create()
@@ -407,7 +408,6 @@ void UsersMenu::Create()
 
 	do
 	{
-		
 		system("cls");
 
 		try
@@ -469,6 +469,8 @@ void UsersMenu::Create()
 	Sleep(1000);
 
 	system("cls");
+
+	std::cin.ignore();
 }
 
 void UsersMenu::showAll()
@@ -672,6 +674,8 @@ void UsersMenu::Update()
 	} while (key != 27);
 
 	system("cls");
+
+	std::cin.ignore();
 }
 /*UsersMenu*/
 
@@ -786,6 +790,8 @@ void TeamsMenu::Create()
 	tM->createTeam(team, structure::currentUserG.id);
 	teams = tM->loadTeams();
 	system("cls");
+
+	std::cin.ignore();
 }
 
 void TeamsMenu::Update()
@@ -844,6 +850,7 @@ void TeamsMenu::Update()
 	} while (key != 27);
 
 	system("cls");
+	std::cin.ignore();
 }
 
 void TeamsMenu::Delete()
@@ -1281,6 +1288,7 @@ void ProjectsMenu::Create()
 	projects = pM->loadAllProjects();
 
 	system("cls");
+	std::cin.ignore();
 }
 
 void ProjectsMenu::Update()
@@ -1390,6 +1398,7 @@ void ProjectsMenu::Update()
 	} while (key != 27);
 
 	system("cls");
+	std::cin.ignore();
 }
 
 void ProjectsMenu::Delete()
@@ -2000,6 +2009,7 @@ void TasksMenu::Create()
 	tasks = taskM->loadAllTasks();
 
 	system("cls");
+	std::cin.ignore();
 }
 
 void TasksMenu::Update()
@@ -2126,6 +2136,7 @@ void TasksMenu::Update()
 	} while (key != 27);
 
 	system("cls");
+	std::cin.ignore();
 }
 
 void TasksMenu::Delete()
