@@ -398,7 +398,6 @@ void UsersMenu::Login()
 	Sleep(1000);
 
 	system("cls");
-	std::cin.ignore();
 }
 
 void UsersMenu::Create()
