@@ -402,8 +402,8 @@ void UsersMenu::Login()
 
 void UsersMenu::Create()
 {
-	pm::dal::UsersStore::USER usr;
 	int key;
+	pm::dal::UsersStore::USER usr;
 
 	do
 	{
@@ -411,13 +411,14 @@ void UsersMenu::Create()
 
 		try
 		{
-			std::cout << "First name: " << std::endl;
-			std::cout << "Last name: " << std::endl;
-			std::cout << "Email: " << std::endl;
-			std::cout << "Age: " << std::endl;
-			std::cout << "Enter password: " << std::endl;
-			if (structure::currentUserG.admin == 1) 
-				std::cout << "Admin (1 - true / 0 - false) -> " << std::endl;
+			gotoXY(0, 0); std::cout << "First name: " << std::endl;
+			gotoXY(0, 1); std::cout << "Last name: " << std::endl;
+			gotoXY(0, 2); std::cout << "Email: " << std::endl;
+			gotoXY(0, 3); std::cout << "Age: " << std::endl;
+			gotoXY(0, 4); std::cout << "Enter password: " << std::endl;
+
+			if(structure::currentUserG.admin == 1)
+				gotoXY(0, 5); std::cout << "Admin (1 - yes \\ 0 - no) -> ";
 
 			gotoXY(12, 0); getline(std::cin, usr.firstName);
 			gotoXY(11, 1); getline(std::cin, usr.lastName);
@@ -435,19 +436,24 @@ void UsersMenu::Create()
 				_putch('*');
 			}
 
+			usr.admin = 0;
+
 			if (structure::currentUserG.admin == 1)
 			{
-				while (true)
+				do
 				{
-					gotoXY(34, 5); std::cin >> usr.admin;
+					gotoXY(28, 5); std::cin >> usr.admin;
 
 					if (usr.admin >= 0 && usr.admin <= 1)
 						break;
 					else
-						std::cout << "Wrong input! ;(" << std::endl;
-
-					continue;
-				}
+					{
+						system("cls");
+						std::cout << "Wrong input";
+						Sleep(1000);
+						continue;
+					}
+				} while (true);
 			}
 
 			uM->registerUser(usr);
@@ -461,15 +467,11 @@ void UsersMenu::Create()
 			std::cout << errorMsg << std::endl;
 			Sleep(1000);
 		}
-
 	} while (true);
 
 	std::cout << "\nYou've successfully created an account!" << std::endl;
 	Sleep(1000);
-
 	system("cls");
-
-	std::cin.ignore();
 }
 
 void UsersMenu::showAll()
