@@ -472,6 +472,8 @@ void UsersMenu::Create()
 	std::cout << "\nYou've successfully created an account!" << std::endl;
 	Sleep(1000);
 	system("cls");
+
+	std::cin.ignore();
 }
 
 void UsersMenu::showAll()
