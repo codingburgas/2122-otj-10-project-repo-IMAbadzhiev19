@@ -107,4 +107,6 @@ CREATE TABLE [TasksAndUsers] (
 	UNIQUE(UserId, TaskId)
 )
 GO
---TasksAndUsersv
+--TasksAndUsers
+
+--SELECT * FROM Users WHERE Id > 1

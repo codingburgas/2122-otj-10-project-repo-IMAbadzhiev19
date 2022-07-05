@@ -783,16 +783,18 @@ void TeamsMenu::runItem()
 
 void TeamsMenu::Create()
 {
+	writeInColor(6, "Press 'ENTER' to continue");
+	std::cin.ignore();
+	system("cls");
 	pm::dal::TeamsStore::TEAM team;
 
+	writeInColor(7, "");
 	std::cout << "Team's name: ";
 	gotoXY(14, 0); getline(std::cin, team.title);
 
 	tM->createTeam(team, structure::currentUserG.id);
 	teams = tM->loadTeams();
 	system("cls");
-
-	std::cin.ignore();
 }
 
 void TeamsMenu::Update()
@@ -962,7 +964,7 @@ void TeamsMenu::AddUser()
 			system("cls");
 
 			size_t counter = 0;
-			std::vector<pm::dal::UsersStore::USER> usersTeam = tM->getUsersFromTeam(selectedTeam + 1);
+			std::vector<pm::dal::UsersStore::USER> usersTeam = tM->getUsersFromTeam(teams[selectedTeam].id);
 
 			std::string query = "SELECT * FROM Users";
 			nanodbc::result res = db.getResultFromSelect(query);
@@ -1062,7 +1064,7 @@ void TeamsMenu::RemoveUser()
 			system("cls");
 
 			size_t counter = 0;
-			std::vector<pm::dal::UsersStore::USER> usersTeam = tM->getUsersFromTeam(selectedTeam + 1);
+			std::vector<pm::dal::UsersStore::USER> usersTeam = tM->getUsersFromTeam(teams[selectedTeam].id);
 
 			if (usersTeam.empty()) {
 				std::cout << "There are no users in the current team";
@@ -1276,19 +1278,22 @@ void ProjectsMenu::moveToProject(bool next, std::vector<pm::dal::ProjectsStore::
 
 void ProjectsMenu::Create()
 {
+	writeInColor(6, "Press 'ENTER' to continue");
+	std::cin.ignore();
+	system("cls");
 	pm::dal::ProjectsStore::PROJECT project;
 
+	writeInColor(7, "");
 	std::cout << "Enter project's name: " << std::endl;
 	std::cout << "Enter a description of the project: " << std::endl;
 
-	gotoXY(22, 0); std::getline(std::cin, project.title);
-	gotoXY(36, 1); std::getline(std::cin, project.description);
+	gotoXY(22, 1); std::getline(std::cin, project.title);
+	gotoXY(36, 2); std::getline(std::cin, project.description);
 
 	pM->createProject(project, structure::currentUserG.id);
 	projects = pM->loadAllProjects();
 
 	system("cls");
-	std::cin.ignore();
 }
 
 void ProjectsMenu::Update()
@@ -1731,7 +1736,7 @@ void ProjectsMenu::AddTeam()
 			system("cls");
 
 			size_t counter = 0;
-			std::vector<pm::dal::TeamsStore::TEAM> teamsProject = pM->getTeamFromProject(selectedProject + 1);
+			std::vector<pm::dal::TeamsStore::TEAM> teamsProject = pM->getTeamFromProject(projects[selectedProject].id);
 			std::vector<int> ids;
 
 			std::string query = "SELECT * FROM Teams";
@@ -1855,7 +1860,7 @@ void ProjectsMenu::RemoveTeam()
 			system("cls");
 
 			size_t counter = 0;
-			std::vector<pm::dal::TeamsStore::TEAM> teamsProject = pM->getTeamFromProject(selectedProject + 1);
+			std::vector<pm::dal::TeamsStore::TEAM> teamsProject = pM->getTeamFromProject(projects[selectedProject].id);
 
 			if (teamsProject.empty()) {
 				std::cout << "There are no teams in the current project";
@@ -1994,8 +1999,12 @@ void TasksMenu::moveToTask(bool next, std::vector<pm::dal::TasksStore::TASK> tmp
 
 void TasksMenu::Create()
 {
+	writeInColor(6, "Press 'ENTER' to continue");
+	std::cin.ignore();
+	system("cls");
 	pm::dal::TasksStore::TASK task;
 
+	writeInColor(7, "");
 	std::cout << "Enter tasks's name: " << std::endl;
 	std::cout << "Enter a description of the project: " << std::endl;
 
@@ -2008,7 +2017,6 @@ void TasksMenu::Create()
 	tasks = taskM->loadAllTasks();
 
 	system("cls");
-	std::cin.ignore();
 }
 
 void TasksMenu::Update()
@@ -2443,7 +2451,7 @@ void TasksMenu::AddProject()
 			system("cls");
 
 			size_t counter = 0;
-			std::vector<pm::dal::ProjectsStore::PROJECT> projectsTask = taskM->getProjectsFromTask(selectedTask + 1);
+			std::vector<pm::dal::ProjectsStore::PROJECT> projectsTask = taskM->getProjectsFromTask(tasks[selectedTask].id);
 
 			std::string query = "SELECT * FROM Projects";
 			nanodbc::result res = db.getResultFromSelect(query);
@@ -2569,7 +2577,7 @@ void TasksMenu::RemoveProject()
 			system("cls");
 
 			size_t counter = 0;
-			std::vector<pm::dal::ProjectsStore::PROJECT> projectsTask = taskM->getProjectsFromTask(selectedTask + 1);
+			std::vector<pm::dal::ProjectsStore::PROJECT> projectsTask = taskM->getProjectsFromTask(tasks[selectedTask].id);
 
 			if (projectsTask.empty()) {
 				std::cout << "The task isn't assigned to any project";
@@ -2654,7 +2662,7 @@ void TasksMenu::AssignUser()
 			system("cls");
 
 			size_t counter = 0;
-			std::vector<pm::dal::UsersStore::USER> usersTask = taskM->getUsersFromTask(selectedTask + 1);
+			std::vector<pm::dal::UsersStore::USER> usersTask = taskM->getUsersFromTask(tasks[selectedTask].id);
 
 			std::string query = "SELECT * FROM Users";
 			nanodbc::result res = db.getResultFromSelect(query);
@@ -2780,7 +2788,7 @@ void TasksMenu::RemoveUser()
 			system("cls");
 
 			size_t counter = 0;
-			std::vector<pm::dal::UsersStore::USER> usersTask = taskM->getUsersFromTask(selectedTask + 1);
+			std::vector<pm::dal::UsersStore::USER> usersTask = taskM->getUsersFromTask(tasks[selectedTask].id);
 
 			for (const auto& x : usersTask)
 			{
