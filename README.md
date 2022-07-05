@@ -14,6 +14,9 @@
 - C++ based projects management system where you can manage users, teams, projects and tasks. 
 
 ## ⚔️How to download and run☄️ <a id = "download"></a>
+
+`In order to run the project, you should create a new query in SSMS and paste the script from the .sql file in database folder`
+
 ![How To Open cmd from file explorer](https://cdn.reddybrek.com/images/posts/669/cmdfromexplorer.gif)
 
 Type `git clone https://github.com/codingburgas/2122-10-biology-ZNBonev19` in the command prompt
