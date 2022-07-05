@@ -15,7 +15,7 @@
 
 ## ⚔️How to download and run☄️ <a id = "download"></a>
 
-`In order to run the project, you should create a new query in SSMS and paste the script from the .sql file in database folder`
+`In order to run the project, you should create a new query in SSMS and paste the script from the .sql file in database folder and then execute it`
 
 ![How To Open cmd from file explorer](https://cdn.reddybrek.com/images/posts/669/cmdfromexplorer.gif)
 
