@@ -1287,8 +1287,8 @@ void ProjectsMenu::Create()
 	std::cout << "Enter project's name: " << std::endl;
 	std::cout << "Enter a description of the project: " << std::endl;
 
-	gotoXY(22, 1); std::getline(std::cin, project.title);
-	gotoXY(36, 2); std::getline(std::cin, project.description);
+	gotoXY(22, 0); std::getline(std::cin, project.title);
+	gotoXY(36, 1); std::getline(std::cin, project.description);
 
 	pM->createProject(project, structure::currentUserG.id);
 	projects = pM->loadAllProjects();
@@ -2231,6 +2231,21 @@ void TasksMenu::Delete()
 		case 13:
 		{
 			system("cls");
+
+			int n1 = random_in_range(1, 99);
+			int tmp = random_in_range(1, 99);
+
+			int n2 = (tmp != n1) ? tmp : rand();
+			int res;
+
+			std::cout << n1 << " + " << n2 << " = "; std::cin >> res;
+
+			if (res != (n1 + n2)) {
+				std::cout << "Wrong answer :(" << std::endl;
+				Sleep(1000);
+				continue;
+			}
+
 			while (true)
 			{
 				if (structure::currentUserG.admin == 1)
