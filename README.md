@@ -1,15 +1,30 @@
-# 2122-10: On the job training (OTJ) project
+# Projects Management System
 
-## 1. Introduction
+## Table of content 📖
 
-This is your personal repository for the OTJ project. **Do not create any projects until requested by your teacher!**
+- [Members](#members)
+- [Resume](#resume)
+- [Tutorial how to download and run](#download)
 
-## 2. Project definition & links
+## Members 👨‍💻 <a id = "members"></a>
+- 🛠Ивайло Абаджиев (IMAbadzhiev19@codingburgas.bg)
 
-Project's definition contains your assignment. It has its own repo and will be updated frequently to reflect every stage of the project.
+# Resume of the poject 💻 <a id = "resume"></a>
 
-You're required to follow and implement the bare minimum of functionality. You're free to extend the project and add more features.
+- C++ based projects management system where you can manage users, teams, projects and tasks. 
+
+## ⚔️How to download and run☄️ <a id = "download"></a>
+![How To Open cmd from file explorer](https://cdn.reddybrek.com/images/posts/669/cmdfromexplorer.gif)
+
+Type `git clone https://github.com/codingburgas/2122-10-biology-ZNBonev19` in the command prompt
+
+Open the project folder and then open the `2122-otj-10-project-repo-IMAbadzhiev19` folder 
+
+Open `2122-otj-10-project-repo-IMAbadzhiev19.sln`
+
+`Make sure that the start up project is set to pm.consoleApp and Debug version is x86`
+
+![How to run code in Visual studio](https://docs.microsoft.com/th-th/cpp/build/media/vscpp-start-without-debugging.gif?view=msvc-170)
+
 
 [Assignment's README](https://github.com/codingburgas/2122-otj-10-project-definition)
-
-**Note:** if you receive error 404, please ensure you're logged in GitHub. If you still receive 404, please contact your teacher.
