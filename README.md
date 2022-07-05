@@ -17,6 +17,8 @@
 
 `In order to run the project, you should create a new query in SSMS and paste the script from the .sql file in database folder and then execute it`
 
+`Make sure that the start up project is set to pm.consoleApp and Debug version is x86`
+
 ![How To Open cmd from file explorer](https://cdn.reddybrek.com/images/posts/669/cmdfromexplorer.gif)
 
 Type `git clone https://github.com/codingburgas/2122-10-biology-ZNBonev19` in the command prompt
@@ -24,8 +26,6 @@ Type `git clone https://github.com/codingburgas/2122-10-biology-ZNBonev19` in th
 Open the project folder and then open the `2122-otj-10-project-repo-IMAbadzhiev19` folder 
 
 Open `2122-otj-10-project-repo-IMAbadzhiev19.sln`
-
-`Make sure that the start up project is set to pm.consoleApp and Debug version is x86`
 
 ![How to run code in Visual studio](https://docs.microsoft.com/th-th/cpp/build/media/vscpp-start-without-debugging.gif?view=msvc-170)
 
