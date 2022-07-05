@@ -23,7 +23,7 @@
 
 Type `git clone https://github.com/codingburgas/2122-10-biology-ZNBonev19` in the command prompt
 
-Open the project folder and then open the `2122-otj-10-project-repo-IMAbadzhiev19` folder 
+Open `2122-otj-10-project-repo-IMAbadzhiev19` folder 
 
 Open `2122-otj-10-project-repo-IMAbadzhiev19.sln`
 
